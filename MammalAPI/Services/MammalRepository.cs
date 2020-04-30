@@ -1,16 +1,19 @@
 using System.Threading.Tasks;
 using MammalAPI.Models;
+using MammalAPI.Context;
 
 namespace MammalAPI.Services
 {
     public class MammalRepository : IMammalRepository
     {
-        //private readonly DBContext dBContext;
+        private readonly DBContextData dBContextData;
 
         public async Task<FakeMammal> GetFake()
         {
-            var query = dbcontext.Fake;
-            return await query.FirstOrDefaultAsync();
+            var query = dBContextData.Get();
+            return await Task.Run(() => query);
+
+            //return await query.FirstOrDefaultAsync();
         }
     }
 }

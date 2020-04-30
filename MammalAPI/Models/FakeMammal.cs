@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace MammalAPI.Models
 {
     public class FakeMammal
     {
-        public int Id { get; set; }
+        [Key]
+        public int FakeMammalId { get; set; }
         public string Name { get; set; }
     }
 }
