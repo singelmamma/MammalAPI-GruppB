@@ -7,7 +7,7 @@ namespace MammalAPI.Services
     {
         //private readonly DBContext dBContext;
 
-        public async Task<Fake> GetFake()
+        public async Task<FakeMammal> GetFake()
         {
             var query = dbcontext.Fake;
             return await query.FirstOrDefaultAsync();
