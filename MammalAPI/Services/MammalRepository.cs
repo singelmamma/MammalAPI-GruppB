@@ -3,7 +3,7 @@ using MammalAPI.Models;
 
 namespace MammalAPI.Services
 {
-    public class AnimalRepository : IAnimalRepository
+    public class MammalRepository : IMammalRepository
     {
         //private readonly DBContext dBContext;
 

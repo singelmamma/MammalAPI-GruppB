@@ -3,7 +3,7 @@ using MammalAPI.Models;
 
 namespace MammalAPI.Services
 {
-    public interface IAnimalRepository
+    public interface IMammalRepository
     {
         Task<Fake> GetFake();
     }
