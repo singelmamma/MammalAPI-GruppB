@@ -6,11 +6,16 @@ namespace MammalAPI.Services
 {
     public class MammalRepository : IMammalRepository
     {
-        private readonly DBContextData dBContextData;
+        private readonly DBContextData _dBContextData;
+
+        public MammalRepository(DBContextData dBContextData)
+        {
+            _dBContextData = dBContextData;
+        }
 
         public async Task<FakeMammal> GetFake()
         {
-            var query = dBContextData.Get();
+            var query = _dBContextData.Get();
             return await Task.Run(() => query);
 
             //return await query.FirstOrDefaultAsync();
