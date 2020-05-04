@@ -1,9 +1,14 @@
-**ROOT**
+##ROOT
+
 http://serveradress.com/api/v1.0
 
-**ENDPOINTS**
-*/mammals*					GET
+##ENDPOINTS
+
+**/mammals					GET**
+
 Returns generic info about all mammals
+
+```javascript
 [
 {
 	MammalID: 1234,
@@ -18,6 +23,7 @@ Returns generic info about all mammals
 	Name: “Dugong”
 }
 ]
+```
 
 
 /mammal/<id>				GET
