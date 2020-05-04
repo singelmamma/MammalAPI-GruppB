@@ -50,18 +50,18 @@ Returns data; mamalsID, name,latin name, length and weight for all mammals
 ```javascript
 [
 	{
-	MammalD: 1,
-	Name: “Blue Whale”,
-	LatinName:”Balaenoptera musculus”,
-	Length:40,
-	Weight:3500
+		MammalD: 1,
+		Name: “Blue Whale”,
+		LatinName:”Balaenoptera musculus”,
+		Length:40,
+		Weight:3500
 	},
 	{
-	MammalD: 2,
-	Name: “Turqoise Whale”,
-	LatinName:”Balaenoptera musculus”,
-	Length:5,
-	Weight:250
+		MammalD: 2,
+		Name: “Turqoise Whale”,
+		LatinName:”Balaenoptera musculus”,
+		Length:5,
+		Weight:250
 	}
 ]
 ```
