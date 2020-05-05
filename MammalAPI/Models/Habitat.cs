@@ -10,5 +10,6 @@ namespace MammalAPI.Models
         public int HabitatID { get; set; }
         public string Name { get; set; }
 
+        public IList<MammalHabitat> MammalHabitats { get; set; }
     }
 }

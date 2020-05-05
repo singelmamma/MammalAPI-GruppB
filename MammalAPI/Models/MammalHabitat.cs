@@ -6,7 +6,7 @@ namespace MammalAPI.Models
     {
         [Key]
         public int Id { get; set; }
-        public int AnimalId { get; set; }
+        public int MammalId { get; set; }
         public int HabitatId { get; set; }
     }
 }
