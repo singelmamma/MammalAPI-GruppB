@@ -20,7 +20,7 @@ namespace MammalAPI
         {
             services.AddScoped<IMammalRepository, MammalRepository>();
             services.AddDbContext<DBContext>();
-            services.AddTransient<DBContextData>();
+            // services.AddTransient<DBContextData>();
             services.AddMvc(options => options.EnableEndpointRouting=false).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
         }
 

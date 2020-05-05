@@ -16,8 +16,7 @@ namespace MammalAPI.Models
         public double Weight { get; set; }
         public string LatinName { get; set; }
         public int Lifespan { get; set; }
-        public int FamilyId { get; set; }
-
+        public Family Family { get; set; }
         public IList<MammalHabitat> MammalHabitats { get; set; }
     }
 }

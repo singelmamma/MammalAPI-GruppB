@@ -18,10 +18,10 @@ namespace MammalAPI.Controllers
             _repository = repository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            return Ok(await _repository.GetFake());
-        }
+        // [HttpGet]
+        // public async Task<IActionResult> Get()
+        // {
+        //      return Ok(await _repository.GetFake());
+        // }
     }
 }
