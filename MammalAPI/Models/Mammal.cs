@@ -18,5 +18,6 @@ namespace MammalAPI.Models
         public int Lifespan { get; set; }
         public int FamilyId { get; set; }
 
+        public IList<MammalHabitat> MammalHabitats { get; set; }
     }
 }
