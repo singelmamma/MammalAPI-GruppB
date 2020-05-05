@@ -6,7 +6,6 @@ namespace MammalAPI.Context
 {
     public class DBContext: DbContext
     {
-        public DbSet<FakeMammal> FakeMammal { get; set; }
         public DbSet<Family> Families { get; set; }
         public DbSet<Habitat> Habitats { get; set; }
         public DbSet<Mammal> Mammals { get; set; }
@@ -26,7 +25,7 @@ namespace MammalAPI.Context
         {
             modelBuilder.Entity<MammalHabitat>().HasKey(sc => new { sc.HabitatId, sc.MammalId });
             
-            modelBuilder.ApplyConfiguration(new FakeConfiguration());   //creating a FakeMammal table
+            //modelBuilder.ApplyConfiguration(new FakeConfiguration());   //creating a FakeMammal table
         }
     }
 }

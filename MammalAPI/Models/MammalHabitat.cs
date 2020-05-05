@@ -7,6 +7,8 @@ namespace MammalAPI.Models
         [Key]
         public int Id { get; set; }
         public int MammalId { get; set; }
+        public Mammal Mammal { get; set; }
         public int HabitatId { get; set; }
+        public Habitat Habitat { get; set; }
     }
 }

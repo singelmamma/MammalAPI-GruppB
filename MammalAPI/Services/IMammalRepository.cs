@@ -5,6 +5,6 @@ namespace MammalAPI.Services
 {
     public interface IMammalRepository
     {
-        Task<FakeMammal> GetFake();
+        // Task<FakeMammal> GetFake();
     }
 }
