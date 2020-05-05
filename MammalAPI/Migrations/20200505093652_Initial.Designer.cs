@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MammalAPI.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20200505091059_Initial")]
+    [Migration("20200505093652_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
