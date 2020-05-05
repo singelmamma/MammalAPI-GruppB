@@ -22,5 +22,4 @@ namespace MammalAPI.Context
             );
         }
     }
-
 }

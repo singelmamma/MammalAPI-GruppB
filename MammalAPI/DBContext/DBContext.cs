@@ -22,6 +22,5 @@ namespace MammalAPI.Context
         {
             modelBuilder.ApplyConfiguration(new FakeConfiguration());   //creating a FakeMammal table
         }
-    } 
+    }
 }
-    
