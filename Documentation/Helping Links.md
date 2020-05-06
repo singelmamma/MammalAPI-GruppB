@@ -1,9 +1,10 @@
 # Teacher GitRepositories
 
-**First Fake API from teacher**
+**API examples from teacher**
 
 [Teknikhögskolan/FakeApi](https://github.com/TeknikhogskolanGothenburg/FakeAPI)
 
+[Teknikhögskolan/FestivalApi](https://github.com/TeknikhogskolanGothenburg/FestivalApi)
 
 # Own project links
 
