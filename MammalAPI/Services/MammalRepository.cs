@@ -19,8 +19,8 @@ namespace MammalAPI.Services
         public async Task<List<Mammal>> GetAllMammals()
         {
            
-            var query = _dBContext.Mammals.Where(f => f.MammalId == 1).ToList();
-            return await Task.Run(() => query);
+           return await _dBContext.Mammals.ToListAsync();
+
         }
     }
 }
