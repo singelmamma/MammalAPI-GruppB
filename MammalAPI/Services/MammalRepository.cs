@@ -1,24 +1,26 @@
 using System.Threading.Tasks;
 using MammalAPI.Models;
 using MammalAPI.Context;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MammalAPI.Services
 {
     public class MammalRepository : IMammalRepository
     {
-        // private readonly DBContextData _dBContextData;
+        private readonly DBContext _dBContext;
 
-        // public MammalRepository(DBContextData dBContextData)
-        // {
-        //     _dBContextData = dBContextData;
-        // }
+        public MammalRepository(DBContext dBContext)
+        {
+            _dBContext = dBContext;
+        }
 
-        // public async Task<FakeMammal> GetFake()
-        // {
-        //     var query = _dBContextData.Get();
-        //     return await Task.Run(() => query);
-
-        //     //return await query.FirstOrDefaultAsync();
-        // }
+        public async Task<List<Mammal>> GetAllMammals()
+        {
+           
+            var query = _dBContext.Mammals.Where(f => f.MammalId == 1).ToList();
+            return await Task.Run(() => query);
+        }
     }
 }
