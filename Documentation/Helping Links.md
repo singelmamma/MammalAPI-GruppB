@@ -14,13 +14,16 @@
 
 **Help Links**
 
-[ManyToMany Entity Framework Setup](https://www.entityframeworktutorial.net/efcore/configure-many-to-many-relationship-in-ef-core.aspx)
-
 [List of Marine Mammals - Wiki](https://en.wikipedia.org/wiki/List_of_marine_mammal_species)
+
+[ManyToMany Entity Framework Setup](https://www.entityframeworktutorial.net/efcore/configure-many-to-many-relationship-in-ef-core.aspx)
 
 [DTO - Design pattern in C#](https://www.codeproject.com/Articles/1050468/Data-Transfer-Object-Design-Pattern-in-Csharp)
 
 [Markdown cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+
+[AutoMapper - DTO](https://www.codementor.io/@zedotech/how-to-using-automapper-on-asp-net-core-3-0-via-dependencyinjection-zq497lzsq)
+
 
 
 []()
