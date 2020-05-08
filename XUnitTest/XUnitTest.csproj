@@ -16,4 +16,7 @@
     </PackageReference>
     <PackageReference Include="Moq" Version="4.14.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\mammalapi\mammalapi.csproj" />
+  </ItemGroup>
 </Project>
