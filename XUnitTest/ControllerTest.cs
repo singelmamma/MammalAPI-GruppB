@@ -1,5 +1,10 @@
 using System;
 using Xunit;
+using MammalAPI;
+using MammalAPI.Models;
+using MammalAPI.Controllers;
+using MammalAPI.Services;
+using MammalAPI.Context;
 
 namespace XUnitTest
 {
@@ -8,7 +13,7 @@ namespace XUnitTest
         [Fact]
         public void Test1()
         {
-            //sds
+            
         }
     }
 }
