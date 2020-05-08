@@ -24,6 +24,7 @@
 
 [AutoMapper - DTO](https://www.codementor.io/@zedotech/how-to-using-automapper-on-asp-net-core-3-0-via-dependencyinjection-zq497lzsq)
 
+[Unit Tests for MVC 3.1](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-3.1)
 
 
 []()
