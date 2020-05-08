@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MammalAPI", "MammalAPI\MammalAPI.csproj", "{7E6032AC-95A9-48ED-BE30-E6D600AD7B99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerTest", "ControllerTest\ControllerTest.csproj", "{EFDCFCAD-3E6E-4CDF-8C64-1E09CA663A6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTest", "XUnitTest\XUnitTest.csproj", "{B60A6A34-C3F6-433A-92AD-D9D3A4616029}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{7E6032AC-95A9-48ED-BE30-E6D600AD7B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E6032AC-95A9-48ED-BE30-E6D600AD7B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E6032AC-95A9-48ED-BE30-E6D600AD7B99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFDCFCAD-3E6E-4CDF-8C64-1E09CA663A6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFDCFCAD-3E6E-4CDF-8C64-1E09CA663A6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFDCFCAD-3E6E-4CDF-8C64-1E09CA663A6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFDCFCAD-3E6E-4CDF-8C64-1E09CA663A6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B60A6A34-C3F6-433A-92AD-D9D3A4616029}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B60A6A34-C3F6-433A-92AD-D9D3A4616029}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B60A6A34-C3F6-433A-92AD-D9D3A4616029}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B60A6A34-C3F6-433A-92AD-D9D3A4616029}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
