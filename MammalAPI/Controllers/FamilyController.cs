@@ -25,7 +25,7 @@ namespace MammalAPI.Controllers
             return Ok(results);
         }
 
-        [HttpGet("MammalsByFamilyId={id}")]
+        [HttpGet("MammalsByFamilyId={id}")] 
         public async Task<IActionResult> ByFamiliyId()
         {
             var results = await _familyRepository.GetMammalsByFamilyId(int id);
