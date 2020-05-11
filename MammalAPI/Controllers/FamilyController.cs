@@ -21,7 +21,14 @@ namespace MammalAPI.Controllers
         [HttpGet("MammalsByFamilyName={name}")]
         public async Task<IActionResult> ByFamiliyName()
         {
-            var results = await _familyRepository.GetMammalsByFamilyId();
+            var results = await _familyRepository.GetMammalsByFamilyName(string name);
+            return Ok(results);
+        }
+
+        [HttpGet("MammalsByFamilyId={id}")]
+        public async Task<IActionResult> ByFamiliyId()
+        {
+            var results = await _familyRepository.GetMammalsByFamilyId(int id);
             return Ok(results);
         }
     }
