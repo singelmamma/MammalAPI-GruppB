@@ -26,5 +26,11 @@ namespace MammalAPI.Controllers
         {
             return Ok(await _repository.GetMammalById(id));
         }
+
+        [HttpGet("habitat/{habitatName}")]
+        public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
+        {
+            return Ok(await _repository.GetMammalsByHabitat(habitatName));
+        }
     }
 }
