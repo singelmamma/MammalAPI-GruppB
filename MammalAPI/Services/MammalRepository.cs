@@ -72,5 +72,36 @@ namespace MammalAPI.Services
                 .FirstOrDefaultAsync(m => m.Lifespan == lifespan);
         }
 
+        public async Task<List<IdNameDTO>> GetMammalsByFamily(string name)
+        {
+            var familyId = _dBContext.Families
+                .Where(fam => fam.Name == name)
+                .Select(fam => fam.FamilyId)
+                .FirstOrDefault();
+
+            var query = _dBContext.Mammals
+                .Where(m => m.Family.FamilyId == familyId)
+                .Select(m => new IdNameDTO
+                {
+                    Id = m.MammalId,
+                    Name = m.Name
+                });
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<IdNameDTO>> GetMammalsByFamilyId(int id)
+        {
+            var query = _dBContext.Mammals
+                .Where(m => m.Family.FamilyId == id)
+                .Select(m => new IdNameDTO
+                {
+                    Id = m.MammalId,
+                    Name = m.Name
+                });
+
+            return await query.ToListAsync();
+        }
+
     }
 }
