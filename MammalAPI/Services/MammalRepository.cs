@@ -20,8 +20,8 @@ namespace MammalAPI.Services
 
         public async Task<List<Mammal>> GetAllMammals()
         {
-           
-           return await _dBContext.Mammals.ToListAsync();
+
+            return await _dBContext.Mammals.ToListAsync();
         }
 
         public async Task<Mammal> GetMammalById(int id)
@@ -37,18 +37,40 @@ namespace MammalAPI.Services
                 .Where(h => h.Name == habitatName),
                 mh => mh.HabitatId,
                 h => h.HabitatID,
-                (mh, h) => new {mh, h})
+                (mh, h) => new { mh, h })
                 .Join(_dBContext.Mammals,
                 m => m.mh.MammalId,
                 n => n.MammalId,
-                (m, h) => new {m, h})
+                (m, h) => new { m, h })
                 .Select(s => new IdNameDTO
                 {
                     Name = s.h.Name,
                     Id = s.h.MammalId
                 });
-            
+
             return await query.ToListAsync();
         }
+
+        public async Task<List<IdNameDTO>> GetMammalsByHabitatId(int id)
+        {
+            var query = _dBContext.MammalHabitats
+                .Include(mh => mh.Mammal)
+                .AsNoTracking()
+                .Where(x => x.HabitatId == id)
+                .Select(x => new IdNameDTO
+                {
+                    Id = x.MammalId,
+                    Name = x.Mammal.Name
+                });
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<Mammal> GetMammalByLifeSpan(int lifespan)
+        {
+            return await _dBContext.Mammals
+                .FirstOrDefaultAsync(m => m.Lifespan == lifespan);
+        }
+
     }
 }

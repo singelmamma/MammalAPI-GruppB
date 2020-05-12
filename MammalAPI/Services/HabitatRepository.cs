@@ -33,5 +33,11 @@ namespace MammalAPI.Services
             
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<Habitat> GetHabitatById(int id)
+        {
+            return await _dBContext.Habitats
+                .FirstOrDefaultAsync(x => x.HabitatID == id);
+        }
     }
 }
