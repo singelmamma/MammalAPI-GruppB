@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MammalAPI.Context;
 using MammalAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace MammalAPI.Services
 {
@@ -17,6 +18,12 @@ namespace MammalAPI.Services
         public async Task<List<Habitat>> GetAllHabitats()
         {
             return await _dBContext.Habitats.ToListAsync();
+        }
+
+        public async Task<Habitat> GetHabitatById(int id)
+        {
+            return await _dBContext.Habitats
+                .FirstOrDefaultAsync(x => x.HabitatID == id);
         }
     }
 }
