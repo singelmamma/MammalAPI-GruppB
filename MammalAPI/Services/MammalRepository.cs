@@ -20,7 +20,12 @@ namespace MammalAPI.Services
         {
            
            return await _dBContext.Mammals.ToListAsync();
+        }
 
+        public async Task<Mammal> GetMammalById(int id)
+        {
+            return await _dBContext.Mammals
+                .FirstOrDefaultAsync(m => m.MammalId == id);
         }
     }
 }

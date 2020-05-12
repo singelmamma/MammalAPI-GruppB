@@ -1,8 +1,5 @@
 ﻿using MammalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MammalAPI.Controllers
@@ -22,6 +19,12 @@ namespace MammalAPI.Controllers
         public async Task<IActionResult> Get()
         {
             return Ok(await _repository.GetAllMammals());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetMammalById(int id)
+        {
+            return Ok(await _repository.GetMammalById(id));
         }
     }
 }
