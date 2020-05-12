@@ -8,8 +8,8 @@ namespace MammalAPI.Services
 {
     public interface IFamilyRepository
     {
-        Task<List<Family>> GetFamilyByName(string name);
-        Task<List<Family>> GetFamilyById(int id);
+        Task<Family> GetFamilyByName(string name);
+        Task<Family> GetFamilyById(int id);
 
     }
 }

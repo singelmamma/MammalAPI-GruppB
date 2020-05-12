@@ -4,6 +4,8 @@ using MammalAPI.Context;
 using MammalAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using MammalAPI.DTO;
+
 
 namespace MammalAPI.Services
 {
@@ -21,9 +23,9 @@ namespace MammalAPI.Services
             return await _dBContext.Families.Where(s => s.Name == name).FirstOrDefaultAsync();
         }
 
-        public async Task<Family> GetFamilyBy(int id)
+        public async Task<Family> GetFamilyById(int id)
         {
-
+            return await _dBContext.Families.Where(s => s.FamilyId == id).FirstOrDefaultAsync();
         }
     }
 }
