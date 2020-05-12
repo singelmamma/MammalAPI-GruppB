@@ -25,6 +25,5 @@ namespace MammalAPI.Controllers
         {
             return Ok(await _habitatRepository.GetHabitatByName(habitatName));
         }
-
     }
 }
