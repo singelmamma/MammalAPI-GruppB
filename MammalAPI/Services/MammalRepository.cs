@@ -65,5 +65,12 @@ namespace MammalAPI.Services
 
             return await query.ToListAsync();
         }
+
+        public async Task<Mammal> GetMammalByLifeSpan(int lifespan)
+        {
+            return await _dBContext.Mammals
+                .FirstOrDefaultAsync(m => m.Lifespan == lifespan);
+        }
+
     }
 }
