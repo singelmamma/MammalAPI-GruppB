@@ -1,5 +1,7 @@
-﻿using MammalAPI.Services;
+﻿using MammalAPI.DTO;
+using MammalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MammalAPI.Controllers
@@ -31,6 +33,12 @@ namespace MammalAPI.Controllers
         public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
         {
             return Ok(await _repository.GetMammalsByHabitat(habitatName));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMammalsByHabitatId([FromQuery] int habitatId)
+        {
+            return Ok(await _repository.GetMammalsByHabitatId(habitatId));
         }
 
         [HttpGet("lifespan/{lifespan}")]
