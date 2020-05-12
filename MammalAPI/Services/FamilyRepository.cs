@@ -18,7 +18,7 @@ namespace MammalAPI.Services
 
         public async Task<Family> GetFamilyByName(string name)
         {
-            
+            return await _dBContext.Families.Where(s => s.Name == name).FirstOrDefaultAsync();
         }
 
         public async Task<Family> GetFamilyBy(int id)
