@@ -7,5 +7,6 @@ namespace MammalAPI.Services
     public interface IMammalRepository
     {
         Task<List<Mammal>> GetAllMammals();
+        Task<Mammal> GetMammalById(int id);
     }
 }
