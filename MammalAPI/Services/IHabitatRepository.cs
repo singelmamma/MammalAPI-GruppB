@@ -8,6 +8,6 @@ namespace MammalAPI.Services
     {
         Task<List<Habitat>> GetAllHabitats();
 
-        Task<Habitat> GetHabitatNameById(int id);
+        Task<Habitat> GetHabitatById(int id);
     }
 }
