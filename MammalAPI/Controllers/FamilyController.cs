@@ -18,17 +18,17 @@ namespace MammalAPI.Controllers
             _familyRepository = familyRepository;
         }
 
-        [HttpGet("MammalsByFamilyName={name}")]
-        public async Task<IActionResult> ByFamilyName()
+        [HttpGet("FamilyByName={name}")]
+        public async Task<IActionResult> GetFamilyByName(string name)
         {
-            var results = await _familyRepository.GetMammalsByFamilyName(string name);
+            var results = await _familyRepository.GetFamilyByName(name);
             return Ok(results);
         }
 
-        [HttpGet("MammalsByFamilyId={id}")] 
-        public async Task<IActionResult> ByFamilyId()
+        [HttpGet("FamilyById={id}")] 
+        public async Task<IActionResult> GetFamilyById(int id)
         {
-            var results = await _familyRepository.GetMammalsByFamilyId(int id);
+            var results = await _familyRepository.GetFamilyById(id);
             return Ok(results);
         }
     }
