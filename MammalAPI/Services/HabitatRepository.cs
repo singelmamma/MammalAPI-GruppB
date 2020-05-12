@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MammalAPI.Context;
+using MammalAPI.DTO;
 using MammalAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace MammalAPI.Services
 {
@@ -18,6 +19,19 @@ namespace MammalAPI.Services
         public async Task<List<Habitat>> GetAllHabitats()
         {
             return await _dBContext.Habitats.ToListAsync();
+        }
+
+        public async Task<IdNameDTO> GetHabitatByName(string name)
+        {
+            var query = _dBContext.Habitats
+                            .Where(h => h.Name == name)
+                            .Select(s => new IdNameDTO
+                            {
+                                Name = s.Name,
+                                Id = s.HabitatID
+                            });
+            
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<Habitat> GetHabitatById(int id)
