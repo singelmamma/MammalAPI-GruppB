@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MammalAPI.Models;
 
 namespace MammalAPI.DTO
 {
@@ -11,9 +12,7 @@ namespace MammalAPI.DTO
         public double Weight { get; set; }
         public string LatinName { get; set; }
         public int Lifespan { get; set; }
-
-        // Unsure what we really want below...need to check with team if the corect type is being used here by me.
-        public List<int> HabitatNames { get; set; }
-        public List<int> FamilyNames { get; set; }
+        public List<Habitat> Habitats { get; set; }
+        public Family Family { get; set; }
     }
 }
