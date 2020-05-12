@@ -10,7 +10,7 @@ namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class HabitatsController : ControllerBase
+    public class HabitatController : ControllerBase
     {
 
         private readonly IHabitatRepository _habitatRepository;
