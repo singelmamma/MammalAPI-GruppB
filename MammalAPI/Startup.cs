@@ -18,8 +18,9 @@ namespace MammalAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IMammalRepository, MammalRepository>();
             services.AddDbContext<DBContext>();
+            services.AddScoped<IMammalRepository, MammalRepository>();
+            services.AddScoped<IHabitatRepository, HabitatRepository>();
             // services.AddTransient<DBContextData>();
             services.AddMvc(options => options.EnableEndpointRouting=false).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
         }
