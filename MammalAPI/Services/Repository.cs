@@ -17,7 +17,8 @@ namespace MammalAPI.Services
 
         public void Add<T>(T entity) where T : class
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation($"Adding object of type {entity.GetType()}");
+            _dBContext.Add(entity);
         }
 
         public void Delete<T>(T entity) where T : class
