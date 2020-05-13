@@ -17,12 +17,14 @@ namespace MammalAPI.Services
 
         public void Add<T>(T entity) where T : class
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation($"Adding object of type {entity.GetType()}");
+            _dBContext.Add(entity);
         }
 
         public void Delete<T>(T entity) where T : class
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation($"Deleting object of type { entity.GetType()}");
+            _dBContext.Remove(entity);
         }
 
         public Task<bool> Save()
@@ -32,7 +34,8 @@ namespace MammalAPI.Services
 
         public void Update<T>(T entity) where T : class
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation($"Updating object of type {entity.GetType()}");
+            _dBContext.Update(entity);
         }
     }
 }

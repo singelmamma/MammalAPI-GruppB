@@ -5,28 +5,29 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using MammalAPI.DTO;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
+
+
+
 
 
 namespace MammalAPI.Services
 {
-    class FamilyRepository : IFamilyRepository
+    class FamilyRepository : Repository, IFamilyRepository
     {
-        private readonly DBContext _dBContext;
-
-        public FamilyRepository(DBContext dBContext)
-        {
-            _dBContext = dBContext;
-        }
+        public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
+        { }
 
         public async Task<Family> GetFamilyByName(string name)
         {
-            return await _dBContext.Families.FirstOrDefaultAsync(s => s.Name == name);
+            _logger.LogInformation($"Getting mammal family by { name }.");
+            return await _dBContext.Families.Where(s => s.Name == name).FirstOrDefaultAsync();
         }
 
         public async Task<Family> GetFamilyById(int id)
         {
-            return await _dBContext.Families.FirstOrDefaultAsync(s => s.FamilyId == id);
+            _logger.LogInformation($"Getting mammal family by { id }.");
+            return await _dBContext.Families.Where(s => s.FamilyId == id).FirstOrDefaultAsync();
         }
     }
 }
