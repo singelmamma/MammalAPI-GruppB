@@ -38,9 +38,9 @@ namespace MammalAPI.Services
                 {
                     Id = x.FamilyId,
                     Name = x.Name
-                }).ToListAsync();
+                });
 
-            return await query;
+            return await query.ToListAsync();
 
         }
     }
