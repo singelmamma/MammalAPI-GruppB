@@ -23,7 +23,8 @@ namespace MammalAPI.Services
 
         public void Delete<T>(T entity) where T : class
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation($"Deleting object of type { entity.GetType()}");
+            _dBContext.Remove(entity);
         }
 
         public Task<bool> Save()
