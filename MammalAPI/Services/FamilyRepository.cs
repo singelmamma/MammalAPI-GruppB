@@ -24,10 +24,17 @@ namespace MammalAPI.Services
             return await _dBContext.Families.Where(s => s.Name == name).FirstOrDefaultAsync();
         }
 
-        public async Task<Family> GetFamilyById(int id)
+        public async Task<IdNameDTO> GetFamilyById(int id)
         {
             _logger.LogInformation($"Getting mammal family by { id }.");
-            return await _dBContext.Families.Where(s => s.FamilyId == id).FirstOrDefaultAsync();
+            var query = _dBContext.Families.Where(s => s.FamilyId == id)
+                .Select(s => new IdNameDTO
+                {
+                    Id = s.FamilyId,
+                    Name = s.Name
+                });
+
+            return await query.FirstOrDefaultAsync();              
         }
 
         public async Task<List<IdNameDTO>> GetAllFamilies()
