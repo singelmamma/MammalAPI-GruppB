@@ -72,15 +72,39 @@ namespace MammalAPI.Services
                 .FirstOrDefaultAsync(m => m.Lifespan == lifespan);
         }
 
-        public async Task<List<IdNameDTO>> GetMammalsByFamily(string name)
+        public async Task<List<IdNameDTO>> GetMammalsByFamily(string familyName)
         {
-            var familyId = _dBContext.Families
-                .Where(fam => fam.Name == name)
-                .Select(fam => fam.FamilyId)
-                .FirstOrDefault();
+            //var query = _dBContext.MammalHabitats
+            //    .Include(mh => mh.Mammal)
+            //    .AsNoTracking()
+            //    .Where(x => x.HabitatId == id)
+            //    .Select(x => new IdNameDTO
+            //    {
+            //        Id = x.MammalId,
+            //        Name = x.Mammal.Name
+            //    });
+
+            //var query = _dBContext.Mammals
+            //    .Include(m => m.Family)
+            //    .AsNoTracking()
+            //    .Where(m => m.Family.Name == name)
+            //    .Select(x => new IdNameDTO
+            //    {
+            //        Id = x.MammalId,
+            //        Name = x.Name
+            //    });
+
+
+            var families = _dBContext.Families.ToList();
+            var familyID = families.Where(f => f.Name == familyName).FirstOrDefault();
+
+            //var familyId = _dBContext.Families
+            //    .Where(fam => fam.Name == name)
+            //    .Select(fam => fam.FamilyId)
+            //    .FirstOrDefault();
 
             var query = _dBContext.Mammals
-                .Where( m => m.Family.FamilyId == familyId)
+                .Where(m => m.Family.FamilyId == 1)
                 .Select(m => new IdNameDTO
                 {
                     Id = m.MammalId,
