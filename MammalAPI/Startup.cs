@@ -21,6 +21,7 @@ namespace MammalAPI
             services.AddDbContext<DBContext>();
             services.AddScoped<IMammalRepository, MammalRepository>();
             services.AddScoped<IHabitatRepository, HabitatRepository>();
+            services.AddScoped<IFamilyRepository, FamilyRepository>();
             // services.AddTransient<DBContextData>();
             services.AddMvc(options => options.EnableEndpointRouting=false).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
         }

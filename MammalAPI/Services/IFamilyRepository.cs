@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MammalAPI.DTO;
 using MammalAPI.Models;
 
 namespace MammalAPI.Services
