@@ -47,7 +47,7 @@ namespace MammalAPI.Controllers
             return Ok(await _repository.GetMammalByLifeSpan(lifespan));
         }
 
-        [HttpGet("byfamilyname/{name}")]
+        [HttpGet("byfamilyname/{familyName}")]
         public async Task<IActionResult> GetMammalsByFamilyName(string familyName)
         {
             return Ok(await _repository.GetMammalsByFamily(familyName));
