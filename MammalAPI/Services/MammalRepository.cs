@@ -32,7 +32,7 @@ namespace MammalAPI.Services
 
         public async Task<List<IdNameDTO>> GetMammalsByHabitat(string habitatName)
         {
-            _logger.LogInformation($"Getting mammals in habitiat: {habitatName}");
+            _logger.LogInformation($"Getting mammals in habitat by name: {habitatName}");
 
             var query = _dBContext.MammalHabitats
                 .Join(_dBContext.Habitats
@@ -55,7 +55,7 @@ namespace MammalAPI.Services
 
         public async Task<List<IdNameDTO>> GetMammalsByHabitatId(int id)
         {
-            _logger.LogInformation($"Getting mammals in habitiat: {id}");
+            _logger.LogInformation($"Getting mammals in habitat by id: {id}");
 
             var query = _dBContext.MammalHabitats
                 .Include(mh => mh.Mammal)
