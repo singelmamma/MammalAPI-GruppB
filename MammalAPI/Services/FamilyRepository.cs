@@ -41,7 +41,6 @@ namespace MammalAPI.Services
                 });
 
             return await query.ToListAsync();
-
         }
     }
 }
