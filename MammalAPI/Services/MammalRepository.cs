@@ -6,32 +6,34 @@ using System.Collections.Generic;
 using System.Linq;
 using MammalAPI.DTO;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
 
 namespace MammalAPI.Services
 {
-    public class MammalRepository : IMammalRepository
+    public class MammalRepository : Repository, IMammalRepository
     {
-        private readonly DBContext _dBContext;
-
-        public MammalRepository(DBContext dBContext)
-        {
-            _dBContext = dBContext;
-        }
+        public MammalRepository(DBContext DBContext, ILogger<MammalRepository> logger): base(DBContext, logger)
+        {}
 
         public async Task<List<Mammal>> GetAllMammals()
         {
+            _logger.LogInformation($"Getting all mammals");
 
             return await _dBContext.Mammals.ToListAsync();
         }
 
         public async Task<Mammal> GetMammalById(int id)
         {
+            _logger.LogInformation($"Getting mammal with {id}");
+
             return await _dBContext.Mammals
                 .FirstOrDefaultAsync(m => m.MammalId == id);
         }
 
         public async Task<List<IdNameDTO>> GetMammalsByHabitat(string habitatName)
         {
+            _logger.LogInformation($"Getting mammals in habitiat: {habitatName}");
+
             var query = _dBContext.MammalHabitats
                 .Join(_dBContext.Habitats
                 .Where(h => h.Name == habitatName),
@@ -53,6 +55,8 @@ namespace MammalAPI.Services
 
         public async Task<List<IdNameDTO>> GetMammalsByHabitatId(int id)
         {
+            _logger.LogInformation($"Getting mammals in habitiat: {id}");
+
             var query = _dBContext.MammalHabitats
                 .Include(mh => mh.Mammal)
                 .AsNoTracking()
@@ -68,6 +72,8 @@ namespace MammalAPI.Services
 
         public async Task<Mammal> GetMammalByLifeSpan(int lifespan)
         {
+            _logger.LogInformation($"Getting mammals by lifespan: {lifespan}");
+
             return await _dBContext.Mammals
                 .FirstOrDefaultAsync(m => m.Lifespan == lifespan);
         }
