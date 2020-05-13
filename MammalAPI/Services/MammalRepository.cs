@@ -80,7 +80,7 @@ namespace MammalAPI.Services
                 .FirstOrDefault();
 
             var query = _dBContext.Mammals
-                .Where(m => m.Family.FamilyId == familyId)
+                .Where( m => m.Family.FamilyId == familyId)
                 .Select(m => new IdNameDTO
                 {
                     Id = m.MammalId,
