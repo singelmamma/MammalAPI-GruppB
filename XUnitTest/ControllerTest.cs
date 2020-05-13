@@ -40,6 +40,20 @@ namespace XUnitTest
                         viewResult.ViewData.Model);
             Assert.Equal(2, model.Count());
         }
+
+        [Fact]
+        public async Task MammalControllerReturnsCorrectMammalGivenId()
+        {
+            // Arrange
+            var mockRepo = new Mock<IMammalRepository>();
+            var controller = new MammalController(mockRepo.Object);
+
+            // Act
+            var result = await controller.GetMammalById(1);
+
+            // Assert
+            Assert.NotEmpty(result.ToString());
+        }
         
         private List<Mammal> GetTestSessions()
         {
