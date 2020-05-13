@@ -1,8 +1,7 @@
-﻿using MammalAPI.Services;
+﻿using MammalAPI.DTO;
+using MammalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MammalAPI.Controllers
@@ -18,18 +17,16 @@ namespace MammalAPI.Controllers
             _familyRepository = familyRepository;
         }
 
-        [HttpGet("FamilyByName={name}")]
+        [HttpGet("familybyname/{name}")]
         public async Task<IActionResult> GetFamilyByName(string name)
         {
-            var results = await _familyRepository.GetFamilyByName(name);
-            return Ok(results);
+            return Ok(await _familyRepository.GetFamilyByName(name));
         }
 
-        [HttpGet("FamilyById={id}")] 
+        [HttpGet("familybyid/{id}")] 
         public async Task<IActionResult> GetFamilyById(int id)
         {
-            var results = await _familyRepository.GetFamilyById(id);
-            return Ok(results);
+            return Ok(await _familyRepository.GetFamilyById(id));
         }
     }
 }
