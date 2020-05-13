@@ -32,7 +32,8 @@ namespace MammalAPI.Services
 
         public void Update<T>(T entity) where T : class
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation($"Updating object of type {entity.GetType()}");
+            _dBContext.Update(entity);
         }
     }
 }
