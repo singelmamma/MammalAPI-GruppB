@@ -96,7 +96,7 @@ namespace MammalAPI.Services
 
 
             var families = _dBContext.Families.ToList();
-            var familyID = families.Where(f => f.Name == familyName).FirstOrDefault();
+            var familyID = families.Where(f => f.Name == familyName).Select(f=> f.FamilyId).FirstOrDefault();
 
             //var familyId = _dBContext.Families
             //    .Where(fam => fam.Name == name)
@@ -104,7 +104,7 @@ namespace MammalAPI.Services
             //    .FirstOrDefault();
 
             var query = _dBContext.Mammals
-                .Where(m => m.Family.FamilyId == 1)
+                .Where(m => m.Family.FamilyId == familyID)
                 .Select(m => new IdNameDTO
                 {
                     Id = m.MammalId,
