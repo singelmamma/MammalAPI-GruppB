@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MammalAPI.Context;
+﻿using System.Threading.Tasks;
 using MammalAPI.Models;
+using MammalAPI.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using MammalAPI.DTO;
 using Microsoft.Extensions.Logging;
+
+
+
+
 
 namespace MammalAPI.Services
 {
@@ -16,13 +20,13 @@ namespace MammalAPI.Services
 
         public async Task<Family> GetFamilyByName(string name)
         {
-            _logger.LogInformation($"Getting mammal family by {name}.");
+            _logger.LogInformation($"Getting mammal family by { name }.");
             return await _dBContext.Families.Where(s => s.Name == name).FirstOrDefaultAsync();
         }
 
         public async Task<Family> GetFamilyById(int id)
         {
-            _logger.LogInformation($"Getting mammal family by {id}.");
+            _logger.LogInformation($"Getting mammal family by { id }.");
             return await _dBContext.Families.Where(s => s.FamilyId == id).FirstOrDefaultAsync();
         }
     }
