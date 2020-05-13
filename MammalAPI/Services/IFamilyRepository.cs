@@ -9,6 +9,6 @@ namespace MammalAPI.Services
     {
         Task<Family> GetFamilyByName(string name);
         Task<Family> GetFamilyById(int id);
-
+        Task<List<IdNameDTO>> GetAllFamilies();
     }
 }
