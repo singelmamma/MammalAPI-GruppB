@@ -6,6 +6,9 @@ namespace MammalAPI.Models
     {
         [Key]
         public int FamilyId { get; set; }
+
+        [Required]
+        [MaxLength]
         public string Name { get; set; }
     }
 }
