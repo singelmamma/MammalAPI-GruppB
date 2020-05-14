@@ -6,11 +6,14 @@ namespace MammalAPI.Context
 {
     public class DBContext: DbContext
     {
-        public DbSet<Family> Families { get; set; }
-        public DbSet<Habitat> Habitats { get; set; }
-        public DbSet<Mammal> Mammals { get; set; }
-        public DbSet<MammalHabitat> MammalHabitats { get; set; }
+        public virtual DbSet<Family> Families { get; set; }
+        public virtual DbSet<Habitat> Habitats { get; set; }
+        public virtual DbSet<Mammal> Mammals { get; set; }
+        public virtual DbSet<MammalHabitat> MammalHabitats { get; set; }
 
+        public DBContext()
+        {}
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsbuilder)
         {
             var config = new ConfigurationBuilder()

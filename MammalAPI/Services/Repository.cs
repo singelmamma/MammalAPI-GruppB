@@ -27,9 +27,10 @@ namespace MammalAPI.Services
             _dBContext.Remove(entity);
         }
 
-        public Task<bool> Save()
+        public async Task<bool> Save()
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation($"Saving Changes");
+            return (await _dBContext.SaveChangesAsync()) >= 0;
         }
 
         public void Update<T>(T entity) where T : class

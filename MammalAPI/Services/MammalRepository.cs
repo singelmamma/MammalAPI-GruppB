@@ -80,6 +80,8 @@ namespace MammalAPI.Services
 
         public async Task<List<IdNameDTO>> GetMammalsByFamily(string familyName)
         {
+            _logger.LogInformation($"Getting mammals by familyname {familyName}");
+
             var query = _dBContext.Mammals
                 .Include(m => m.Family)
                 .AsNoTracking()
@@ -95,6 +97,8 @@ namespace MammalAPI.Services
 
         public async Task<List<IdNameDTO>> GetMammalsByFamilyId(int id)
         {
+            _logger.LogInformation($"Getting mammals by familyid {id}");
+
             var query = _dBContext.Mammals
                 .Where(m => m.Family.FamilyId == id)
                 .Select(m => new IdNameDTO
