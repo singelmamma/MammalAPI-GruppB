@@ -1,4 +1,5 @@
 ﻿using MammalAPI.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -23,19 +24,40 @@ namespace MammalAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHabitatByName([FromQuery]string habitatName)
         {
-            return Ok(await _habitatRepository.GetHabitatByName(habitatName));
+            try
+            {
+                return Ok(await _habitatRepository.GetHabitatByName(habitatName));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
         
         [HttpGet("{id}")]
         public async Task<IActionResult> GetHabitatById(int id)
         {
-            return Ok(await _habitatRepository.GetHabitatById(id));
+            try
+            {
+                return Ok(await _habitatRepository.GetHabitatById(id));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllHabitats()
         {
-            return Ok(await _habitatRepository.GetAllHabitats());
+            try
+            {
+                return Ok(await _habitatRepository.GetAllHabitats());
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
     }
