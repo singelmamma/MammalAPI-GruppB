@@ -85,12 +85,20 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<Mammal> GetMammalByLifeSpan(int lifespan)
+        public async Task<List<IdNameDTO>> GetMammalsByLifeSpan(int fromLifespanYear, int toLifespanYear)
         {
-            _logger.LogInformation($"Getting mammals by lifespan: {lifespan}");
+            _logger.LogInformation($"Getting mammals by lifespan: {fromLifespanYear}-{toLifespanYear}");
+            var query = _dBContext.Mammals
+                .Where(x => x.Lifespan >= fromLifespanYear && x.Lifespan <= toLifespanYear)
+                .Select(x => new IdNameDTO
+                {
+                    Id = x.MammalId,
+                    Name = x.Name
+                });
 
-            return await _dBContext.Mammals
-                .FirstOrDefaultAsync(m => m.Lifespan == lifespan);
+
+
+            return await query.ToListAsync(); 
         }
 
         public async Task<List<IdNameDTO>> GetMammalsByFamily(string familyName)
