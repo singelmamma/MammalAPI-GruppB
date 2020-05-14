@@ -5,9 +5,12 @@ http://serveradress.com/api/v1.0
 ## ENDPOINTS - Mammal
 
 
+
 **/mammal/getall				GET**
 
 Returns generic info about all mammals
+
+
 
 ```javascript
 [
@@ -29,9 +32,12 @@ Returns generic info about all mammals
 ```
 
 
+
 **/mammal/<id>				GET**
 
 Returns generic info about one specific mammal
+
+
 
 ```javascript
 {
@@ -47,6 +53,7 @@ Returns generic info about one specific mammal
 ```
 
 
+
 **/mammal/habitat/habitat<habitatName>		GET**
 
 Returns all the mammals in a given habitat by habitat name
@@ -54,6 +61,8 @@ Returns all the mammals in a given habitat by habitat name
 **/mammal/?habitatId=<habitatID>			GET**
 
 Returns all animals in a given habitat by habitat ID
+
+
 
 ```javascript
 [
@@ -73,10 +82,13 @@ Returns all animals in a given habitat by habitat ID
 ```
 
 
+
 **/mammal/lifespan/<lifespan>
 
 Returns all mammals by a given lifespan
 
+
+
 ```javascript
 [
 	{
@@ -89,12 +101,18 @@ Returns all mammals by a given lifespan
 	}
 ]
 ```
+
 
 
 **/mammal/byfamilyname/<familyName>			GET**
+	
+Returns all mammals in a given family by name
+	
 **/mammal/byfamilyid/<familyId>				GET**
 
-Returns all mammals in a given family
+Returns all mammals in a given family by id
+
+
 
 ```javascript
 [
@@ -108,15 +126,22 @@ Returns all mammals in a given family
 	}
 ]
 ```
+
 
 
 ## ENDPOINTS - Family
 
 
+
 **/family/byname/<familyname>			GET**
+	
+Returns FamilyId and FamilyName by name
+
 **/family/byid/<familyid>			GET**
 
-Returns FamilyId and FamilyName
+Returns FamilyId and FamilyName by Id
+
+
 
 ```javascript
 {
@@ -126,9 +151,12 @@ Returns FamilyId and FamilyName
 ```
 
 
+
 **/family/all					GET**
 
 Returns all families
+
+
 
 ```javascript
 [
@@ -144,14 +172,20 @@ Returns all families
 ```
 
 
+
 ## ENDPOINTS - Habitat
 
 
 
-**/habitat/?habitatName=<habitatName>		GET**
+**/habitat/?habitatName=<habitatName>		GET**	
+	
+Returns the habitat info by name
+
 **/habitat/<id>					GET**
 	
-Returns the habitat info
+Returns the habitat info by id
+
+
 
 ```javascript
 {
@@ -161,9 +195,12 @@ Returns the habitat info
 ```
 
 
+
 **/habitat/all					GET**
 
 Returns all Habitats
+
+
 
 ```javascript
 [
