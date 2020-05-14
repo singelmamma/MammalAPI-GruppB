@@ -10,17 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 using MammalAPI.Context;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Threading.Tasks;
-using System.Net.Http;
-using Microsoft.EntityFrameworkCore;
 using Moq.EntityFrameworkCore;
 
 namespace XUnitTest
 {
-    public class ControllerTest
+    public class HabitatRepositoryTest
     {
         [Fact]
-        public void GetHabitatByName_FourDifferentHabitats_Id2()
+        public void GetHabitatByName_FourDifferentHabitats_NameIsEast()
         {
             // Arrange
             var habitatName = "East";
@@ -38,24 +35,6 @@ namespace XUnitTest
             Assert.Equal(habitatName, testResult.Result.Name);
         }
 
-        public async Task Test1()
-        {
-            // Arrange
-            var mockRepo = new Mock<IMammalRepository>();
-            mockRepo.Setup(repo => repo.GetAllMammals())
-                    .ReturnsAsync(GetTestSessions());
-            var controller = new MammalController(mockRepo.Object);
-
-            // Act
-            var result = await controller.Get();
-
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IList<Mammal>>(
-                        viewResult.ViewData.Model);
-            Assert.Equal(2, model.Count());
-        }
-        
         private List<Mammal> GetTestSessions()
         {
             var sessions = new List<Mammal>();
