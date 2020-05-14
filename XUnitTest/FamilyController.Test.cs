@@ -18,6 +18,8 @@ namespace XUnitTest
 {
     public class FamilyControllerTest
     {
+        /*https://docs.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/unit-testing-controllers-in-web-api#testing-actions-that-return-httpresponsemessage*/
+
         [Fact]
         public void GetReturnsFamilyById_ExpectCorrectReturn()
         {
@@ -32,8 +34,6 @@ namespace XUnitTest
 
             //Act
             var testResult = controller.GetFamilyById(1);
-            
-            //var contentResult = result as OkNegotiatedContentResult<IdNameDTO>;
 
             //Assert
             Assert.NotNull(testResult);
