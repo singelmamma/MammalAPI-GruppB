@@ -32,12 +32,13 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetMammalById(int id)
         {
             try
             {
-                return Ok(await _repository.GetMammalById(id));
+                var result = await _repository.GetMammalById(id);
+                return Ok(result);
             }
             catch (Exception e)
             {

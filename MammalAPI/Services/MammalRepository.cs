@@ -7,6 +7,7 @@ using System.Linq;
 using MammalAPI.DTO;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace MammalAPI.Services
 {
@@ -25,9 +26,17 @@ namespace MammalAPI.Services
         public async Task<Mammal> GetMammalById(int id)
         {
             _logger.LogInformation($"Getting mammal with {id}");
-
-            return await _dBContext.Mammals
-                .FirstOrDefaultAsync(m => m.MammalId == id);
+                var result = await _dBContext.Mammals
+                    .FirstOrDefaultAsync(m => m.MammalId == id);
+            
+            if (result.MammalId != id)
+            {
+                throw new System.Exception(StatusCodes.Status400BadRequest.ToString());
+            }
+            else
+            {
+                return result;
+            }
         }
 
         public async Task<List<IdNameDTO>> GetMammalsByHabitat(string habitatName)
