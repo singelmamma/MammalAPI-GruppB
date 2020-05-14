@@ -25,7 +25,7 @@ namespace XUnitTest
             var logger = Mock.Of<ILogger<FamilyRepository>>();
             var familyRepository = new FamilyRepository(contextMock.Object, logger);
             var name = "Test Family One";
-            var result = GetTestFamilies()[0];
+            var actual = GetTestFamilies()[0];
 
 
             // Act
@@ -33,12 +33,13 @@ namespace XUnitTest
 
             // Assert
             Assert.NotNull(expected.Result);
-            Assert.Equal(result.Name, expected.Result.Name);
+            Assert.Equal(expected.Result.Name, actual.Name);
+
         }
 
 
         [Fact]
-        public void GetFamilyById()
+        public void GetFamilyById_ExpectedNotNull_EqualsActual()
         {
             // Arrange
             var contextMock = new Mock<DBContext>();
@@ -47,7 +48,7 @@ namespace XUnitTest
             var familyRepository = new FamilyRepository(contextMock.Object, logger);
             var id = 2;
 
-            var result = GetTestFamilies()[1];
+            var actual = GetTestFamilies()[1];
 
 
             // Act
@@ -55,13 +56,24 @@ namespace XUnitTest
 
             // Assert
             Assert.NotNull(expected.Result);
-            Assert.Equal(result.Name, expected.Result.Name);
+            Assert.Equal(expected.Result.Name, actual.Name);
         }
 
-        //public void GetAllFamilies()
-        //{
+        public void GetAllFamilies_ExpectedNotNullOrEmpty()
+        {
+            // Arrange
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(f => f.Families).ReturnsDbSet(GetTestFamilies());
+            var logger = Mock.Of<ILogger<FamilyRepository>>();
+            var familyRepository = new FamilyRepository(contextMock.Object, logger);
 
-        //}
+            // Act
+            var expected = familyRepository.GetAllFamilies();
+
+            // Assert
+            Assert.NotNull(expected.Result);
+            Assert.NotEmpty(expected.Result);
+        }
 
         private List<Family> GetTestFamilies()
         {
