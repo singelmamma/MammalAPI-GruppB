@@ -59,6 +59,7 @@ namespace XUnitTest
             Assert.Equal(expected.Result.Name, actual.Name);
         }
 
+        [Fact]
         public void GetAllFamilies_ExpectedNotNullOrEmpty()
         {
             // Arrange
