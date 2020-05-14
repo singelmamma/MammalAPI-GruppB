@@ -46,6 +46,7 @@ namespace MammalAPI.Services
                             .FirstOrDefaultAsync();
             
             if (query == null) throw new System.Exception($"Not found {name}");
+            
             return  query;
         }
 

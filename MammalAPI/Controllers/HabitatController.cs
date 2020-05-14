@@ -28,9 +28,13 @@ namespace MammalAPI.Controllers
             {
                 return Ok(await _habitatRepository.GetHabitatByName(habitatName));
             }
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
             catch (Exception e)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: {e.Message}");
             }
         }
         
