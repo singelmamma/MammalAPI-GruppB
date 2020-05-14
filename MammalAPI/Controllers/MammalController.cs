@@ -1,6 +1,8 @@
 ﻿using MammalAPI.DTO;
 using MammalAPI.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,43 +22,92 @@ namespace MammalAPI.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _repository.GetAllMammals());
+            try
+            {
+                return Ok(await _repository.GetAllMammals());
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database failure: { e.Message }");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMammalById(int id)
         {
-            return Ok(await _repository.GetMammalById(id));
+            try
+            {
+                return Ok(await _repository.GetMammalById(id));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
+            }
         }
 
         [HttpGet("habitat/{habitatName}")]
         public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
         {
-            return Ok(await _repository.GetMammalsByHabitat(habitatName));
+            try
+            {
+                return Ok(await _repository.GetMammalsByHabitat(habitatName));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: { e.Message }");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetMammalsByHabitatId([FromQuery] int habitatId)
         {
-            return Ok(await _repository.GetMammalsByHabitatId(habitatId));
+            try
+            {
+                return Ok(await _repository.GetMammalsByHabitatId(habitatId));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
+            }
         }
 
         [HttpGet("lifespan/{lifespan}")]
         public async Task<IActionResult> GetMammalByLifeSpan(int lifespan)
         {
-            return Ok(await _repository.GetMammalByLifeSpan(lifespan));
+            try
+            {
+                return Ok(await _repository.GetMammalByLifeSpan(lifespan));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
+            }
         }
 
         [HttpGet("byfamilyname/{familyName}")]
         public async Task<IActionResult> GetMammalsByFamilyName(string familyName)
         {
-            return Ok(await _repository.GetMammalsByFamily(familyName));
+            try
+            {
+                return Ok(await _repository.GetMammalsByFamily(familyName));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: { e.Message }");
+            }
         }
 
         [HttpGet("byfamilyid/{id}")]
         public async Task<IActionResult> GetMammalsByFamilyId(int id)
         {
-            return Ok(await _repository.GetMammalsByFamilyId(id));
+            try
+            {
+                return Ok(await _repository.GetMammalsByFamilyId(id));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
+            }
         }
     }
 }
