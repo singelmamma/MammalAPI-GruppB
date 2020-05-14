@@ -8,7 +8,7 @@ namespace MammalAPI.Models
         public int FamilyId { get; set; }
 
         [Required]
-        [MaxLength]
+        [MaxLength(50)]
         public string Name { get; set; }
     }
 }
