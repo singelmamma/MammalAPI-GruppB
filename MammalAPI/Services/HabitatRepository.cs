@@ -19,10 +19,17 @@ namespace MammalAPI.Services
             _dBContext = context;
         }
 
-        public async Task<List<Habitat>> GetAllHabitats()
+        public async Task<List<IdNameDTO>> GetAllHabitats()
         {
             _logger.LogInformation("Getting all habitats");
-            return await _dBContext.Habitats.ToListAsync();
+            var query = _dBContext.Habitats
+                .Select(x => new IdNameDTO
+                {
+                    Id = x.HabitatID,
+                    Name = x.Name
+                });
+
+            return await query.ToListAsync();
         }
 
         public async Task<IdNameDTO> GetHabitatByName(string name)
