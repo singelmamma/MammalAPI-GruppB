@@ -15,11 +15,21 @@ namespace MammalAPI.Services
         public MammalRepository(DBContext DBContext, ILogger<MammalRepository> logger): base(DBContext, logger)
         {}
 
-        public async Task<List<Mammal>> GetAllMammals()
+        public async Task<List<MammalsDTO>> GetAllMammals()
         {
             _logger.LogInformation($"Getting all mammals");
 
-            return await _dBContext.Mammals.ToListAsync();
+            var query = _dBContext.Mammals
+                .Select(m => new MammalsDTO
+                {
+                    MammalId = m.MammalId,
+                    Name = m.Name,
+                    LatinName = m.LatinName,
+                    Length = m.Length,
+                    Weight = m.Weight
+                });
+
+            return await query.ToListAsync();
         }
 
         public async Task<Mammal> GetMammalById(int id)
