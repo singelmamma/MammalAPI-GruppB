@@ -35,24 +35,6 @@ namespace XUnitTest
             Assert.Equal(habitatName, testResult.Result.Name);
         }
 
-        private List<Mammal> GetTestSessions()
-        {
-            var sessions = new List<Mammal>();
-            sessions.Add(new Mammal()
-            {
-                MammalId = 1,
-                Name = "Test Mammal One",
-                LatinName = "Bapa latin apa"
-            });
-            sessions.Add(new Mammal()
-            {
-                MammalId = 2,
-                Name = "Test Mammal Two",
-                LatinName = "Latin kanske med"
-            });
-            return sessions;
-        }
-
         private IList<Habitat> GetMoqHabitats()
         {
             var habitats = new List<Habitat>();
