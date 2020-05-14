@@ -40,7 +40,7 @@ namespace MammalAPI.Services
                 var result = await _dBContext.Mammals
                     .FirstOrDefaultAsync(m => m.MammalId == id);
 
-            if (result == null) throw new Exception($"Something went wrong { id }");
+            if (result == null) throw new Exception($"Not found: { id }");
 
             return result;
         }
