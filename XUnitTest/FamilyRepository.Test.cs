@@ -17,7 +17,7 @@ namespace XUnitTest
     public class FamilyRepositoryTest
     {
         [Fact]
-        public void GetFamilyByName_TwoTestFamilies_ExpectedNotNull()
+        public void GetFamilyByName_OneTestFamily_ExpectedNotNull()
         {
             // Arrange
             var contextMock = new Mock<DBContext>();
@@ -25,12 +25,8 @@ namespace XUnitTest
             var logger = Mock.Of<ILogger<FamilyRepository>>();
             var familyRepository = new FamilyRepository(contextMock.Object, logger);
             var name = "Test Family One";
+            var result = GetTestFamilies()[0];
 
-            var result = new Family
-            {
-                FamilyId = 1,
-                Name = "Test Family One",
-            };
 
             // Act
             var expected = familyRepository.GetFamilyByName(name);
@@ -40,12 +36,27 @@ namespace XUnitTest
             Assert.Equal(result.Name, expected.Result.Name);
         }
 
-        
 
-        //public void GetFamilyById(int id)
-        //{
+        [Fact]
+        public void GetFamilyById()
+        {
+            // Arrange
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(f => f.Families).ReturnsDbSet(GetTestFamilies());
+            var logger = Mock.Of<ILogger<FamilyRepository>>();
+            var familyRepository = new FamilyRepository(contextMock.Object, logger);
+            var id = 2;
 
-        //}
+            var result = GetTestFamilies()[1];
+
+
+            // Act
+            var expected = familyRepository.GetFamilyById(id);
+
+            // Assert
+            Assert.NotNull(expected.Result);
+            Assert.Equal(result.Name, expected.Result.Name);
+        }
 
         //public void GetAllFamilies()
         //{
