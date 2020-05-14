@@ -14,7 +14,7 @@ using Moq.EntityFrameworkCore;
 
 namespace XUnitTest
 {
-    public class ControllerTest
+    public class FamilyControllerTest
     {
 
     }
