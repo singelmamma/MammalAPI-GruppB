@@ -2,9 +2,10 @@
 
 http://serveradress.com/api/v1.0
 
-## ENDPOINTS
+## ENDPOINTS - Mammal
 
-**/mammals					GET**
+
+**/mammal/getall				GET**
 
 Returns generic info about all mammals
 
@@ -12,15 +13,17 @@ Returns generic info about all mammals
 [
 	{
 		MammalID: 1234,
-		Name: “Blue Whale”
+		Name: “Blue Whale”,
+		LatinName: "Latin Latin",
+		Lenght: 30.2,
+		Weight: 27000
 	},
 	{
 		MammalID: 2345,
-		Name: “Seal”
-	},
-	{
-		MammalID: 3456,
-		Name: “Dugong”
+		Name: “Seal”,
+		LatinName: "Seal in Latin",
+		Lenght: 1.8,
+		Weight: 47.2
 	}
 ]
 ```
@@ -43,44 +46,53 @@ Returns generic info about one specific mammal
 }
 ```
 
-**/mammals-data				GET**
 
-Returns data; mamalsID, name,latin name, length and weight for all mammals
+**/mammal/habitat/habitat<habitatName>		GET**
+
+Returns all the mammals in a given habitat by habitat name
+
+**/mammal/?habitatId=<habitatID>			GET**
+
+Returns all animals in a given habitat by habitat ID
 
 ```javascript
 [
 	{
-		MammalD: 1,
-		Name: “Blue Whale”,
-		LatinName:”Balaenoptera musculus”,
-		Length:40,
-		Weight:3500
+		“MammalID”: 159,
+		“Name”: “Killerwhale”
 	},
 	{
-		MammalD: 2,
-		Name: “Turqoise Whale”,
-		LatinName:”Balaenoptera musculus”,
-		Length:5,
-		Weight:250
+		“MammalID”: 754,
+		“Name”: “Blue Whale”
+	},
+	{
+		“MammalID”: 157,
+		“Name”: “Harbor Seal”
 	}
 ]
 ```
 
-**/mammals-data<id>				GET**
-	
-Returns data; name,latin name, length and weight about one specific mammal
+
+**/mammal/lifespan/<lifespan>
+
+Returns all mammals by a given lifespan
 
 ```javascript
-{
-	MammallD: 1,
-	Name: “Blue Whale”,
-	LatinName:”Balaenoptera musculus”,
-	Length:40,
-	Weight:3500
-}
+[
+	{
+		MammalID: 156,
+		Name: “Blue Whale”
+	},
+	{
+		MammalID: 784,
+		Name: “Crabeater Seal”
+	}
+]
 ```
 
-**/mammals?family=<familyName>			GET**
+
+**/mammal/byfamilyname/<familyName>			GET**
+**/mammal/byfamilyid/<familyId>				GET**
 
 Returns all mammals in a given family
 
@@ -97,92 +109,71 @@ Returns all mammals in a given family
 ]
 ```
 
-**/mammals?family=<habitatID>		GET**
 
-Returns all animals in a given habitat by habitat ID
+## ENDPOINTS - Family
+
+
+**/family/byname/<familyname>			GET**
+**/family/byid/<familyid>			GET**
+
+Returns FamilyId and FamilyName
+
+```javascript
+{
+	id: 1,
+	name: "Mustelidae"
+}
+```
+
+
+**/family/all					GET**
+
+Returns all families
 
 ```javascript
 [
 	{
-		“MammalID”: 159,
-		“Name”: “Killerwhale”
+		id: 1,
+		name: "Phocidae"
 	},
 	{
-		“MammalID”: 754,
-		“Name”: “Blue Whale”
-	},
-	{
-		“MammalID”: 157,
-		“Name”: “Harbor Seal”
+		"id": 2,
+		"name": "Balaenopteridae"
 	}
 ]
 ```
 
-**/mammals?habitat=<habitatName>		GET**
 
-Returns all the mammals in a given habitat by habitat name
+## ENDPOINTS - Habitat
 
-**/mammals?habitat=<habitatID>			GET**
+
+
+**/habitat/?habitatName=<habitatName>		GET**
+**/habitat/<id>					GET**
 	
-Returns all animals in a given habitat by habitat ID
+Returns the habitat info
+
+```javascript
+{
+    "id": 1,
+    "name": "Pacific Ocean"
+}
+```
+
+
+**/habitat/all					GET**
+
+Returns all Habitats
 
 ```javascript
 [
 	{
-		“MammalID”: 159,
-		“Name”: “Killerwhale”
+		id: 1,
+        	"name": "Pacific Ocean"
 	},
 	{
-		“MammalID”: 754,
-		“Name”: “Blue Whale”
-	},
-	{
-		“MammalID”: 157,
-		“Name”: “Harbor Seal”
+		"id": 2,
+		"name": "Atlantic Ocean"
 	}
 ]
-```
-
-**/habitat?name=<name>			GET**
-	
-Returns the ID of a habitat
-
-```javascript
-{
-	ID: 666
-}
-```
-
-**/habitat/<id>				GET**
-	
-Returns the name of a habitat
-
-```javascript
-{
-	Name: “Indian Ocean”
-}
-```
-
-**/family?name=<name>&habitat=<name>	GET**
-	
-Returns mammals living in the specified habitat from a specific family of mammals
-
-```javascript
-{
-	mammals: 
-	[
-		{
-			Name: “Elephant Seal”,
-			ID: 222
-		},
-		{
-			Name: “Antarctic Fur Seal”,
-			ID: 213
-		},
-		{
-			Name: “ Crabeater Seal”,
-			ID: 422
-		}
-	]
-}
 ```
