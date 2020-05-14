@@ -26,6 +26,10 @@ namespace MammalAPI.Controllers
             {
                 return Ok(await _familyRepository.GetFamilyByName(name));
             }
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -40,6 +44,10 @@ namespace MammalAPI.Controllers
                 return Ok(await _familyRepository.GetFamilyById(id));
 
             }
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -53,6 +61,10 @@ namespace MammalAPI.Controllers
             try
             {
                 return Ok(await _familyRepository.GetAllFamilies());
+            }
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
             }
             catch (Exception e)
             {
