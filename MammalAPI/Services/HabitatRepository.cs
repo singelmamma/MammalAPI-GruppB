@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MammalAPI.Context;
 using MammalAPI.DTO;
 using MammalAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -35,15 +36,17 @@ namespace MammalAPI.Services
         public async Task<IdNameDTO> GetHabitatByName(string name)
         {
             _logger.LogInformation($"Getting habitat with name: { name }");
-            var query = _dBContext.Habitats
+            var query = await _dBContext.Habitats
                             .Where(h => h.Name == name)
                             .Select(s => new IdNameDTO
                             {
                                 Name = s.Name,
                                 Id = s.HabitatID
-                            });
-
-            return await query.FirstOrDefaultAsync();
+                            })
+                            .FirstOrDefaultAsync();
+            
+            if (query == null) throw new System.Exception($"Not found {name}");
+            return  query;
         }
 
         public async Task<Habitat> GetHabitatById(int id)
