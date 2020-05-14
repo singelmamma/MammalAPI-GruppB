@@ -28,5 +28,11 @@ namespace MammalAPI.Controllers
         {
             return Ok(await _familyRepository.GetFamilyById(id));
         }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllFamilies()
+        {
+            return Ok(await _familyRepository.GetAllFamilies());
+        }
     }
 }

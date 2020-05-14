@@ -18,16 +18,43 @@ namespace MammalAPI.Services
         public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
         { }
 
-        public async Task<Family> GetFamilyByName(string name)
+        public async Task<IdNameDTO> GetFamilyByName(string name)
         {
             _logger.LogInformation($"Getting mammal family by { name }.");
-            return await _dBContext.Families.Where(s => s.Name == name).FirstOrDefaultAsync();
+            var query = _dBContext.Families.Where(s => s.Name == name)
+                .Select(s => new IdNameDTO
+                {
+                    Id = s.FamilyId,
+                    Name = s.Name
+                });
+
+            return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Family> GetFamilyById(int id)
+        public async Task<IdNameDTO> GetFamilyById(int id)
         {
             _logger.LogInformation($"Getting mammal family by { id }.");
-            return await _dBContext.Families.Where(s => s.FamilyId == id).FirstOrDefaultAsync();
+            var query = _dBContext.Families.Where(s => s.FamilyId == id)
+                .Select(s => new IdNameDTO
+                {
+                    Id = s.FamilyId,
+                    Name = s.Name
+                });
+
+            return await query.FirstOrDefaultAsync();              
+        }
+
+        public async Task<List<IdNameDTO>> GetAllFamilies()
+        {
+            _logger.LogInformation($"Getting all families");
+            var query = _dBContext.Families
+                .Select(x => new IdNameDTO
+                {
+                    Id = x.FamilyId,
+                    Name = x.Name
+                });
+
+            return await query.ToListAsync();
         }
     }
 }
