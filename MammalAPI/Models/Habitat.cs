@@ -8,6 +8,8 @@ namespace MammalAPI.Models
     {
         [Key]
         public int HabitatID { get; set; }
+        
+        [MaxLength(50)]
         public string Name { get; set; }
 
         public IList<MammalHabitat> MammalHabitats { get; set; }
