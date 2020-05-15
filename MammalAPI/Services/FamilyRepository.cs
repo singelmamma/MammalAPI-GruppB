@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MammalAPI.Services
 {
-    class FamilyRepository : Repository, IFamilyRepository
+    public class FamilyRepository : Repository, IFamilyRepository
     {
         public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
         { }
