@@ -83,7 +83,7 @@ Returns all animals in a given habitat by habitat ID
 
 
 
-**/mammal/lifespan/<lifespan>
+**/mammal/lifespan/fromYear=<fromYear>&toYear=<toYear>
 
 Returns all mammals by a given lifespan
 
