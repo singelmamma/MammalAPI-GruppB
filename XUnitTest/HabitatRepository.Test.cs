@@ -49,7 +49,7 @@ namespace XUnitTest
             var expected = habitatRepository.GetHabitatById(1);
 
             // Assert
-            Assert.Equal(1, expected.Result.HabitatID);
+            Assert.Equal(1, expected.Result.Id);
 
         }
 
