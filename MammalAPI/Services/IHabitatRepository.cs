@@ -9,7 +9,7 @@ namespace MammalAPI.Services
     {
         Task<List<IdNameDTO>> GetAllHabitats();
         Task<IdNameDTO> GetHabitatByName(string name);
-        Task<Habitat> GetHabitatById(int id);
+        Task<IdNameDTO> GetHabitatById(int id);
         
     }
 }
