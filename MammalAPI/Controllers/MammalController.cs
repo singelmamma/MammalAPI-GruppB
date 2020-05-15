@@ -72,12 +72,12 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("lifespan/{lifespan}")]
-        public async Task<IActionResult> GetMammalByLifeSpan(int lifespan)
+        [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
+        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear)
         {
             try
             {
-                return Ok(await _repository.GetMammalByLifeSpan(lifespan));
+                return Ok(await _repository.GetMammalsByLifeSpan(fromYear, toYear));
             }
             catch (Exception e)
             {
