@@ -35,6 +35,24 @@ namespace XUnitTest
             Assert.Equal(habitatName, testResult.Result.Name);
         }
 
+        [Fact]
+        public void GetHabitatById_FourTestHabitats_GetIdOne()
+        {
+            // Arrange
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(h => h.Habitats).ReturnsDbSet(GetMoqHabitats());
+            var logger = Mock.Of<ILogger<HabitatRepository>>();
+
+            var habitatRepository = new HabitatRepository(contextMock.Object, logger);
+
+            // Act
+            var expected = habitatRepository.GetHabitatById(1);
+
+            // Assert
+            Assert.Equal(1, expected.Result.HabitatID);
+
+        }
+
         private IList<Habitat> GetMoqHabitats()
         {
             var habitats = new List<Habitat>();
