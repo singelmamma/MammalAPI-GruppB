@@ -94,10 +94,12 @@ Returns all mammals by a given lifespan
 	{
 		MammalID: 156,
 		Name: “Blue Whale”
+        Lifespan: 20
 	},
 	{
 		MammalID: 784,
 		Name: “Crabeater Seal”
+        Lifespan: 30
 	}
 ]
 ```
