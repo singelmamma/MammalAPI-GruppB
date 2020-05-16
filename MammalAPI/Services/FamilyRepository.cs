@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MammalAPI.Services
 {
-    class FamilyRepository : Repository, IFamilyRepository
+    public class FamilyRepository : Repository, IFamilyRepository
     {
         public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
         { }
@@ -28,6 +28,8 @@ namespace MammalAPI.Services
                     Name = s.Name
                 });
 
+            if (query == null) throw new System.Exception($"Not found {name}");
+
             return await query.FirstOrDefaultAsync();
         }
 
@@ -41,6 +43,8 @@ namespace MammalAPI.Services
                     Name = s.Name
                 });
 
+            if (query == null) throw new System.Exception($"Mammal family not found on id: {id}");
+
             return await query.FirstOrDefaultAsync();              
         }
 
@@ -53,6 +57,8 @@ namespace MammalAPI.Services
                     Id = x.FamilyId,
                     Name = x.Name
                 });
+            if (query == null) throw new System.Exception($"Something went wrong.");
+
 
             return await query.ToListAsync();
         }

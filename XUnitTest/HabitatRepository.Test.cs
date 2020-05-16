@@ -68,28 +68,23 @@ namespace XUnitTest
             // Act & Assert
             Assert.ThrowsAsync<Exception>(() => habitatRepository.GetHabitatByName(habitatName));
         }
+        
+        public void GetHabitatById_FourTestHabitats_GetIdOne()
+        {
+            // Arrange
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(h => h.Habitats).ReturnsDbSet(GetMoqHabitats());
+            var logger = Mock.Of<ILogger<HabitatRepository>>();
 
-        // [Fact]
-        // public void GetHabitatById_FourDifferentHabitats_Id3()
-        // {
-            // Waiting for GetHabitatById to be updated to return DTO
+            var habitatRepository = new HabitatRepository(contextMock.Object, logger);
 
+            // Act
+            var expected = habitatRepository.GetHabitatById(1);
 
-            // // Arrange
-            // var habitatId = 3;
-            // var habitats = GetMoqHabitats();
-            // var contextMock = new Mock<DBContext>();
-            // contextMock.Setup(h => h.Habitats).ReturnsDbSet(habitats);
-            // var logger = Mock.Of<ILogger<HabitatRepository>>();
-            
-            // var habitatRepository = new HabitatRepository(contextMock.Object, logger);
+            // Assert
+            Assert.Equal(1, expected.Result.Id);
 
-            // // Act
-            // var testResult = habitatRepository.GetHabitatById(habitatId);
-
-            // // Assert
-            // Assert.Equal(habitatId, testResult.Result.HabitatID);
-        // }
+        }
 
         private IList<Habitat> GetMoqHabitats()
         {
