@@ -17,6 +17,24 @@ namespace XUnitTest
     public class HabitatRepositoryTest
     {
         [Fact]
+        public void GetAllHabitats_FourDifferentHabitats_4()
+        {
+            // Arrange
+            var habitats = GetMoqHabitats();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(h => h.Habitats).ReturnsDbSet(habitats);
+            var logger = Mock.Of<ILogger<HabitatRepository>>();
+            
+            var habitatRepository = new HabitatRepository(contextMock.Object, logger);
+
+            // Act
+            var testResult = habitatRepository.GetAllHabitats();
+
+            // Assert
+            Assert.Equal(4, testResult.Result.Count);
+        }
+
+        [Fact]
         public void GetHabitatByName_FourDifferentHabitats_NameIsEast()
         {
             // Arrange
@@ -36,6 +54,21 @@ namespace XUnitTest
         }
 
         [Fact]
+        public void GetHabitatByName_MisspelledHabitatName_Exception()
+        {
+            // Arrange
+            var habitatName = "Eastss";
+            var habitats = GetMoqHabitats();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(h => h.Habitats).ReturnsDbSet(habitats);
+            var logger = Mock.Of<ILogger<HabitatRepository>>();
+            
+            var habitatRepository = new HabitatRepository(contextMock.Object, logger);
+
+            // Act & Assert
+            Assert.ThrowsAsync<Exception>(() => habitatRepository.GetHabitatByName(habitatName));
+        }
+        
         public void GetHabitatById_FourTestHabitats_GetIdOne()
         {
             // Arrange
