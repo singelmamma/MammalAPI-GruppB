@@ -34,15 +34,31 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<Mammal> GetMammalById(int id)
+        public async Task<MammalDTO> GetMammalById(int id)
         {
             _logger.LogInformation($"Getting mammal with {id}");
-                var result = await _dBContext.Mammals
-                    .FirstOrDefaultAsync(m => m.MammalId == id);
 
-            if (result == null) throw new Exception($"Not found: { id }");
+            var query = _dBContext.Mammals
+                .Include(f => f.Family)
+                .Include(mh => mh.MammalHabitats)
+                .Where(x => x.MammalId == id)
 
-            return result;
+                .Select(x => new MammalDTO
+                {
+                    MammalID = x.MammalId,
+                    Name = x.Name,
+                    Children = 0,
+                    Length = x.Length,
+                    Weight = x.Weight,
+                    LatinName = x.LatinName,
+                    Lifespan = x.Lifespan,
+                    Habitats = x.MammalHabitats.Select(h => h.Habitat).ToList(),
+                    Family = x.Family
+                });
+
+            if (query == null) throw new Exception($"Not found: { id }");
+  
+            return await query.SingleOrDefaultAsync();
         }
 
         public async Task<List<IdNameDTO>> GetMammalsByHabitat(string habitatName)
