@@ -56,23 +56,54 @@ namespace XUnitTest
         }
 
         [Fact]
-        public void GetAllMammals_TwoTestMammals_EqualListsOfMammals()
+        public async void GetAllMammals_TwoTestMammals_EqualListsOfMammals()
         {
             // Arrange
-            var contextMock = new Mock<IMammalRepository>();
-            contextMock.Setup(m => m.GetAllMammals()).Returns(GetTestAllMammals());
-            var logger = Mock.Of<ILogger<MammalRepository>>();
+            IList<Mammal> mammals = GenerateMammals();
 
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(m => m.Mammals).ReturnsDbSet(mammals);
+
+            //var contextMock = new Mock<IMammalRepository>();
+            //contextMock.Setup(m => m.GetAllMammals()).Returns(GetTestAllMammals());
+            
+            var logger = Mock.Of<ILogger<MammalRepository>>();
             var mammalRepository = new MammalRepository(contextMock.Object, logger);
 
             // Act
-            var expected = mammalRepository.GetAllMammals();
+            List<MammalsDTO> expectedDTO = GenerateMammalsDTO();
+            var actualGetAll = await mammalRepository.GetAllMammals();
 
             // Assert
-           // Assert.Equal(2, expected.Result.MammalId);
+            Assert.Equal(expectedDTO, actualGetAll);
         }
 
-        private async Task<List<MammalDTO>> GetTestAllMammals()
+        private static IList<Mammal> GenerateMammals()
+        {
+            List<Mammal> items = new List<Mammal>();
+            items.Add(new Mammal
+            {
+                MammalId = 1,
+                Name = "Grey Whale",
+                LatinName = "Latin name1",
+                Length = 250,
+                Weight = 30000
+            });
+            items.Add(new Mammal
+            {
+                MammalId = 2,
+                Name = "Pink Whale",
+                LatinName = "Latin name2",
+                Length = 750,
+                Weight = 800000
+            });
+
+            //return Task.Run(() => items);
+
+            return items;
+        }
+
+        private static List<MammalsDTO> GenerateMammalsDTO()
         {
             List<MammalsDTO> items = new List<MammalsDTO>();
             items.Add(new MammalsDTO
@@ -92,9 +123,9 @@ namespace XUnitTest
                 Weight = 800000
             });
 
-            return Task.Run(() => items);
+            //return Task.Run(() => items);
 
-           // return items;
+           return items;
         }
     }
 }
