@@ -83,7 +83,7 @@ Returns all animals in a given habitat by habitat ID
 
 
 
-**/mammal/lifespan/<lifespan>
+**/mammal/lifespan/fromYear=<fromYear>&toYear=<toYear>
 
 Returns all mammals by a given lifespan
 
@@ -94,10 +94,12 @@ Returns all mammals by a given lifespan
 	{
 		MammalID: 156,
 		Name: “Blue Whale”
+        Lifespan: 20
 	},
 	{
 		MammalID: 784,
 		Name: “Crabeater Seal”
+        Lifespan: 30
 	}
 ]
 ```
