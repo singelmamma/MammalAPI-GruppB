@@ -1,4 +1,5 @@
-﻿using MammalAPI.DTO;
+﻿using AutoMapper;
+using MammalAPI.DTO;
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace MammalAPI.Controllers
     public class MammalController : ControllerBase
     {
         private readonly IMammalRepository _repository;
+        private readonly IMapper _mapper;
 
-        public MammalController(IMammalRepository repository)
+        public MammalController(IMammalRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet("GetAll")]
@@ -24,7 +27,11 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetAllMammals());
+                var results = await _repository.GetAllMammals();
+
+                var mappedResult = _mapper.Map<MammalDTO[]>(results);
+
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
