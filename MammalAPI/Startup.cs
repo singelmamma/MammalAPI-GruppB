@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using AutoMapper;
 
 namespace MammalAPI
 {
@@ -23,6 +24,7 @@ namespace MammalAPI
             services.AddScoped<IHabitatRepository, HabitatRepository>();
             services.AddScoped<IFamilyRepository, FamilyRepository>();
             // services.AddTransient<DBContextData>();
+            services.AddAutoMapper(typeof(Startup));
             services.AddMvc(options => options.EnableEndpointRouting=false).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
         }
 
