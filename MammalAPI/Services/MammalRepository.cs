@@ -26,7 +26,7 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<Mammal> GetMammalById(int id)
+        public async Task<MammalDTO> GetMammalById(int id)
         {
             _logger.LogInformation($"Getting mammal with {id}");
                 var result = await _dBContext.Mammals
