@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
+using MammalAPI.DTO;
 
 namespace MammalAPI
 {
@@ -25,6 +26,11 @@ namespace MammalAPI
             services.AddScoped<IFamilyRepository, FamilyRepository>();
             // services.AddTransient<DBContextData>();
             services.AddAutoMapper(typeof(Startup));
+            services.AddMvc().AddHateoas(options => 
+            {
+                options
+                    .AddLink<IdNameDTO>("get-family-id", f => new { id = f.Id });
+            });
             services.AddMvc(options => options.EnableEndpointRouting=false).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
         }
 
