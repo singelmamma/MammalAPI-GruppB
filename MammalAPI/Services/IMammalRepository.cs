@@ -7,8 +7,8 @@ namespace MammalAPI.Services
 {
     public interface IMammalRepository
     {
-        Task<List<MammalsDTO>> GetAllMammals();
-        Task<MammalDTO> GetMammalById(int id);
+        Task<List<Mammal>> GetAllMammals();
+        Task<Mammal> GetMammalById(int id);
         Task<List<IdNameDTO>> GetMammalsByHabitat(string habitatName);
         Task<List<IdNameDTO>> GetMammalsByHabitatId(int id);
         Task<List<MammalLifespanDTO>> GetMammalsByLifeSpan(int fromYear, int toYear);
