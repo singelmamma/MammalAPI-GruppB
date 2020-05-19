@@ -26,6 +26,6 @@
 
 [Unit Tests for MVC 3.1](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-3.1)
 
-
+[Hatoas](https://www.e4developer.com/2018/02/16/hateoas-simple-explanation/)
 []()
 []()
