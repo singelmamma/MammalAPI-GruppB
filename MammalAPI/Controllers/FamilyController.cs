@@ -36,7 +36,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("byid/{id}", Name = "get-family-id")] 
+        [HttpGet("byid/{id}")] 
         public async Task<IActionResult> GetFamilyById(int id)
         {
             try
