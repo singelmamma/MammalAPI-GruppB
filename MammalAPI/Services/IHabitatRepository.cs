@@ -5,7 +5,7 @@ using MammalAPI.Models;
 
 namespace MammalAPI.Services
 {
-    public interface IHabitatRepository
+    public interface IHabitatRepository : IRepository
     {
         Task<List<IdNameDTO>> GetAllHabitats();
         Task<IdNameDTO> GetHabitatByName(string name);

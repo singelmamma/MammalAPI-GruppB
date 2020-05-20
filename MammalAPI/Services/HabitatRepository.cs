@@ -10,15 +10,10 @@ using Microsoft.Extensions.Logging;
 
 namespace MammalAPI.Services
 {
-    public class HabitatRepository : IHabitatRepository
+    public class HabitatRepository : Repository, IHabitatRepository
     {
-        private readonly DBContext _dBContext;
-        private readonly ILogger<HabitatRepository> _logger;
-        public HabitatRepository(DBContext context, ILogger<HabitatRepository> logger)
-        {
-            _logger = logger;
-            _dBContext = context;
-        }
+        public HabitatRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base(DBContext, logger)
+        { }
 
         public async Task<List<IdNameDTO>> GetAllHabitats()
         {
