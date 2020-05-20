@@ -5,7 +5,7 @@ using MammalAPI.Models;
 
 namespace MammalAPI.Services
 {
-    public interface IFamilyRepository
+    public interface IFamilyRepository:IRepository
     {
         Task<IdNameDTO> GetFamilyByName(string name);
         Task<IdNameDTO> GetFamilyById(int id);

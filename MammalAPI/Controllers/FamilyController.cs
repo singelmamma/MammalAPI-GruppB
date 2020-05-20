@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using AutoMapper;
+using MammalAPI.Models;
 
 namespace MammalAPI.Controllers
 {
@@ -13,12 +15,14 @@ namespace MammalAPI.Controllers
     public class FamilyController : ControllerBase
     {
         private readonly IFamilyRepository _familyRepository;
-
-        public FamilyController(IFamilyRepository familyRepository)
+        private readonly IMapper _mapper;
+        public FamilyController(IFamilyRepository familyRepository, IMapper mapper)
         {
             _familyRepository = familyRepository;
+            this._mapper = mapper;
         }
 
+        ///api/v1.0/family/byname/Phocidae      Get family by name
         [HttpGet("byname/{name}")]
         public async Task<IActionResult> GetFamilyByName(string name)
         {
@@ -36,6 +40,7 @@ namespace MammalAPI.Controllers
             }
         }
 
+        ///api/v1.0/family/byid/1   Get family by id
         [HttpGet("byid/{id}")] 
         public async Task<IActionResult> GetFamilyById(int id)
         {
@@ -55,6 +60,7 @@ namespace MammalAPI.Controllers
             }
         }
 
+        ///api/v1.0/family/all       Get all families
         [HttpGet("all")]
         public async Task<IActionResult> GetAllFamilies()
         {
@@ -70,6 +76,28 @@ namespace MammalAPI.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<IdNameDTO>>PostFamily(IdNameDTO family)
+        {
+            try
+            {
+                var mappedEntity = _mapper.Map<Family>(family);
+                _familyRepository.Add(mappedEntity);
+
+                if (await _familyRepository.Save())
+                {
+                    return Created($"/api/v1.0/Family/{mappedEntity.FamilyId}", _mapper.Map<IdNameDTO>(mappedEntity));
+                }
+            }
+            catch (Exception e)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"database failure {e.Message}");
+            }
+            return BadRequest();
+
         }
     }
 }
