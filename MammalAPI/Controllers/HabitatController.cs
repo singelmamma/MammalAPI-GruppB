@@ -1,10 +1,13 @@
-﻿using MammalAPI.Services;
+﻿using MammalAPI.DTO;
+using MammalAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MammalAPI.HATEOAS;
+
 
 
 namespace MammalAPI.Controllers
@@ -15,10 +18,12 @@ namespace MammalAPI.Controllers
     {
 
         private readonly IHabitatRepository _habitatRepository;
+        private readonly IUrlHelper _urlHelper;
 
-        public HabitatController(IHabitatRepository habitatRepository)
+        public HabitatController(IHabitatRepository habitatRepository, IUrlHelper injectedUrlHelper)
         {
             _habitatRepository = habitatRepository;
+            _urlHelper = injectedUrlHelper;
         }
 
         [HttpGet]
@@ -62,6 +67,39 @@ namespace MammalAPI.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
+        }
+
+        private IEnumerable<Link> CreateLinks(IdNameDTO habitat)
+        {
+            var links = new[]
+            {
+                 new Link
+                {
+                    Method = "GET",
+                    Rel = "self",
+                    Href = Url.Link("GetDeliveryById", new {id = habitat.Id})
+                },
+                //new Link
+                //{
+                //    Method = "PUT",
+                //    Rel = "status-delivered",
+                //    Href = Url.Link("ChangeStatusById", new {id = habitat.Id, status = "delivered"})
+                //},
+                //new Link
+                //{
+                //    Method = "PATCH",
+                //    Rel = "status-partial-updated",
+                //    Href = Url.Link("ChangeStatusById", new {id = habitat.Id, status = "delivered"})
+                //},
+                //new Link
+                //{
+                //    Method = "DELETE",
+                //    Rel = "status-deleted",
+                //    Href = Url.Link("ChangeStatusById", new {id = habitat.Id, status = "delivered"})
+                //}
+            };
+
+            return links;
         }
 
     }
