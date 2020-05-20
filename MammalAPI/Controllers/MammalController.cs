@@ -3,35 +3,42 @@ using MammalAPI.DTO;
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using MammalAPI.Models;
 
 namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class MammalController : ControllerBase
+    public class MammalController : HateoasControllerBase
     {
         private readonly IMammalRepository _repository;
         private readonly IMapper _mapper;
 
-        public MammalController(IMammalRepository repository, IMapper mapper)
+        public MammalController(IMammalRepository repository, IMapper mapper, IActionDescriptorCollectionProvider actionDescriptorCollectionProvider) : base(actionDescriptorCollectionProvider, mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("getall", Name = "GetClients")]
         public async Task<IActionResult> Get()
         {
             try
             {
                 var results = await _repository.GetAllMammals();
-
+                
                 var mappedResult = _mapper.Map<MammalDTO[]>(results);
 
-                return Ok(mappedResult);
+                //IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                IEnumerable<MammalDTO> mammalDto = mappedResult.Select(m => RestfulClient(m));
+
+                //return Ok(mappedResult);
+                return Ok(mammalDto);
             }
             catch (Exception e)
             {
@@ -39,13 +46,13 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetClientAsync")]
         public async Task<IActionResult> GetMammalById(int id)
         {
             try
             {
                 var result = await _repository.GetMammalById(id);
-                return Ok(result);
+                return Ok(RestfulClient(result));
             }
             catch (Exception e)
             {
@@ -66,8 +73,8 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetMammalsByHabitatId([FromQuery] int habitatId)
+        [HttpGet("habitat/{habitatId}")]
+        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId)
         {
             try
             {

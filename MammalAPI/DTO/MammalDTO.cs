@@ -3,7 +3,7 @@ using MammalAPI.Models;
 
 namespace MammalAPI.DTO
 {
-    public class MammalDTO
+    public class MammalDTO : HateoasDTOBase
     {
         public int MammalID { get; set; }
         public string Name { get; set; }

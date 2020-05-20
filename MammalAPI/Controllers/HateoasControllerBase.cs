@@ -1,13 +1,20 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+
+using AutoMapper;
+
+using MammalAPI.HATEOAS;
+using MammalAPI.Models;
+using MammalAPI.DTO;
 
 namespace MammalAPI.Controllers
 {
-    public class HateoasControllerBase
+    public class HateoasControllerBase : ControllerBase
     {
         private readonly IReadOnlyList<ActionDescriptor> _routes;
         private readonly IMapper _mapper;
@@ -16,6 +23,41 @@ namespace MammalAPI.Controllers
         {
             _routes = actionDescriptorCollectionProvider.ActionDescriptors.Items;
             _mapper = mapper;
+        }
+
+        internal Link UrlLink(string relation, string routeName, object values)
+        {
+            var route = _routes.FirstOrDefault(f =>
+                                    f.AttributeRouteInfo.Name.Equals(routeName));
+            var method = route.ActionConstraints.
+                                    OfType<HttpMethodActionConstraint>()
+                                    .First()
+                                    .HttpMethods
+                                    .First();
+            var url = Url.Link(routeName, values).ToLower();
+            return new Link(url, relation, method);
+        }
+
+        internal MammalDTO RestfulClient(MammalDTO mammal)
+        {
+            MammalDTO mammalDto = _mapper.Map<MammalDTO>(mammal);
+
+            mammalDto.Links.Add(
+                UrlLink("all",
+                        "GetClients",
+                        null));
+
+            mammalDto.Links.Add(
+                UrlLink("_self",
+                        "GetClientAsync",
+                        new { id = mammalDto.MammalID }));
+
+            //mammalDto.Links.Add(
+            //    UrlLink("addresses",
+            //            "GetAddressesByClient",
+            //            new { id = mammalDto.MammalID }));
+
+            return mammalDto;
         }
     }
 }
