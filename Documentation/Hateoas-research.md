@@ -28,6 +28,9 @@ Det finns många  spår att gå på, men tre av dem verkar mer lovande än andra
 3. Implementing HATEOAS in ASP.NET Core Web API
 
    * https://code-maze.com/hateoas-aspnet-core-web-api/
+* **Beskrivning:** Använder sig av .netcore3. Väldigt omfattande, men som sagt. asp.netcore3.
 
-   * **Beskrivning:** Använder sig av .netcore3. Väldigt omfattande, men som sagt. asp.netcore3.
+4. Adding HATEOAS to an ASP.NET CORE API
+   * https://baldbeardedbuilder.com/posts/adding-hateoas-to-an-asp-net-core-api/
+   * Beskrivning: Verkar vara en av de bättre tutorialsen. Lyckats komma ända tills anrop där jag får en nullreferens-error. Vet ännu inte hur jag skall lösa denna.
 
