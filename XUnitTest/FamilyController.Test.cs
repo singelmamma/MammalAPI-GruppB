@@ -18,46 +18,46 @@ namespace XUnitTest
 {
     public class FamilyControllerTest
     {
-        //[Fact]
-        //public async Task GetReturnsFamilyById_ExpectCorrectIdAsync()
-        //{
-        //    //Arrange
-        //    var responseObject = GetItem();
+        [Fact]
+        public async Task GetReturnsFamilyById_ExpectCorrectIdAsync()
+        {
+            //Arrange
+            var responseObject = GetItem();
 
-        //    var mockRepository = new Mock<IFamilyRepository>();
-        //    mockRepository.Setup(x => x.GetFamilyById(1))
-        //        .Returns(responseObject);
+            var mockRepository = new Mock<IFamilyRepository>();
+            mockRepository.Setup(x => x.GetFamilyById(1))
+                .Returns(responseObject);
 
-        //    var controller = new FamilyController(mockRepository.Object);
+            var controller = new FamilyController(mockRepository.Object);
 
-        //    //Act          
-        //    Task<IActionResult> actionResult = controller.GetFamilyById(1);
-        //    var contentResult = await actionResult as OkObjectResult;
-        //    var expectedObject = new IdNameDTO
-        //    {
-        //        Id = 1,
-        //        Name = "Phocidae"
-        //    };
+            //Act          
+            Task<IActionResult> actionResult = controller.GetFamilyById(1);
+            var contentResult = await actionResult as OkObjectResult;
+            var expectedObject = new IdNameDTO
+            {
+                Id = 1,
+                Name = "Phocidae"
+            };
 
-        //    //Assert
-        //    Assert.NotNull(contentResult);
-        //    Assert.Equal(200, contentResult.StatusCode);
+            //Assert
+            Assert.NotNull(contentResult);
+            Assert.Equal(200, contentResult.StatusCode);
 
-        //    IdNameDTO actualObject = contentResult.Value as IdNameDTO;
-        //    Assert.Equal(expectedObject.Id, actualObject.Id);
-        //    Assert.Equal(expectedObject.Name, actualObject.Name);
-        //}
+            IdNameDTO actualObject = contentResult.Value as IdNameDTO;
+            Assert.Equal(expectedObject.Id, actualObject.Id);
+            Assert.Equal(expectedObject.Name, actualObject.Name);
+        }
 
-        //private async Task<IdNameDTO> GetItem()
-        //{
-        //    var itemToReturn = new IdNameDTO
-        //    {
-        //        Id = 1,
-        //        Name = "Phocidae"
-        //    };
+        private async Task<IdNameDTO> GetItem()
+        {
+            var itemToReturn = new IdNameDTO
+            {
+                Id = 1,
+                Name = "Phocidae"
+            };
 
-        //    return itemToReturn;
-        //}
+            return itemToReturn;
+        }
 
     }
 }
