@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MammalAPI.Models
 {
@@ -10,5 +11,6 @@ namespace MammalAPI.Models
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
+        public ICollection<Mammal> Mammals { get; set; }
     }
 }
