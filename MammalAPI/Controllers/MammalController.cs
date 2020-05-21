@@ -58,7 +58,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByHabitat(habitatName));
+                var result = await _repository.GetMammalsByHabitat(habitatName);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
