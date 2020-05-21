@@ -21,6 +21,6 @@ namespace MammalAPI.Models
         public string LatinName { get; set; }
         public int Lifespan { get; set; }
         public Family Family { get; set; }
-        public IList<MammalHabitat> MammalHabitats { get; set; }
+        public ICollection<MammalHabitat> MammalHabitats { get; set; }
     }
 }

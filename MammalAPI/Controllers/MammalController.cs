@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MammalAPI.DTO;
+using MammalAPI.Models;
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -116,6 +117,25 @@ namespace MammalAPI.Controllers
             {
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
+        }
+        [HttpPost]
+        public async Task<ActionResult<MammalDTO>> PostMammal(MammalDTO mammalDTO)
+        {
+            try
+            {
+                var mappedEntity = _mapper.Map<Mammal>(mammalDTO);
+
+                _repository.Add(mappedEntity);
+                if(await _repository.Save())
+                {
+                    return Created($"api/v1.0/mammals/{mappedEntity.MammalId}", _mapper.Map<MammalDTO>(mappedEntity));
+                }
+            }
+            catch(Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure : {e.Message}");
+            }
+            return BadRequest();
         }
     }
 }
