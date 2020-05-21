@@ -7,6 +7,6 @@ namespace MammalAPI.DTO
     {
         public int HabitatID { get; set; }
         public string Name { get; set; }
-        public IList<MammalHabitat> MammalHabitats { get; set; }
+        public IList<Habitat> MammalHabitats { get; set; }
     }
 }
