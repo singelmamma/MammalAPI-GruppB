@@ -32,9 +32,9 @@ namespace MammalAPI.Controllers
             {
                 var results = await _repository.GetAllMammals();
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                IEnumerable<MammalDTO> mammalDto = mappedResult.Select(m => HateoasMainLinks(m));
+                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
 
-                return Ok(mammalDto);
+                return Ok(mammalsresult);
             }
             catch (Exception e)
             {
