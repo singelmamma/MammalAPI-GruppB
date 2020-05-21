@@ -17,12 +17,10 @@ namespace MammalAPI.Controllers
     public class HateoasControllerBase : ControllerBase
     {
         private readonly IReadOnlyList<ActionDescriptor> _routes;
-        //private readonly IMapper _mapper;
 
         public HateoasControllerBase(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider)
         {
             _routes = actionDescriptorCollectionProvider.ActionDescriptors.Items;
-            //_mapper = mapper;
         }
 
         internal Link UrlLink(string relation, string routeName, object values)
@@ -37,8 +35,8 @@ namespace MammalAPI.Controllers
         {
             MammalDTO mammalDto = mammal;
 
-            mammalDto.Links.Add(UrlLink("all", "GetAll", null));
-            mammalDto.Links.Add(UrlLink("_self", "GetMammalAsync", mammalDto.MammalID));
+            mammalDto.Links.Add(UrlLink("all", "GetAll", mammalDto.MammalID));
+            mammalDto.Links.Add(UrlLink("_self", "GetMammalAsync", new { id = mammalDto.MammalID }));
 
             //mammalDto.Links.Add(
             //    UrlLink("addresses",

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MammalAPI.Controllers
 {
@@ -31,9 +32,11 @@ namespace MammalAPI.Controllers
             {
                 var results = await _repository.GetAllMammals();
 
-                var mappedResult = _mapper.Map<MammalDTO[]>(results);
-
-                return Ok(mappedResult);
+                //var mappedResult = _mapper.Map<MammalDTO[]>(results);
+                IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                IEnumerable<MammalDTO> mammalDto = mappedResult.Select(m => HateoasMammalLink(m));
+                //return Ok(mappedResult);
+                return Ok(mammalDto);
             }
             catch (Exception e)
             {
