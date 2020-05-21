@@ -14,7 +14,7 @@ namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class MammalController : HateoasControllerBase
+    public class MammalController : HateoasMammalControllerBase
     {
         private readonly IMammalRepository _repository;
         private readonly IMapper _mapper;
@@ -32,7 +32,7 @@ namespace MammalAPI.Controllers
             {
                 var results = await _repository.GetAllMammals();
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                IEnumerable<MammalDTO> mammalDto = mappedResult.Select(m => HateoasMammalLink(m));
+                IEnumerable<MammalDTO> mammalDto = mappedResult.Select(m => HateoasMainLinks(m));
 
                 return Ok(mammalDto);
             }
@@ -50,7 +50,7 @@ namespace MammalAPI.Controllers
                 var result = await _repository.GetMammalById(id);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
 
-                return Ok(HateoasMammalLink(mappedResult));
+                return Ok(HateoasMainLinks(mappedResult));
             }
             catch (Exception e)
             {

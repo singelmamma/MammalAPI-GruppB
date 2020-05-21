@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MammalAPI.DTO
+namespace MammalAPI.HATEOAS
 {
-        public abstract class HateoasDTOBase
+        public abstract class HateoasLinkBase
         {
             public List<Link> Links { get; set; } = new List<Link>();
         }

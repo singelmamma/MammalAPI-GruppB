@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using MammalAPI.Models;
+using MammalAPI.HATEOAS;
 
 namespace MammalAPI.DTO
 {
-    public class MammalDTO : HateoasDTOBase
+    public class MammalDTO : HateoasLinkBase
     {
         public int MammalID { get; set; }
         public string Name { get; set; }
