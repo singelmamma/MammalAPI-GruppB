@@ -28,7 +28,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _familyRepository.GetFamilyByName(name));
+                var result= await _familyRepository.GetFamilyByName(name);
+                var mappedResult = _mapper.Map<FamilyDTO>(result);
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
