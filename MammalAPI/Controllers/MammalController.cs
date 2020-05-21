@@ -19,7 +19,7 @@ namespace MammalAPI.Controllers
         private readonly IMammalRepository _repository;
         private readonly IMapper _mapper;
 
-        public MammalController(IMammalRepository repository, IMapper mapper, IActionDescriptorCollectionProvider actionDescriptorCollectionProvider) : base(actionDescriptorCollectionProvider, mapper)
+        public MammalController(IMammalRepository repository, IMapper mapper, IActionDescriptorCollectionProvider actionDescriptorCollectionProvider) : base(actionDescriptorCollectionProvider)
         {
             _repository = repository;
             _mapper = mapper;
@@ -35,10 +35,10 @@ namespace MammalAPI.Controllers
                 var mappedResult = _mapper.Map<MammalDTO[]>(results);
 
                 //IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                IEnumerable<MammalDTO> mammalDto = mappedResult.Select(m => RestfulClient(m));
+                //IEnumerable<MammalDTO> mammalDto = mappedResult.Select(m => RestfulClient(m));
 
                 //return Ok(mappedResult);
-                return Ok(mammalDto);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
