@@ -13,6 +13,7 @@ namespace MammalAPI.Configuration
         public Mapper()
         {
             CreateMap<Mammal, MammalDTO>().ReverseMap();
+            CreateMap<Family, FamilyDTO>().ReverseMap();
         }
     }
 }
