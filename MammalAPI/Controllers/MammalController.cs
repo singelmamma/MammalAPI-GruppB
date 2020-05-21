@@ -53,6 +53,7 @@ namespace MammalAPI.Controllers
             {
                 var result = await _repository.GetMammalById(id);
                 return Ok(RestfulClient(result));
+                //return Ok(result);
             }
             catch (Exception e)
             {
