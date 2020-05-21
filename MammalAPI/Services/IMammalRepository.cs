@@ -5,7 +5,7 @@ using MammalAPI.Models;
 
 namespace MammalAPI.Services
 {
-    public interface IMammalRepository
+    public interface IMammalRepository : IRepository
     {
         Task<List<Mammal>> GetAllMammals();
         Task<MammalDTO> GetMammalById(int id);

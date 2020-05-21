@@ -48,19 +48,18 @@ namespace MammalAPI.Services
             return await query.FirstOrDefaultAsync();              
         }
 
-        public async Task<List<IdNameDTO>> GetAllFamilies()
+        
+
+        public async Task<Family[]> GetAllFamilies(bool includeMammals)
         {
-            _logger.LogInformation($"Getting all families");
-            var query = _dBContext.Families
-                .Select(x => new IdNameDTO
-                {
-                    Id = x.FamilyId,
-                    Name = x.Name
-                });
-            if (query == null) throw new System.Exception($"Something went wrong.");
+            IQueryable<Family> queary = _dBContext.Families;
 
+            if (includeMammals == true)
+            {
+                queary = queary.Include(m => m.Mammals);
+            }
 
-            return await query.ToListAsync();
+            return await queary.ToArrayAsync();
         }
     }
 }
