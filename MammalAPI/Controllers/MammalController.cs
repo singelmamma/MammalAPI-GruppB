@@ -67,11 +67,14 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMammalsByHabitatId([FromQuery] int habitatId)
+        public async Task<ActionResult<MammalDTO>> GetMammalsByHabitatId([FromQuery] int habitatId)
         {
             try
             {
-                return Ok(await _repository.GetMammalsByHabitatId(habitatId));
+                var result = await _repository.GetMammalsByHabitatId(habitatId);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
