@@ -50,16 +50,16 @@ namespace XUnitTest
         //    Assert.Equal(expectedObject.Name, actualObject.Name);
         //}
 
-        private async Task<IdNameDTO> GetItem()
-        {
-            var itemToReturn = new IdNameDTO
-            {
-                Id = 1,
-                Name = "Phocidae"
-            };
+        //private async Task<IdNameDTO> GetItem()
+        //{
+        //    var itemToReturn = new IdNameDTO
+        //    {
+        //        Id = 1,
+        //        Name = "Phocidae"
+        //    };
 
-            return itemToReturn;
-        }
+        //    return itemToReturn;
+        //}
 
     }
 }

@@ -53,7 +53,7 @@ namespace MammalAPI.Services
             return await query.SingleOrDefaultAsync();
         }
 
-        public async Task<List<IdNameDTO>> GetMammalsByHabitat(string habitatName)
+        public async Task<List<FamilyDTO>> GetMammalsByHabitat(string habitatName)
         {
             _logger.LogInformation($"Getting mammals in habitat by name: {habitatName}");
 
@@ -67,16 +67,16 @@ namespace MammalAPI.Services
                 m => m.mh.MammalId,
                 n => n.MammalId,
                 (m, h) => new { m, h })
-                .Select(s => new IdNameDTO
+                .Select(s => new FamilyDTO
                 {
                     Name = s.h.Name,
-                    Id = s.h.MammalId
+                    FamilyID = s.h.MammalId
                 });
 
             return await query.ToListAsync();
         }
 
-        public async Task<List<IdNameDTO>> GetMammalsByHabitatId(int id)
+        public async Task<List<FamilyDTO>> GetMammalsByHabitatId(int id)
         {
             _logger.LogInformation($"Getting mammals in habitat by id: {id}");
 
@@ -84,9 +84,9 @@ namespace MammalAPI.Services
                 .Include(mh => mh.Mammal)
                 .AsNoTracking()
                 .Where(x => x.HabitatId == id)
-                .Select(x => new IdNameDTO
+                .Select(x => new FamilyDTO
                 {
-                    Id = x.MammalId,
+                    FamilyID = x.MammalId,
                     Name = x.Mammal.Name
                 });
 
@@ -110,7 +110,7 @@ namespace MammalAPI.Services
             return await query.ToListAsync(); 
         }
 
-        public async Task<List<IdNameDTO>> GetMammalsByFamily(string familyName)
+        public async Task<List<FamilyDTO>> GetMammalsByFamily(string familyName)
         {
             _logger.LogInformation($"Getting mammals by familyname {familyName}");
 
@@ -118,24 +118,24 @@ namespace MammalAPI.Services
                 .Include(m => m.Family)
                 .AsNoTracking()
                 .Where(m => m.Family.Name == familyName)
-                .Select(x => new IdNameDTO
+                .Select(x => new FamilyDTO
                 {
-                    Id = x.MammalId,
+                    FamilyID = x.MammalId,
                     Name = x.Name
                 });
 
             return await query.ToListAsync();
         }
 
-        public async Task<List<IdNameDTO>> GetMammalsByFamilyId(int id)
+        public async Task<List<FamilyDTO>> GetMammalsByFamilyId(int id)
         {
             _logger.LogInformation($"Getting mammals by familyid {id}");
 
             var query = _dBContext.Mammals
                 .Where(m => m.Family.FamilyId == id)
-                .Select(m => new IdNameDTO
+                .Select(m => new FamilyDTO
                 {
-                    Id = m.MammalId,
+                   FamilyID = m.MammalId,
                     Name = m.Name
                 });
 

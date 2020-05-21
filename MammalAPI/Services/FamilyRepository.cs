@@ -18,13 +18,13 @@ namespace MammalAPI.Services
         public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
         { }
 
-        public async Task<IdNameDTO> GetFamilyByName(string name)
+        public async Task<FamilyDTO> GetFamilyByName(string name)
         {
             _logger.LogInformation($"Getting mammal family by { name }.");
             var query = _dBContext.Families.Where(s => s.Name == name)
-                .Select(s => new IdNameDTO
+                .Select(s => new FamilyDTO
                 {
-                    Id = s.FamilyId,
+                    FamilyID = s.FamilyId,
                     Name = s.Name
                 });
 
@@ -33,13 +33,13 @@ namespace MammalAPI.Services
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IdNameDTO> GetFamilyById(int id)
+        public async Task<FamilyDTO> GetFamilyById(int id)
         {
             _logger.LogInformation($"Getting mammal family by { id }.");
             var query = _dBContext.Families.Where(s => s.FamilyId == id)
-                .Select(s => new IdNameDTO
+                .Select(s => new FamilyDTO
                 {
-                    Id = s.FamilyId,
+                    FamilyID = s.FamilyId,
                     Name = s.Name
                 });
 
@@ -48,13 +48,13 @@ namespace MammalAPI.Services
             return await query.FirstOrDefaultAsync();              
         }
 
-        public async Task<List<IdNameDTO>> GetAllFamilies()
+        public async Task<List<FamilyDTO>> GetAllFamilies()
         {
             _logger.LogInformation($"Getting all families");
             var query = _dBContext.Families
-                .Select(x => new IdNameDTO
+                .Select(x => new FamilyDTO
                 {
-                    Id = x.FamilyId,
+                    FamilyID = x.FamilyId,
                     Name = x.Name
                 });
             if (query == null) throw new System.Exception($"Something went wrong.");
