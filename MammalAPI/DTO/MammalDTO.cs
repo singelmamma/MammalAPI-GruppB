@@ -12,7 +12,7 @@ namespace MammalAPI.DTO
         public double Weight { get; set; }
         public string LatinName { get; set; }
         public int Lifespan { get; set; }
-        public List<Habitat> Habitats { get; set; }
+        public List<Habitats> Habitats { get; set; }
         public Family Family { get; set; }
     }
 }

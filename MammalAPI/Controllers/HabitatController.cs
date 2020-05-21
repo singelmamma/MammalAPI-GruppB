@@ -74,7 +74,7 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var mappedEntity = _mapper.Map<Habitat>(habitat);
+                var mappedEntity = _mapper.Map<Habitats>(habitat);
                 _habitatRepository.Add(mappedEntity);
 
                 if (await _habitatRepository.Save())

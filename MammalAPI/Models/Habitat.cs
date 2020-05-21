@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MammalAPI.Models
 {
-    public class Habitat
+    public class Habitats
     {
         [Key]
         public int HabitatID { get; set; }

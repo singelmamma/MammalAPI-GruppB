@@ -9,6 +9,6 @@ namespace MammalAPI.Models
         public int MammalId { get; set; }
         public Mammal Mammal { get; set; }
         public int HabitatId { get; set; }
-        public Habitat Habitat { get; set; }
+        public Habitats Habitat { get; set; }
     }
 }
