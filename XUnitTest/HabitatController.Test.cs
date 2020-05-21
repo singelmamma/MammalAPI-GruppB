@@ -20,7 +20,7 @@ namespace XUnitTest
         public async void GetHabitatByName_ShouldReturnOneHabitat()
         {
             //arrange
-            IList<Habitats> habitat = GenerateHabitet();
+            IList<Habitat> habitat = GenerateHabitet();
             var habitatContextMock = new Mock<DBContext>();
             habitatContextMock.Setup(e => e.Habitats).ReturnsDbSet(habitat);
 
@@ -38,7 +38,7 @@ namespace XUnitTest
         public async void GetHabitatById_ShouldReturnOneHabitat()
         {
             //arrange
-            IList<Habitats> habitat = GenerateHabitet();
+            IList<Habitat> habitat = GenerateHabitet();
             var habitatMockContext = new Mock<DBContext>();
             habitatMockContext.Setup(h => h.Habitats).ReturnsDbSet(habitat);
             var logger = Mock.Of<ILogger<HabitatRepository>>();
@@ -57,7 +57,7 @@ namespace XUnitTest
         public async void GetAllHabitat_ShouldReturnAllHabitat()
         {
             //arrange
-            IList<Habitats> habitat = GenerateHabitet();
+            IList<Habitat> habitat = GenerateHabitet();
             var habitatMockContext = new Mock<DBContext>();
             habitatMockContext.Setup(h => h.Habitats).ReturnsDbSet(habitat);
 
@@ -71,11 +71,11 @@ namespace XUnitTest
             Assert.True(actual.Count > 0);
         
         }
-        public static IList<Habitats> GenerateHabitet()
+        public static IList<Habitat> GenerateHabitet()
         {
-            return new List<Habitats>
+            return new List<Habitat>
             {
-                new Habitats
+                new Habitat
                 {
                     HabitatID=1,
                     Name="Pacific Ocean",

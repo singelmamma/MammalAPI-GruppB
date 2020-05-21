@@ -86,28 +86,28 @@ namespace XUnitTest
 
         }
 
-        private IList<Habitats> GetMoqHabitats()
+        private IList<Habitat> GetMoqHabitats()
         {
-            var habitats = new List<Habitats>();
-            habitats.Add(new Habitats
+            var habitats = new List<Habitat>();
+            habitats.Add(new Habitat
             {
                 HabitatID = 1,
                 Name = "North",
                 MammalHabitats = null
             });
-            habitats.Add(new Habitats
+            habitats.Add(new Habitat
             {
                 HabitatID = 2,
                 Name = "East",
                 MammalHabitats = null
             });
-            habitats.Add(new Habitats
+            habitats.Add(new Habitat
             {
                 HabitatID = 3,
                 Name = "South",
                 MammalHabitats = null
             });
-            habitats.Add(new Habitats
+            habitats.Add(new Habitat
             {
                 HabitatID = 4,
                 Name = "West",
