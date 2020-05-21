@@ -4,6 +4,7 @@ using MammalAPI.Models;
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,18 +13,18 @@ namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class MammalController : ControllerBase
+    public class MammalController : HateoasControllerBase
     {
         private readonly IMammalRepository _repository;
         private readonly IMapper _mapper;
 
-        public MammalController(IMammalRepository repository, IMapper mapper)
+        public MammalController(IMammalRepository repository, IMapper mapper, IActionDescriptorCollectionProvider actionDescriptorCollectionProvider) : base(actionDescriptorCollectionProvider)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("GetAll", Name ="GetAll")]
         public async Task<IActionResult> Get()
         {
             try
@@ -40,7 +41,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetMammalAsync")]
         public async Task<IActionResult> GetMammalById(int id)
         {
             try
@@ -48,7 +49,8 @@ namespace MammalAPI.Controllers
                 var result = await _repository.GetMammalById(id);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
                 
-                return Ok(result);
+                //return Ok(result);
+                return Ok(HateoasMammalLink(mappedResult));
             }
             catch (Exception e)
             {

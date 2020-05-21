@@ -33,12 +33,12 @@ namespace MammalAPI.Controllers
             return new Link(url, relation, method);
         }
 
-        internal MammalDTO RestfulClient(MammalDTO mammal)
+        internal MammalDTO HateoasMammalLink(MammalDTO mammal)
         {
             MammalDTO mammalDto = mammal;
 
-            mammalDto.Links.Add(UrlLink("all", "GetClients", null));
-            mammalDto.Links.Add(UrlLink("_self", "GetClientAsync", mammalDto.MammalID));
+            mammalDto.Links.Add(UrlLink("all", "GetAll", null));
+            mammalDto.Links.Add(UrlLink("_self", "GetMammalAsync", mammalDto.MammalID));
 
             //mammalDto.Links.Add(
             //    UrlLink("addresses",
