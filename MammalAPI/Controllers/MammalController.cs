@@ -86,7 +86,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByLifeSpan(fromYear, toYear));
+                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear);
+                var mappedResult = _mapper.Map<MammalLifespanDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
