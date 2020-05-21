@@ -46,6 +46,8 @@ namespace MammalAPI.Controllers
             try
             {
                 var result = await _repository.GetMammalById(id);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                
                 return Ok(result);
             }
             catch (Exception e)
