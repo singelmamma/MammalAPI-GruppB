@@ -48,7 +48,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _habitatRepository.GetHabitatById(id));
+                var result =await _habitatRepository.GetHabitatById(id);
+                var mappedResult = _mapper.Map<HabitatDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -57,50 +59,18 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllHabitats()
+        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats()
         {
             try
             {
-                return Ok(await _habitatRepository.GetAllHabitats());
+                var result= await _habitatRepository.GetAllHabitats();
+                var mappedResult = _mapper.Map<HabitatDTO[]>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-
-        //private IEnumerable<Link> CreateLinks(IdNameDTO habitat)
-        //{
-        //    var links = new[]
-        //    {
-        //        // new Link
-        //        //{
-        //        //    Method = "GET",
-        //        //    Rel = "self",
-        //        //    Href = Url.Link("GetDeliveryById", new {id = habitat.Id})
-        //        //},
-        //        //new Link
-        //        //{
-        //        //    Method = "PUT",
-        //        //    Rel = "status-delivered",
-        //        //    Href = Url.Link("ChangeStatusById", new {id = habitat.Id, status = "delivered"})
-        //        //},
-        //        //new Link
-        //        //{
-        //        //    Method = "PATCH",
-        //        //    Rel = "status-partial-updated",
-        //        //    Href = Url.Link("ChangeStatusById", new {id = habitat.Id, status = "delivered"})
-        //        //},
-        //        //new Link
-        //        //{
-        //        //    Method = "DELETE",
-        //        //    Rel = "status-deleted",
-        //        //    Href = Url.Link("ChangeStatusById", new {id = habitat.Id, status = "delivered"})
-        //        //}
-        //    };
-
-        //    return links;
-        //}
-
     }
 }

@@ -34,3 +34,4 @@ Det finns många  spår att gå på, men tre av dem verkar mer lovande än andra
    * https://baldbeardedbuilder.com/posts/adding-hateoas-to-an-asp-net-core-api/
    * Beskrivning: Verkar vara en av de bättre tutorialsen. Lyckats komma ända tills anrop där jag får en nullreferens-error. Vet ännu inte hur jag skall lösa denna.
 
+**Uppdatering!: följt punkt 4 och lyckats efter mycket modifierande och debugging att få det att fungera!**

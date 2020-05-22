@@ -15,28 +15,28 @@ namespace MammalAPI.Services
         public HabitatRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base(DBContext, logger)
         { }
 
-        public async Task<List<IdNameDTO>> GetAllHabitats()
+        public async Task<List<FamilyDTO>> GetAllHabitats()
         {
             _logger.LogInformation("Getting all habitats");
             var query = _dBContext.Habitats
-                .Select(x => new IdNameDTO
+                .Select(x => new FamilyDTO
                 {
-                    Id = x.HabitatID,
+                    FamilyID = x.HabitatID,
                     Name = x.Name
                 });
 
             return await query.ToListAsync();
         }
 
-        public async Task<IdNameDTO> GetHabitatByName(string name)
+        public async Task<FamilyDTO> GetHabitatByName(string name)
         {
             _logger.LogInformation($"Getting habitat with name: { name }");
             var query = await _dBContext.Habitats
                             .Where(h => h.Name == name)
-                            .Select(s => new IdNameDTO
+                            .Select(s => new FamilyDTO
                             {
                                 Name = s.Name,
-                                Id = s.HabitatID
+                                FamilyID = s.HabitatID
                             })
                             .FirstOrDefaultAsync();
             
@@ -45,14 +45,14 @@ namespace MammalAPI.Services
             return  query;
         }
 
-        public async Task<IdNameDTO> GetHabitatById(int id)
+        public async Task<FamilyDTO> GetHabitatById(int id)
         {
             _logger.LogInformation($"Getting habitat with id: { id }");
             var query = _dBContext.Habitats
                 .Where(x => x.HabitatID == id)
-                .Select(x => new IdNameDTO
+                .Select(x => new FamilyDTO
                 {
-                    Id = x.HabitatID,
+                    FamilyID = x.HabitatID,
                     Name = x.Name
                 });
 

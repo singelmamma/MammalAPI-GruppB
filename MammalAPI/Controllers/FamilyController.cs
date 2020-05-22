@@ -24,11 +24,13 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/byname/Phocidae      Get family by name
         [HttpGet("byname/{name}")]
-        public async Task<IActionResult> GetFamilyByName(string name)
+        public async Task<ActionResult<FamilyDTO>> GetFamilyByName(string name)
         {
             try
             {
-                return Ok(await _familyRepository.GetFamilyByName(name));
+                var result= await _familyRepository.GetFamilyByName(name);
+                var mappedResult = _mapper.Map<FamilyDTO>(result);
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
@@ -46,7 +48,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _familyRepository.GetFamilyById(id));
+                var result = await _familyRepository.GetFamilyById(id);
+                var mappedResult = _mapper.Map<FamilyDTO>(result);
+                return Ok(mappedResult);
 
             }
             catch (TimeoutException e)
@@ -80,7 +84,7 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-
+        /*
         [HttpPost]
         public async Task<ActionResult<IdNameDTO>>PostFamily(IdNameDTO family)
         {
@@ -101,6 +105,6 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
 
-        }
+        }        */
     }
 }
