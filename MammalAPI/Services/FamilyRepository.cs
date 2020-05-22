@@ -47,17 +47,6 @@ namespace MammalAPI.Services
 
             return await query.FirstOrDefaultAsync();              
         }
-
-        public async Task<List<FamilyDTO>> GetAllFamilies()
-        {
-            _logger.LogInformation($"Getting all families");
-            var query = _dBContext.Families
-                .Select(x => new FamilyDTO
-                {
-                    FamilyID = x.FamilyId,
-                    Name = x.Name
-                });
-            if (query == null) throw new System.Exception($"Something went wrong.");
         
         public async Task<Family[]> GetAllFamilies(bool includeMammals)
         {
