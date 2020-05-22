@@ -66,11 +66,14 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/all       Get all families
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllFamilies()
+        public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeMammals = false)
         {
             try
             {
-                return Ok(await _familyRepository.GetAllFamilies());
+                var results = await _familyRepository.GetAllFamilies(includeMammals);
+
+                var mappedResult = _mapper.Map<FamilyDTO[]>(results);
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {

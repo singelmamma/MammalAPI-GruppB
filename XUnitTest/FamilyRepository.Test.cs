@@ -69,7 +69,7 @@ namespace XUnitTest
             var familyRepository = new FamilyRepository(contextMock.Object, logger);
 
             // Act
-            var expected = familyRepository.GetAllFamilies();
+            var expected = familyRepository.GetAllFamilies(false);
 
             // Assert
             Assert.NotNull(expected.Result);

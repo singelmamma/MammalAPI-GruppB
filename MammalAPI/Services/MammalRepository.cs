@@ -39,13 +39,13 @@ namespace MammalAPI.Services
                 {
                     MammalID = x.MammalId,
                     Name = x.Name,
-                    Children = 0,
+                    //Children = 0,
                     Length = x.Length,
                     Weight = x.Weight,
                     LatinName = x.LatinName,
                     Lifespan = x.Lifespan,
                     Habitats = x.MammalHabitats.Select(h => h.Habitat).ToList(),
-                    Family = x.Family
+                    //Family = x.Family
                 });
 
             if (query == null) throw new Exception($"Not found: { id }");
@@ -117,7 +117,7 @@ namespace MammalAPI.Services
             var query = _dBContext.Mammals
                 .Include(m => m.Family)
                 .AsNoTracking()
-                .Where(m => m.Family.Name == familyName)
+                //.Where(m => m.Family.Name == familyName)
                 .Select(x => new IdNameDTO
                 {
                     Id = x.MammalId,

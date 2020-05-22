@@ -14,6 +14,7 @@ namespace MammalAPI.Configuration
         {
             CreateMap<Mammal, MammalDTO>().ReverseMap();
             CreateMap<Habitat, HabitatDTO>().ReverseMap();
+            CreateMap<Family, FamilyDTO>().ReverseMap();
         }
     }
 }
