@@ -1,4 +1,5 @@
-﻿using MammalAPI.DTO;
+﻿using AutoMapper;
+using MammalAPI.DTO;
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,13 @@ namespace MammalAPI.Controllers
 
         private readonly IHabitatRepository _habitatRepository;
         private readonly IUrlHelper _urlHelper;
+        private readonly IMapper _mapper;
 
-        public HabitatController(IHabitatRepository habitatRepository, IUrlHelper injectedUrlHelper)
+        public HabitatController(IHabitatRepository habitatRepository, IUrlHelper injectedUrlHelper, IMapper mapper)
         {
             _habitatRepository = habitatRepository;
             _urlHelper = injectedUrlHelper;
+            _mapper = mapper;
         }
 
         [HttpGet]
