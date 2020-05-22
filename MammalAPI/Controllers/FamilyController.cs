@@ -24,11 +24,13 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/byname/Phocidae      Get family by name
         [HttpGet("byname/{name}")]
-        public async Task<IActionResult> GetFamilyByName(string name)
+        public async Task<ActionResult<FamilyDTO>> GetFamilyByName(string name)
         {
             try
             {
-                return Ok(await _familyRepository.GetFamilyByName(name));
+                var result= await _familyRepository.GetFamilyByName(name);
+                var mappedResult = _mapper.Map<FamilyDTO>(result);
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
