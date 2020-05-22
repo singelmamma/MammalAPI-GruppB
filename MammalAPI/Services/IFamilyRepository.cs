@@ -10,5 +10,6 @@ namespace MammalAPI.Services
         Task<FamilyDTO> GetFamilyByName(string name);
         Task<FamilyDTO> GetFamilyById(int id);
         Task<List<FamilyDTO>> GetAllFamilies();
+        Task<Family[]> GetAllFamilies(bool includeMammals);
     }
 }

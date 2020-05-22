@@ -48,7 +48,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _habitatRepository.GetHabitatById(id));
+                var result =await _habitatRepository.GetHabitatById(id);
+                var mappedResult = _mapper.Map<HabitatDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -57,11 +59,13 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllHabitats()
+        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats()
         {
             try
             {
-                return Ok(await _habitatRepository.GetAllHabitats());
+                var result= await _habitatRepository.GetAllHabitats();
+                var mappedResult = _mapper.Map<HabitatDTO[]>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {

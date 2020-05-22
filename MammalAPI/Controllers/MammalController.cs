@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MammalAPI.DTO;
+using MammalAPI.Models;
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,8 @@ namespace MammalAPI.Controllers
             try
             {
                 var result = await _repository.GetMammalById(id);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                
                 return Ok(result);
             }
             catch (Exception e)
@@ -58,7 +61,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByHabitat(habitatName));
+                var result = await _repository.GetMammalsByHabitat(habitatName);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -84,7 +89,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByLifeSpan(fromYear, toYear));
+                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear);
+                var mappedResult = _mapper.Map<MammalLifespanDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -97,7 +104,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByFamily(familyName));
+                var result= await _repository.GetMammalsByFamily(familyName);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -110,12 +119,33 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByFamilyId(id));
+                var result= await _repository.GetMammalsByFamilyId(id);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
+        }
+        [HttpPost]
+        public async Task<ActionResult<MammalDTO>> PostMammal(MammalDTO mammalDTO)
+        {
+            try
+            {
+                var mappedEntity = _mapper.Map<Mammal>(mammalDTO);
+
+                _repository.Add(mappedEntity);
+                if(await _repository.Save())
+                {
+                    return Created($"api/v1.0/mammals/{mappedEntity.MammalId}", _mapper.Map<MammalDTO>(mappedEntity));
+                }
+            }
+            catch(Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure : {e.Message}");
+            }
+            return BadRequest();
         }
     }
 }

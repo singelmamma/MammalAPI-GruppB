@@ -27,7 +27,7 @@ namespace MammalAPI.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MammalHabitat>().HasKey(sc => new { sc.HabitatId, sc.MammalId });
-            modelBuilder.Entity<Mammal>().HasOne(m => m.Family).WithMany(f => f.Mammals).IsRequired();
+            modelBuilder.Entity<Mammal>().HasOne(m => m.Family).WithMany(f => f.Mammals);
             
             //modelBuilder.ApplyConfiguration(new FakeConfiguration());   //creating a FakeMammal table
         }

@@ -58,9 +58,17 @@ namespace MammalAPI.Services
                     Name = x.Name
                 });
             if (query == null) throw new System.Exception($"Something went wrong.");
+        
+        public async Task<Family[]> GetAllFamilies(bool includeMammals)
+        {
+            IQueryable<Family> queary = _dBContext.Families;
 
+            if (includeMammals == true)
+            {
+                queary = queary.Include(m => m.Mammals);
+            }
 
-            return await query.ToListAsync();
+            return await queary.ToArrayAsync();
         }
     }
 }
