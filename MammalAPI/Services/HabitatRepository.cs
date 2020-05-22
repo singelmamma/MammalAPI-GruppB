@@ -45,14 +45,14 @@ namespace MammalAPI.Services
             return  query;
         }
 
-        public async Task<FamilyDTO> GetHabitatById(int id)
+        public async Task<HabitatDTO> GetHabitatById(int id)
         {
             _logger.LogInformation($"Getting habitat with id: { id }");
             var query = _dBContext.Habitats
                 .Where(x => x.HabitatID == id)
-                .Select(x => new FamilyDTO
+                .Select(x => new HabitatDTO
                 {
-                    FamilyID = x.HabitatID,
+                    HabitatID = x.HabitatID,
                     Name = x.Name
                 });
 
