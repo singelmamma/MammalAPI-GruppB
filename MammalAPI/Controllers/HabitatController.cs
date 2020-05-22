@@ -72,7 +72,7 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-
+        /*
         [HttpPost]
         public async Task<ActionResult<IdNameDTO>> PostHabitat(IdNameDTO habitat)
         {
@@ -92,6 +92,6 @@ namespace MammalAPI.Controllers
             }
 
             return BadRequest();
-        }
+        } */
     }
 }
