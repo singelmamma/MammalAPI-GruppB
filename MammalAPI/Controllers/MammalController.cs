@@ -104,7 +104,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByFamily(familyName));
+                var result= await _repository.GetMammalsByFamily(familyName);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
