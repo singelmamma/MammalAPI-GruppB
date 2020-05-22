@@ -61,7 +61,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByHabitat(habitatName));
+                var result = await _repository.GetMammalsByHabitat(habitatName);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -87,7 +89,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByLifeSpan(fromYear, toYear));
+                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear);
+                var mappedResult = _mapper.Map<MammalLifespanDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -100,7 +104,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByFamily(familyName));
+                var result= await _repository.GetMammalsByFamily(familyName);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -113,7 +119,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                return Ok(await _repository.GetMammalsByFamilyId(id));
+                var result= await _repository.GetMammalsByFamilyId(id);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
