@@ -36,7 +36,7 @@ namespace MammalAPI.Services
         public async Task<Family> GetFamilyById(int id)
         {
             _logger.LogInformation($"Getting mammal family by { id }.");
-            var query = _dBContext.Families;
+            var query = _dBContext.Families.Where(f => f.FamilyId == id);
 
             if (query == null) throw new System.Exception($"Mammal family not found on id: {id}");
 
