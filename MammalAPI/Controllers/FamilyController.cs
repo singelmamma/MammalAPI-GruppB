@@ -85,7 +85,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{familyId}")]
         public async Task<ActionResult<FamilyDTO>> Put(int familyId, FamilyDTO familyDTO)
         {
             try
