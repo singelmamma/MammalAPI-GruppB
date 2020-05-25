@@ -7,7 +7,7 @@ namespace MammalAPI.Services
 {
     public interface IHabitatRepository : IRepository
     {
-        Task<List<FamilyDTO>> GetAllHabitats();
+        Task<List<Habitat>> GetAllHabitats();
         Task<FamilyDTO> GetHabitatByName(string name);
         Task<HabitatDTO> GetHabitatById(int id);
         

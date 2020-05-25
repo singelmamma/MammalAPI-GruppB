@@ -15,17 +15,10 @@ namespace MammalAPI.Services
         public HabitatRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base(DBContext, logger)
         { }
 
-        public async Task<List<FamilyDTO>> GetAllHabitats()
+        public async Task<List<Habitat>> GetAllHabitats()
         {
             _logger.LogInformation("Getting all habitats");
-            var query = _dBContext.Habitats
-                .Select(x => new FamilyDTO
-                {
-                    FamilyID = x.HabitatID,
-                    Name = x.Name
-                });
-
-            return await query.ToListAsync();
+            return await _dBContext.Habitats.ToListAsync();
         }
 
         public async Task<FamilyDTO> GetHabitatByName(string name)

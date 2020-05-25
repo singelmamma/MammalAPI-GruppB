@@ -19,13 +19,13 @@ namespace MammalAPI.Controllers
     {
 
         private readonly IHabitatRepository _habitatRepository;
-        private readonly IUrlHelper _urlHelper;
+        //private readonly IUrlHelper _urlHelper;
         private readonly IMapper _mapper;
 
-        public HabitatController(IHabitatRepository habitatRepository, IUrlHelper injectedUrlHelper, IMapper mapper)
+        public HabitatController(IHabitatRepository habitatRepository, /*IUrlHelper injectedUrlHelper,*/ IMapper mapper)
         {
             _habitatRepository = habitatRepository;
-            _urlHelper = injectedUrlHelper;
+            //_urlHelper = injectedUrlHelper;
             _mapper = mapper;
         }
 
@@ -66,6 +66,10 @@ namespace MammalAPI.Controllers
         {
             try
             {
+                if (_habitatRepository==null)
+                {
+                    return NotFound();
+                }
                 var result= await _habitatRepository.GetAllHabitats();
                 var mappedResult = _mapper.Map<HabitatDTO[]>(result);
                 return Ok(mappedResult);
