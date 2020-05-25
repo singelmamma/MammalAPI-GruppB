@@ -18,6 +18,8 @@
 * Never EVER commit code directly to master!!!
 * Everyone present during review must approve pull request before they are merged
 
-# Panik-situationer
+# Panic situations
 
-* Vid situationer när personen/gruppen känner att projektet står stilla eller har större problem som inte går att lösa själv, kallas gruppen till ett möte för att revidera arbetsprocessen och projektet på hur och vad som behövs ändras för att komma vidare med arbetet för att uppnå projektets mål.
+* In situations where the person / group feels that the project is stationary or has major problems that cannot be solved by themselves, the group is called to a meeting to revise the work process and the project on how and what needs to be changed to continue with the work to achieve the projects goals.
+
+
