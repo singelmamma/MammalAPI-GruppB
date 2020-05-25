@@ -30,20 +30,13 @@ namespace MammalAPI.Services
             return  query;
         }
 
-        public async Task<HabitatDTO> GetHabitatById(int id)
+        public async Task<Habitat> GetHabitatById(int id)
         {
             _logger.LogInformation($"Getting habitat with id: { id }");
-            var query = _dBContext.Habitats
-                .Where(x => x.HabitatID == id)
-                .Select(x => new HabitatDTO
-                {
-                    HabitatID = x.HabitatID,
-                    Name = x.Name
-                });
+            var query = _dBContext.Habitats.Where(x => x.HabitatID == id).FirstOrDefaultAsync();
 
             if (query == null) throw new System.Exception($"Not found {id}");
-
-            return await query.FirstOrDefaultAsync();
+            return await query;
         }
     }
 }
