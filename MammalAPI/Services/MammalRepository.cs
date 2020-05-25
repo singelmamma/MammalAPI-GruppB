@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MammalAPI.Services
 {
@@ -40,25 +41,13 @@ namespace MammalAPI.Services
             return await query.SingleOrDefaultAsync();
         }
 
-        public async Task<List<FamilyDTO>> GetMammalsByHabitat(string habitatName)
+        public async Task<List<Mammal>> GetMammalsByHabitat(string habitatName)
         {
             _logger.LogInformation($"Getting mammals in habitat by name: {habitatName}");
 
-            var query = _dBContext.MammalHabitats
-                .Join(_dBContext.Habitats
-                .Where(h => h.Name == habitatName),
-                mh => mh.HabitatId,
-                h => h.HabitatID,
-                (mh, h) => new { mh, h })
-                .Join(_dBContext.Mammals,
-                m => m.mh.MammalId,
-                n => n.MammalId,
-                (m, h) => new { m, h })
-                .Select(s => new FamilyDTO
-                {
-                    Name = s.h.Name,
-                    FamilyID = s.h.MammalId
-                });
+
+            IQueryable<Mammal> query = _dBContext.Mammals
+                .Where(x => x.MammalHabitats.Any(z => z.Habitat.Name == habitatName));
 
             return await query.ToListAsync();
         }

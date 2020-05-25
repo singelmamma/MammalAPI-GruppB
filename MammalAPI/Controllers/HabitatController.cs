@@ -19,13 +19,13 @@ namespace MammalAPI.Controllers
     {
 
         private readonly IHabitatRepository _habitatRepository;
-        private readonly IUrlHelper _urlHelper;
+        //private readonly IUrlHelper _urlHelper;
         private readonly IMapper _mapper;
 
-        public HabitatController(IHabitatRepository habitatRepository, IUrlHelper injectedUrlHelper, IMapper mapper)
+        public HabitatController(IHabitatRepository habitatRepository, /*IUrlHelper injectedUrlHelper,*/ IMapper mapper)
         {
             _habitatRepository = habitatRepository;
-            _urlHelper = injectedUrlHelper;
+            //_urlHelper = injectedUrlHelper;
             _mapper = mapper;
         }
 

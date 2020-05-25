@@ -32,13 +32,13 @@ namespace MammalAPI.Services
         {
             _logger.LogInformation($"Getting habitat with name: { name }");
             var query = await _dBContext.Habitats
-                            .Where(h => h.Name == name)
-                            .Select(s => new FamilyDTO
-                            {
-                                Name = s.Name,
-                                FamilyID = s.HabitatID
-                            })
-                            .FirstOrDefaultAsync();
+                .Where(h => h.Name == name)
+                .Select(s => new FamilyDTO
+                {
+                    Name = s.Name,
+                    FamilyID = s.HabitatID
+                })
+                .FirstOrDefaultAsync();
             
             if (query == null) throw new System.Exception($"Not found {name}");
             
