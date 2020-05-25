@@ -341,3 +341,5 @@ healthchecksdb
 .vscode/launch.json
 .vscode/tasks.json
 MammalAPI/appsettings.json
+
+*appsettings.json
