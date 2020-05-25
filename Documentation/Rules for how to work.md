@@ -17,3 +17,7 @@
 * Code must be reviewed before merging to master
 * Never EVER commit code directly to master!!!
 * Everyone present during review must approve pull request before they are merged
+
+# Panik-situationer
+
+* Vid situationer när personen/gruppen känner att projektet står stilla eller har större problem som inte går att lösa själv, kallas gruppen till ett möte för att revidera arbetsprocessen och projektet på hur och vad som behövs ändras för att komma vidare med arbetet för att uppnå projektets mål.
