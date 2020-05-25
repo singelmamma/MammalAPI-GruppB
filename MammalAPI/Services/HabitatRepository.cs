@@ -21,18 +21,10 @@ namespace MammalAPI.Services
             return await _dBContext.Habitats.ToListAsync();
         }
 
-        public async Task<FamilyDTO> GetHabitatByName(string name)
+        public async Task<Habitat> GetHabitatByName(string name)
         {
             _logger.LogInformation($"Getting habitat with name: { name }");
-            var query = await _dBContext.Habitats
-                            .Where(h => h.Name == name)
-                            .Select(s => new FamilyDTO
-                            {
-                                Name = s.Name,
-                                FamilyID = s.HabitatID
-                            })
-                            .FirstOrDefaultAsync();
-            
+            var query = await _dBContext.Habitats.Where(x=> x.Name==name).FirstOrDefaultAsync();
             if (query == null) throw new System.Exception($"Not found {name}");
             
             return  query;
