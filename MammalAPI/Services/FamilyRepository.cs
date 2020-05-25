@@ -28,19 +28,14 @@ namespace MammalAPI.Services
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<FamilyDTO> GetFamilyById(int id)
+        public async Task<Family> GetFamilyById(int id)
         {
             _logger.LogInformation($"Getting mammal family by { id }.");
-            var query = _dBContext.Families.Where(s => s.FamilyId == id)
-                .Select(s => new FamilyDTO
-                {
-                    FamilyID = s.FamilyId,
-                    Name = s.Name
-                });
+            var query = _dBContext.Families.Where(f => f.FamilyId == id);
 
             if (query == null) throw new System.Exception($"Mammal family not found on id: {id}");
 
-            return await query.FirstOrDefaultAsync();              
+            return await query.FirstOrDefaultAsync();
         }
         
         public async Task<Family[]> GetAllFamilies(bool includeMammals)
