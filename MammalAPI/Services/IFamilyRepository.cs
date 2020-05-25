@@ -7,7 +7,7 @@ namespace MammalAPI.Services
 {
     public interface IFamilyRepository:IRepository
     {
-        Task<FamilyDTO> GetFamilyByName(string name);
+        Task<Family> GetFamilyByName(string name);
         Task<Family> GetFamilyById(int id);
         Task<Family[]> GetAllFamilies(bool includeMammals);
     }

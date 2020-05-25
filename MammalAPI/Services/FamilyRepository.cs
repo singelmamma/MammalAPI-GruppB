@@ -18,15 +18,10 @@ namespace MammalAPI.Services
         public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
         { }
 
-        public async Task<FamilyDTO> GetFamilyByName(string name)
+        public async Task<Family> GetFamilyByName(string name)
         {
             _logger.LogInformation($"Getting mammal family by { name }.");
-            var query = _dBContext.Families.Where(s => s.Name == name)
-                .Select(s => new FamilyDTO
-                {
-                    FamilyID = s.FamilyId,
-                    Name = s.Name
-                });
+            var query = _dBContext.Families.Where(f => f.Name == name);
 
             if (query == null) throw new System.Exception($"Not found {name}");
 
