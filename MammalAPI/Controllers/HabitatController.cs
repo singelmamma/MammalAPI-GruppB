@@ -99,6 +99,7 @@ namespace MammalAPI.Controllers
             return BadRequest();
         }
 
+        ///api/v1.0/habitat/8       To change a habitat
         [HttpPut("{id}")]
         public async Task<ActionResult>PutHabitat(int id, HabitatDTO habitatDto)
         {
