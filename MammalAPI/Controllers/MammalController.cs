@@ -149,5 +149,31 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
         }
+
+        [HttpPut("{mammalId}")]
+        public async Task<ActionResult<MammalDTO>> PutMammal (int mammalId, MammalDTO mammalDTO)
+        {
+            try
+            {
+                var oldMammal = await _repository.GetMammalById(mammalId);
+                if(oldMammal == null)
+                {
+                    return NotFound($"Mammal with ID: {mammalId} does not exist");
+                }
+
+                var newMammal = _mapper.Map(mammalDTO, oldMammal);
+                _repository.Update(newMammal);
+                if(await _repository.Save())
+                {
+                    return NoContent();
+                }
+            }
+
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database failure: {e.Message}");
+            }
+            return BadRequest();
+        }
     }
 }
