@@ -122,7 +122,7 @@ namespace MammalAPI.Controllers
             try
             {
                 var result= await _repository.GetMammalsByFamilyId(id);
-                var mappedResult = _mapper.Map<MammalDTO>(result);
+                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
                 return Ok(mappedResult);
             }
             catch (Exception e)

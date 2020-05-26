@@ -103,17 +103,13 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<List<FamilyDTO>> GetMammalsByFamilyId(int id)
+        public async Task<List<Mammal>> GetMammalsByFamilyId(int id)
         {
             _logger.LogInformation($"Getting mammals by familyid {id}");
 
             var query = _dBContext.Mammals
-                .Where(m => m.Family.FamilyId == id)
-                .Select(m => new FamilyDTO
-                {
-                   FamilyID = m.MammalId,
-                    Name = m.Name
-                });
+                .Where(m => m.Family.FamilyId == id);
+                
 
             return await query.ToListAsync();
         }
