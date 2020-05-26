@@ -38,7 +38,7 @@ namespace MammalAPI.Services
             return await query.FirstOrDefaultAsync();
         }
         
-        public async Task<Family[]> GetAllFamilies(bool includeMammals)
+        public async Task<Family[]> GetAllFamily(bool includeMammals)
         {
             IQueryable<Family> queary = _dBContext.Families;
 
