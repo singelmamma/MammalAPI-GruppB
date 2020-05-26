@@ -19,16 +19,14 @@ namespace MammalAPI.Controllers
     {
 
         private readonly IHabitatRepository _habitatRepository;
-        //private readonly IUrlHelper _urlHelper;
         private readonly IMapper _mapper;
 
-        public HabitatController(IHabitatRepository habitatRepository, /*IUrlHelper injectedUrlHelper,*/ IMapper mapper)
+        public HabitatController(IHabitatRepository habitatRepository, IMapper mapper)
         {
             _habitatRepository = habitatRepository;
-            //_urlHelper = injectedUrlHelper;
             _mapper = mapper;
         }
-
+        // /api/v1.0/habitat/?habitatName=pacific%20ocean  To get habitat by name
         [HttpGet]
         public async Task<IActionResult> GetHabitatByName([FromQuery]string habitatName)
         {
@@ -45,7 +43,7 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: {e.Message}");
             }
         }
-        
+        ///api/v1.0/habitat/1    To get one habitat by id
         [HttpGet("{id}")]
         public async Task<IActionResult> GetHabitatById(int id)
         {
@@ -61,6 +59,7 @@ namespace MammalAPI.Controllers
             }
         }
 
+        ///api/v1.0/habitat/all             To get all habitats
         [HttpGet("all")]
         public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats()
         {
