@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-//using MammalAPI.HATEOAS;
 
 
 
@@ -19,13 +18,11 @@ namespace MammalAPI.Controllers
     {
 
         private readonly IHabitatRepository _habitatRepository;
-        //private readonly IUrlHelper _urlHelper;
         private readonly IMapper _mapper;
 
-        public HabitatController(IHabitatRepository habitatRepository, /*IUrlHelper injectedUrlHelper,*/ IMapper mapper)
+        public HabitatController(IHabitatRepository habitatRepository, IMapper mapper)
         {
             _habitatRepository = habitatRepository;
-            //_urlHelper = injectedUrlHelper;
             _mapper = mapper;
         }
 
