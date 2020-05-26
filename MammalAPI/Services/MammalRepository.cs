@@ -63,19 +63,12 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<List<FamilyDTO>> GetMammalsByHabitatId(int id)
+        public async Task<List<Mammal>> GetMammalsByHabitatId(int id)
         {
             _logger.LogInformation($"Getting mammals in habitat by id: {id}");
 
-            var query = _dBContext.MammalHabitats
-                .Include(mh => mh.Mammal)
-                .AsNoTracking()
-                .Where(x => x.HabitatId == id)
-                .Select(x => new FamilyDTO
-                {
-                    FamilyID = x.MammalId,
-                    Name = x.Mammal.Name
-                });
+            var query = _dBContext.Mammals
+                .Include(i => i.Habitat.HabitatID == id);
 
             return await query.ToListAsync();
         }
