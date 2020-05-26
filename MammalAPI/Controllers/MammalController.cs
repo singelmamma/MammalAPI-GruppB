@@ -92,7 +92,7 @@ namespace MammalAPI.Controllers
             try
             {
                 var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear);
-                var mappedResult = _mapper.Map<List<Mammal>>(result);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
                 return Ok(mappedResult);
             }
             catch (Exception e)
