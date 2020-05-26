@@ -175,5 +175,38 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
         }
+
+        [HttpDelete("{mammalId}")]
+        public async Task<ActionResult> DeleteMammal(int mammalId)
+        {
+            try
+            {
+                var mammalToDelete = await _repository.GetMammalById(mammalId);
+
+                if(mammalToDelete == null)
+                {
+                    return NotFound($"Mammal with ID: {mammalId} didn't exist");
+                }
+
+                _repository.Delete(mammalToDelete);
+
+                if(await _repository.Save())
+                {
+                    return NoContent();
+                }
+            }
+
+            catch(TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
+
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database failure: {e.Message}");
+            }
+
+            return BadRequest();
+        }
     }
 }
