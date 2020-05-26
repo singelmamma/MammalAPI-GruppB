@@ -84,6 +84,39 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
+
+        ///api/v1.0/family/##       Put a family by id
+        [HttpPut("{familyId}")]
+        public async Task<ActionResult<FamilyDTO>> Put(int familyId, FamilyDTO familyDTO)
+        {
+            try
+            {
+                var oldFamily = await _familyRepository.GetFamilyById(familyId);
+                if (oldFamily == null)
+                {
+                    return NotFound($"Family with ID: {familyId} could not be found.");
+                }
+
+                var newFamily = _mapper.Map(familyDTO, oldFamily);
+                _familyRepository.Update(newFamily);
+                if (await _familyRepository.Save())
+                {
+                    return NoContent();
+                }
+            }
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+
+            return BadRequest();
+        }
+
+
         /*
         [HttpPost]
         public async Task<ActionResult<IdNameDTO>>PostFamily(IdNameDTO family)
@@ -106,5 +139,7 @@ namespace MammalAPI.Controllers
             return BadRequest();
 
         }        */
+
+
     }
 }
