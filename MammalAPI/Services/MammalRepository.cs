@@ -49,6 +49,9 @@ namespace MammalAPI.Services
             IQueryable<Mammal> query = _dBContext.Mammals
                 .Where(x => x.MammalHabitats.Any(z => z.Habitat.Name == habitatName));
 
+            if (query == null) throw new Exception($"Not found: { habitatName }");
+
+
             return await query.ToListAsync();
         }
 
@@ -57,7 +60,10 @@ namespace MammalAPI.Services
             _logger.LogInformation($"Getting mammals in habitat by id: {id}");
 
             var query = _dBContext.Mammals
-                .Include(i => i.Habitat.HabitatID == id);
+                .Where(i => i.MammalHabitats.Any(i => i.Habitat.HabitatID == id));
+
+            if (query == null) throw new Exception($"Not found: { id }");
+
 
             return await query.ToListAsync();
         }
