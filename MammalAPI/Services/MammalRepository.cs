@@ -75,6 +75,9 @@ namespace MammalAPI.Services
             var query = _dBContext.Mammals
                 .Where(x => x.Lifespan >= fromYear && x.Lifespan <= toYear);
 
+            if (query == null) throw new Exception($"Not found: { fromYear } and { toYear }");
+
+
             return await query.ToListAsync(); 
         }
 
