@@ -11,7 +11,7 @@ namespace MammalAPI.Services
         Task<Mammal> GetMammalById(int id);
         Task<List<Mammal>> GetMammalsByHabitat(string habitatName);
         Task<List<FamilyDTO>> GetMammalsByHabitatId(int id);
-        Task<List<MammalLifespanDTO>> GetMammalsByLifeSpan(int fromYear, int toYear);
+        Task<List<Mammal>> GetMammalsByLifeSpan(int fromYear, int toYear);
         Task<List<Mammal>> GetMammalsByFamily(string familyName);
         Task<List<Mammal>> GetMammalsByFamilyId(int id);
     }
