@@ -44,11 +44,11 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/byid/1   Get family by id
         [HttpGet("byid/{id}")] 
-        public async Task<IActionResult> GetFamilyById(int id)
+        public async Task<IActionResult> GetFamilyById(int id, [FromQuery] bool includeMammals = false)
         {
             try
             {
-                var result = await _familyRepository.GetFamilyById(id);
+                var result = await _familyRepository.GetFamilyById(id, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
                 return Ok(mappedResult);
 
