@@ -28,7 +28,7 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result= await _familyRepository.GetFamilyByName(name);
+                var result = await _familyRepository.GetFamilyByName(name);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
                 return Ok(mappedResult);
             }
@@ -116,6 +116,7 @@ namespace MammalAPI.Controllers
             return BadRequest();
         }
 
+
         [HttpDelete("{familyId}")]
         public async Task<ActionResult<FamilyDTO>> DeleteFamily (int familyId)
         {
@@ -146,29 +147,25 @@ namespace MammalAPI.Controllers
             return BadRequest();
         }
 
-        /*
         [HttpPost]
-        public async Task<ActionResult<IdNameDTO>>PostFamily(IdNameDTO family)
+        public async Task<ActionResult<FamilyDTO>> PostFamily (FamilyDTO familyDTO)
         {
             try
             {
-                var mappedEntity = _mapper.Map<Family>(family);
+                var mappedEntity = _mapper.Map<Family>(familyDTO);
                 _familyRepository.Add(mappedEntity);
-
-                if (await _familyRepository.Save())
+                if(await _familyRepository.Save())
                 {
-                    return Created($"/api/v1.0/Family/{mappedEntity.FamilyId}", _mapper.Map<IdNameDTO>(mappedEntity));
+                    return Created($"/api/v1.0/family/id{familyDTO.FamilyID}", _mapper.Map<FamilyDTO>(mappedEntity));
                 }
             }
+
             catch (Exception e)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"database failure {e.Message}");
             }
+            
             return BadRequest();
-
-        }        */
-
-
+        }
     }
 }
