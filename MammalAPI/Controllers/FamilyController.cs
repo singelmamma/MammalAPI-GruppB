@@ -71,7 +71,6 @@ namespace MammalAPI.Controllers
             try
             {
                 var results = await _familyRepository.GetAllFamilies(includeMammals);
-
                 var mappedResult = _mapper.Map<FamilyDTO[]>(results);
                 return Ok(mappedResult);
             }

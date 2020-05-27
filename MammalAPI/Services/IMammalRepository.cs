@@ -9,7 +9,7 @@ namespace MammalAPI.Services
     {
         Task<List<Mammal>> GetAllMammals();
         Task<Mammal> GetMammalById(int id);
-        Task<List<Mammal>> GetMammalsByHabitatId(int id);
+        Task<List<Mammal>> GetMammalsByHabitatId(int id, bool inCludeFamilies);
         Task<List<Mammal>> GetMammalsByHabitat(string habitatName);
         Task<List<Mammal>> GetMammalsByLifeSpan(int fromYear, int toYear);
         Task<List<Mammal>> GetMammalsByFamily(string familyName);
