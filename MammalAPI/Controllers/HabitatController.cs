@@ -45,12 +45,12 @@ namespace MammalAPI.Controllers
             }
         }
         ///api/v1.0/habitat/1    To get one habitat by id
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetHabitatById(int id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
         {
             try
             {
-                var result = await _habitatRepository.GetHabitatById(id);
+                var result = await _habitatRepository.GetHabitatById(id, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
                 return Ok(mappedResult);
             }
