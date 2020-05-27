@@ -49,22 +49,21 @@ namespace MammalAPI.Services
             IQueryable<Mammal> query = _dBContext.Mammals
                 .Where(x => x.MammalHabitats.Any(z => z.Habitat.Name == habitatName));
 
+            if (query == null) throw new Exception($"Not found: { habitatName }");
+
+
             return await query.ToListAsync();
         }
 
-        public async Task<List<FamilyDTO>> GetMammalsByHabitatId(int id)
+        public async Task<List<Mammal>> GetMammalsByHabitatId(int id)
         {
             _logger.LogInformation($"Getting mammals in habitat by id: {id}");
 
-            var query = _dBContext.MammalHabitats
-                .Include(mh => mh.Mammal)
-                .AsNoTracking()
-                .Where(x => x.HabitatId == id)
-                .Select(x => new FamilyDTO
-                {
-                    FamilyID = x.MammalId,
-                    Name = x.Mammal.Name
-                });
+            var query = _dBContext.Mammals
+                .Where(i => i.MammalHabitats.Any(i => i.Habitat.HabitatID == id));
+
+            if (query == null) throw new Exception($"Not found: { id }");
+
 
             return await query.ToListAsync();
         }
