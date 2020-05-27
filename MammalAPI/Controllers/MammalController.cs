@@ -73,8 +73,8 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetMammalsByHabitatId([FromQuery] int habitatId)
+        [HttpGet("habitatId={habitatId}")]
+        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId)
         {
             try
             {
