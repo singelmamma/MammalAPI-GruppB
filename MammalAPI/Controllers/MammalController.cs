@@ -92,7 +92,7 @@ namespace MammalAPI.Controllers
             try
             {
                 var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear);
-                var mappedResult = _mapper.Map<MammalLifespanDTO>(result);
+                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -147,6 +147,65 @@ namespace MammalAPI.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure : {e.Message}");
             }
+            return BadRequest();
+        }
+
+        [HttpPut("{mammalId}")]
+        public async Task<ActionResult<MammalDTO>> PutMammal (int mammalId, MammalDTO mammalDTO)
+        {
+            try
+            {
+                var oldMammal = await _repository.GetMammalById(mammalId);
+                if(oldMammal == null)
+                {
+                    return NotFound($"Mammal with ID: {mammalId} does not exist");
+                }
+
+                var newMammal = _mapper.Map(mammalDTO, oldMammal);
+                _repository.Update(newMammal);
+                if(await _repository.Save())
+                {
+                    return NoContent();
+                }
+            }
+
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database failure: {e.Message}");
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete("{mammalId}")]
+        public async Task<ActionResult> DeleteMammal(int mammalId)
+        {
+            try
+            {
+                var mammalToDelete = await _repository.GetMammalById(mammalId);
+
+                if(mammalToDelete == null)
+                {
+                    return NotFound($"Mammal with ID: {mammalId} didn't exist");
+                }
+
+                _repository.Delete(mammalToDelete);
+
+                if(await _repository.Save())
+                {
+                    return NoContent();
+                }
+            }
+
+            catch(TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
+
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database failure: {e.Message}");
+            }
+
             return BadRequest();
         }
     }
