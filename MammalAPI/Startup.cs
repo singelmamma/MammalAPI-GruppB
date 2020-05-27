@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using MammalAPI.DTO;
+using Microsoft.OpenApi.Models;
 
 namespace MammalAPI
 {
@@ -24,13 +25,17 @@ namespace MammalAPI
             services.AddScoped<IMammalRepository, MammalRepository>();
             services.AddScoped<IHabitatRepository, HabitatRepository>();
             services.AddScoped<IFamilyRepository, FamilyRepository>();
-            // services.AddTransient<DBContextData>();
             services.AddAutoMapper(typeof(Startup));
             services.AddMvc(options => options.EnableEndpointRouting=false).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "MammalApi", Version = "v1", Description ="Tjaba tjena hallå" });
             });
         }
 
@@ -43,16 +48,12 @@ namespace MammalAPI
             }
             app.UseMvc();
 
-            // Gammalt som auto-skapades
-            // app.UseRouting();
+            app.UseSwagger();
 
-            // app.UseEndpoints(endpoints =>
-            // {
-            //     endpoints.MapGet("/", async context =>
-            //     {
-            //         await context.Response.WriteAsync("Hello World!");
-            //     });
-            // });
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "MammalApi");
+            });
         }
     }
 }

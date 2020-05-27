@@ -24,7 +24,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/byname/Phocidae      Get family by name
         [HttpGet("byname/{name}")]
-        public async Task<ActionResult<FamilyDTO>> GetFamilyByName(string name)
+        public async Task<ActionResult> GetFamilyByName(string name)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/##       Put a family by id
         [HttpPut("{familyId}")]
-        public async Task<ActionResult<FamilyDTO>> Put(int familyId, FamilyDTO familyDTO)
+        public async Task<ActionResult<FamilyDTO>> PutFamily (int familyId, FamilyDTO familyDTO)
         {
             try
             {
@@ -99,6 +99,37 @@ namespace MammalAPI.Controllers
 
                 var newFamily = _mapper.Map(familyDTO, oldFamily);
                 _familyRepository.Update(newFamily);
+                if (await _familyRepository.Save())
+                {
+                    return NoContent();
+                }
+            }
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+
+            return BadRequest();
+        }
+
+
+        [HttpDelete("{familyId}")]
+        public async Task<ActionResult<FamilyDTO>> DeleteFamily (int familyId)
+        {
+            try
+            {
+                var familyToDelete = await _familyRepository.GetFamilyById(familyId);
+                if (familyToDelete == null)
+                {
+                    return NotFound($"Family with ID: {familyId} could not be found.");
+                }
+
+                _familyRepository.Delete(familyToDelete);
+
                 if (await _familyRepository.Save())
                 {
                     return NoContent();
