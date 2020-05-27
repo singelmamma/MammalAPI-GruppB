@@ -79,9 +79,9 @@ namespace MammalAPI.Controllers
             }
         }
 
-         //  /api/v1.0/habitat           To create a post
+        //  /api/v1.0/habitat           To create a post
         [HttpPost]
-        public async Task <ActionResult<HabitatDTO>>PostHabitat(HabitatDTO habitatDto)
+        public async Task<ActionResult<HabitatDTO>> PostHabitat(HabitatDTO habitatDto)
         {
             try
             {
@@ -96,6 +96,8 @@ namespace MammalAPI.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"database failure {e.Message}");
             }
+            return BadRequest();
+        }
             
         [HttpDelete("{habitatId}")]
         public async Task<ActionResult<HabitatDTO>> DeleteHabitat (int habitatId)
