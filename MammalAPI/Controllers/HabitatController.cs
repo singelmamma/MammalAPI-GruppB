@@ -26,13 +26,13 @@ namespace MammalAPI.Controllers
             _habitatRepository = habitatRepository;
             _mapper = mapper;
         }
-        // /api/v1.0/habitat/?habitatName=pacific%20ocean  To get habitat by name
-        [HttpGet]
-        public async Task<IActionResult> GetHabitatByName([FromQuery]string habitatName)
+        // /api/v1.0/habitat/name=pacific%20ocean  To get habitat by name
+        [HttpGet("name={name}")]
+        public async Task<IActionResult> GetHabitatByName(string name)
         {
             try
             {
-                return Ok(await _habitatRepository.GetHabitatByName(habitatName));
+                return Ok(await _habitatRepository.GetHabitatByName(name));
             }
             catch (TimeoutException e)
             {
@@ -124,6 +124,33 @@ namespace MammalAPI.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+            return BadRequest();
+        }
+
+        ///api/v1.0/habitat/8       To change a habitat
+        [HttpPut("{id}")]
+        public async Task<ActionResult>PutHabitat(int id, HabitatDTO habitatDto)
+        {
+            try
+            {
+                var oldHabitat = await _habitatRepository.GetHabitatById(id);
+                if (oldHabitat == null)
+                {
+                    return NotFound();
+                }
+
+                var newHabitat = _mapper.Map(habitatDto, oldHabitat);
+                _habitatRepository.Update(newHabitat);
+                if (await _habitatRepository.Save())
+                {
+                    return NoContent();
+                }
+
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database failure {e.Message}");
             }
             return BadRequest();
         }
