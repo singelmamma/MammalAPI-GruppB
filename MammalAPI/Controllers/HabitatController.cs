@@ -26,13 +26,14 @@ namespace MammalAPI.Controllers
             _habitatRepository = habitatRepository;
             _mapper = mapper;
         }
-        // /api/v1.0/habitat/name=pacific%20ocean  To get habitat by name
+        // /api/v1.0/habitat/name=pacific ocean                To get habitat by name
+        ///habitat/name=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
         [HttpGet("name={name}")]
-        public async Task<IActionResult> GetHabitatByName(string name)
+        public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal=false)
         {
             try
             {
-                return Ok(await _habitatRepository.GetHabitatByName(name));
+                return Ok(await _habitatRepository.GetHabitatByName(name, includeMammal));
             }
             catch (TimeoutException e)
             {
