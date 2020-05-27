@@ -77,5 +77,37 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
+
+        [HttpDelete("{habitatId}")]
+        public async Task<ActionResult<HabitatDTO>> DeleteHabitat (int habitatId)
+        {
+            try
+            {
+                var habitatToDelete = await _habitatRepository.GetHabitatById(habitatId);
+                if(habitatToDelete == null)
+                {
+                    return NotFound($"Habitat with ID: {habitatId} could not be found");
+                }
+
+                _habitatRepository.Delete(habitatToDelete);
+
+                if(await _habitatRepository.Save())
+                {
+                    return NoContent();
+                }
+            }
+
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
+
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+
+            return BadRequest();
+        }
     }
 }
