@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MammalAPI.DTO;
+using MammalAPI.Models;
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,7 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result =await _habitatRepository.GetHabitatById(id);
+                var result = await _habitatRepository.GetHabitatById(id);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
                 return Ok(mappedResult);
             }
@@ -64,11 +65,11 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                if (_habitatRepository==null)
+                if (_habitatRepository == null)
                 {
                     return NotFound();
                 }
-                var result= await _habitatRepository.GetAllHabitats();
+                var result = await _habitatRepository.GetAllHabitats();
                 var mappedResult = _mapper.Map<HabitatDTO[]>(result);
                 return Ok(mappedResult);
             }
@@ -78,6 +79,24 @@ namespace MammalAPI.Controllers
             }
         }
 
+         //  /api/v1.0/habitat           To create a post
+        [HttpPost]
+        public async Task <ActionResult<HabitatDTO>>PostHabitat(HabitatDTO habitatDto)
+        {
+            try
+            {
+                var mappedEntity = _mapper.Map<Habitat>(habitatDto);
+                _habitatRepository.Add(mappedEntity);
+                if (await _habitatRepository.Save())
+                {
+                    return Created($"/api/v1.0/habitat/id/{habitatDto.HabitatID}", _mapper.Map<HabitatDTO>(mappedEntity));
+                }
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"database failure {e.Message}");
+            }
+            
         [HttpDelete("{habitatId}")]
         public async Task<ActionResult<HabitatDTO>> DeleteHabitat (int habitatId)
         {
@@ -106,7 +125,6 @@ namespace MammalAPI.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
-
             return BadRequest();
         }
     }
