@@ -26,13 +26,16 @@ namespace MammalAPI.Controllers
             _habitatRepository = habitatRepository;
             _mapper = mapper;
         }
-        // /api/v1.0/habitat/name=pacific%20ocean  To get habitat by name
+        // /api/v1.0/habitat/name=pacific ocean                To get habitat by name
+        ///habitat/name=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
         [HttpGet("name={name}")]
-        public async Task<IActionResult> GetHabitatByName(string name)
+        public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal=false)
         {
             try
             {
-                return Ok(await _habitatRepository.GetHabitatByName(name));
+                var result= await _habitatRepository.GetHabitatByName(name, includeMammal);
+                var mappedResult = _mapper.Map<HabitatDTO>(result);
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
@@ -44,12 +47,12 @@ namespace MammalAPI.Controllers
             }
         }
         ///api/v1.0/habitat/1    To get one habitat by id
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetHabitatById(int id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
         {
             try
             {
-                var result = await _habitatRepository.GetHabitatById(id);
+                var result = await _habitatRepository.GetHabitatById(id, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
                 return Ok(mappedResult);
             }
@@ -79,7 +82,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        //  /api/v1.0/habitat           To create a post
+        ///api/v1.0/habitat           To create a post
         [HttpPost]
         public async Task<ActionResult<HabitatDTO>> PostHabitat(HabitatDTO habitatDto)
         {
