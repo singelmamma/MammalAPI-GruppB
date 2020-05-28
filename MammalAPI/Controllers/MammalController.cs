@@ -102,12 +102,34 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("byfamilyname/{familyName}")]
-        public async Task<IActionResult> GetMammalsByFamilyName(string familyName)
+        public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
         {
             try
             {
-                var result= await _repository.GetMammalsByFamily(familyName);
+                var result = await _repository.GetMammalsByFamily(familyName, includeHabitat, includeFamily);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+
+                //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
+                //where we filter the DTO to stop recursion
+                if (includeHabitat)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        foreach (HabitatDTO habitat in mammal.Habitats)
+                        {
+                            habitat.Mammal = null;
+                        }
+                    }                    
+                }
+
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        mammal.Family.Mammals = null;
+                    }
+                }
+
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -117,12 +139,34 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("byfamilyid/{id}")]
-        public async Task<IActionResult> GetMammalsByFamilyId(int id)
+        public async Task<IActionResult> GetMammalsByFamilyId(int id, bool includeHabitat = false, bool includeFamily = false)
         {
             try
             {
-                var result= await _repository.GetMammalsByFamilyId(id);
+                var result= await _repository.GetMammalsByFamilyId(id, includeHabitat, includeFamily);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+
+                //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
+                //where we filter the DTO to stop recursion
+                if (includeHabitat)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        foreach (HabitatDTO habitat in mammal.Habitats)
+                        {
+                            habitat.Mammal = null;
+                        }
+                    }
+                }
+
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        mammal.Family.Mammals = null;
+                    }
+                }
+
                 return Ok(mappedResult);
             }
             catch (Exception e)

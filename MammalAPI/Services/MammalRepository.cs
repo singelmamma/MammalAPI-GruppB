@@ -80,23 +80,42 @@ namespace MammalAPI.Services
             return await query.ToListAsync(); 
         }
 
-        public async Task<List<Mammal>> GetMammalsByFamily(string familyName)
+        public async Task<List<Mammal>> GetMammalsByFamily(string familyName, bool includeHabitat = false, bool includeFamily = false)
         {
             _logger.LogInformation($"Getting mammals by familyname {familyName}");
 
             var query = _dBContext.Mammals
                 .Where(f => f.Family.Name == familyName);
 
+            if (includeHabitat)
+            {
+                query = query.Include(m => m.MammalHabitats).ThenInclude(mh => mh.Habitat);
+            }
+
+            if (includeFamily)
+            {
+                query = query.Include(m => m.Family);
+            }
+
             return await query.ToListAsync();
         }
 
-        public async Task<List<Mammal>> GetMammalsByFamilyId(int id)
+        public async Task<List<Mammal>> GetMammalsByFamilyId(int id, bool includeHabitat = false, bool includeFamily = false)
         {
             _logger.LogInformation($"Getting mammals by familyid {id}");
 
             var query = _dBContext.Mammals
                 .Where(m => m.Family.FamilyId == id);
-                
+
+            if (includeHabitat)
+            {
+                query = query.Include(m => m.MammalHabitats).ThenInclude(mh => mh.Habitat);
+            }
+
+            if (includeFamily)
+            {
+                query = query.Include(m => m.Family);
+            }
 
             return await query.ToListAsync();
         }
