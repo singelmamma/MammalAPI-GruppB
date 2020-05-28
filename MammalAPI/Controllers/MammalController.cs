@@ -87,11 +87,11 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
-        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear)
+        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily, bool includeHabitat)
         {
             try
             {
-                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear);
+                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
                 return Ok(mappedResult);
             }
