@@ -26,6 +26,7 @@ namespace MammalAPI.Controllers
             _habitatRepository = habitatRepository;
             _mapper = mapper;
         }
+
         // /api/v1.0/habitat/name=pacific ocean                To get habitat by name
         ///habitat/name=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
         [HttpGet("name={name}")]
@@ -46,9 +47,10 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: {e.Message}");
             }
         }
+
         ///api/v1.0/habitat/1    To get one habitat by id
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
+        public async Task<ActionResult<HabitatDTO>> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
         {
             try
             {

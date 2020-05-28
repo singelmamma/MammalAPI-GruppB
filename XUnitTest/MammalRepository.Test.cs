@@ -99,9 +99,9 @@ namespace XUnitTest
                         FamilyId = 1,
                         Name = "Hoppoloppo"
                     },
-                    MammalHabitats = new List<MammalHabitat>()
+                    MammalHabitats = new List<MammalHabitatDTO>()
                     {
-                        new MammalHabitat
+                        new MammalHabitatDTO
                         {
                             HabitatId = 1,
                             MammalId = 1
