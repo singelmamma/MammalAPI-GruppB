@@ -28,7 +28,7 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<List<Mammal>> GetMammalByName(string mammelName, bool includeFamilies)
+        public async Task<List<Mammal>> GetMammalByName(string mammelName, bool includeFamilies = false)
         {
             _logger.LogInformation($"Getting mammals by name: {mammelName}");
 
