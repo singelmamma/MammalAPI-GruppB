@@ -25,12 +25,12 @@ namespace MammalAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("GetAll", Name ="GetAll")]
-        public async Task<IActionResult> Get()
+        [HttpGet("family/{includeFamily}/habitat{includeHabitat}",Name ="GetAll")]
+        public async Task<ActionResult<MammalDTO[]>> Get(bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
-                var results = await _repository.GetAllMammals();
+                var results = await _repository.GetAllMammals(includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
 
@@ -73,8 +73,8 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetMammalsByHabitatId([FromQuery] int habitatId)
+        [HttpGet("/byhabitatid/{habitatId}")]
+        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-
+                
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -166,7 +166,7 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-
+                
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -174,6 +174,7 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
         }
+        
         [HttpPost]
         public async Task<ActionResult<MammalDTO>> PostMammal(MammalDTO mammalDTO)
         {

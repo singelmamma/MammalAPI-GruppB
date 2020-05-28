@@ -19,7 +19,12 @@ namespace MammalAPI.Configuration
                     .ToList()))
                 .ReverseMap();
 
-            CreateMap<Habitat, HabitatDTO>().ForMember(dto => dto.Mammal, opt => opt.MapFrom(x => x.MammalHabitats.Select(y => y.Mammal).ToList())).ReverseMap();
+            CreateMap<Habitat, HabitatDTO>().ForMember(
+                dto => dto.Mammal, 
+                opt => opt.MapFrom(x => x.MammalHabitats
+                    .Select(y => y.Mammal)
+                    .ToList()))
+                .ReverseMap();
 
             CreateMap<Family, FamilyDTO>().ReverseMap();
         }
