@@ -25,6 +25,7 @@ namespace MammalAPI.Controllers
             _mapper = mapper;
         }
 
+
         [HttpGet("family/{includeFamily}/habitat{includeHabitat}",Name ="GetAll")]
         public async Task<ActionResult<MammalDTO[]>> Get(bool includeFamily = false, bool includeHabitat = false)
         {
@@ -73,7 +74,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("habitatId={habitatId}")]
+        [HttpGet("/byhabitatid/{habitatId}")]
         public async Task<IActionResult> GetMammalsByHabitatId(int habitatId)
         {
             try
