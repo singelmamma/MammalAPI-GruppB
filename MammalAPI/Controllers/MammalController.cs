@@ -43,7 +43,7 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("{mammelName}")]
-        public async Task<IActionResult> GetMammalByName(string mammelName, bool includeFamilies)
+        public async Task<IActionResult> GetMammalByName(string mammelName, bool includeFamilies = false)
         {
             try
             {
