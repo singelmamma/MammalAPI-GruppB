@@ -22,7 +22,7 @@ namespace MammalAPI.Controllers
             this._mapper = mapper;
         }
 
-        ///api/v1.0/family/all       Get all families
+        ///api/v1.0/family       Get all families
         [HttpGet]
         public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeMammals = false)
         {
@@ -43,13 +43,13 @@ namespace MammalAPI.Controllers
             }
         }
 
-        ///api/v1.0/family/byname/Phocidae      Get family by name
+        ///api/v1.0/family/Phocidae      Get family by name
         [HttpGet("{name}")]
         public async Task<ActionResult> GetFamilyByName(string name)
         {
             try
             {
-                var result = await _familyRepository.GetFamilyByName(name);
+                var result = await _familyRepository.GetFamilyByName(name, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
                 return Ok(mappedResult);
             }
@@ -63,7 +63,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        ///api/v1.0/family/byid/1   Get family by id
+        ///api/v1.0/family/1   Get family by id
         [HttpGet("{id:int}")] 
         public async Task<IActionResult> GetFamilyById(int id)
         {
