@@ -12,9 +12,10 @@ namespace MammalAPI.Configuration
     {
         public Mapper()
         {
-            CreateMap<Mammal, MammalDTO>().ReverseMap();
+            CreateMap<Mammal, MammalDTO>().PreserveReferences().ForMember(dto => dto.Habitats, opt => opt.MapFrom(x => x.MammalHabitats.Select(y => y.Habitat).ToList())).ReverseMap();
+                
             CreateMap<Habitat, HabitatDTO>().ReverseMap();
-            CreateMap<Family, FamilyDTO>().ReverseMap();
+            CreateMap<Family, FamilyDTO>().PreserveReferences().ReverseMap();
         }
     }
 }
