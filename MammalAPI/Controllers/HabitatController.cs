@@ -79,7 +79,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        //  /api/v1.0/habitat           To create a post
+        ///api/v1.0/habitat           To create a post
         [HttpPost]
         public async Task<ActionResult<HabitatDTO>> PostHabitat(HabitatDTO habitatDto)
         {
