@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MammalAPI.Services
 {
@@ -23,6 +24,23 @@ namespace MammalAPI.Services
             _logger.LogInformation($"Getting all mammals");
 
             var query = _dBContext.Mammals;
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<Mammal>> GetMammalByName(string mammelName, bool includeFamilies)
+        {
+            _logger.LogInformation($"Getting mammals by name: {mammelName}");
+
+            IQueryable<Mammal> query = _dBContext.Mammals
+                .Where(x => x.MammalHabitats.Any(z => z.Mammal.Name == mammelName));
+
+            if (query == null) throw new Exception($"Not found: { mammelName }");
+
+            if(includeFamilies)
+            {
+                query = query.Include(f => f.Family);
+            }
 
             return await query.ToListAsync();
         }

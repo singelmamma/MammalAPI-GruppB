@@ -42,6 +42,21 @@ namespace MammalAPI.Controllers
             }
         }
 
+        [HttpGet("{mammelName}")]
+        public async Task<IActionResult> GetMammalByName(string mammelName, bool includeFamilies)
+        {
+            try
+            {
+                var result = await _repository.GetMammalByName(mammelName, includeFamilies);
+                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                return Ok(mappedResult);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: { e.Message }");
+            }
+        }
+
         [HttpGet("{id:int}", Name = "GetMammalAsync")]
         public async Task<IActionResult> GetMammalById(int id)
         {

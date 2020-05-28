@@ -18,12 +18,19 @@ namespace MammalAPI.Services
         public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
         { }
 
-        public async Task<Family> GetFamilyByName(string name)
+        public async Task<Family> GetFamilyByName(string name, bool includeMammal)
         {
             _logger.LogInformation($"Getting mammal family by { name }.");
             var query = _dBContext.Families.Where(f => f.Name == name);
 
             if (query == null) throw new System.Exception($"Not found {name}");
+           
+            if(includeMammal)
+            {
+                query = query.Include(mh => mh.Mammals)
+                    .ThenInclude(mh => mh.MammalHabitats)
+                    .ThenInclude(h => h.Habitat);
+            }
 
             return await query.FirstOrDefaultAsync();
         }

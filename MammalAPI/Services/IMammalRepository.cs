@@ -8,6 +8,7 @@ namespace MammalAPI.Services
     public interface IMammalRepository : IRepository
     {
         Task<List<Mammal>> GetAllMammals();
+        Task<List<Mammal>> GetMammalByName(string mammelName, bool includeFamilies);
         Task<Mammal> GetMammalById(int id);
         Task<List<Mammal>> GetMammalsByHabitatId(int id);
         Task<List<Mammal>> GetMammalsByHabitat(string habitatName);
