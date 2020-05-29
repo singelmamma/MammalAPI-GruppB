@@ -42,13 +42,22 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{mammelName}")]
-        public async Task<IActionResult> GetMammalByName(string mammelName, bool includeFamilies = false)
+        [HttpGet("{mammalName}")]
+        public async Task<IActionResult> GetMammalByName(string mammalName, bool includeFamilies = false)
         {
             try
             {
-                var result = await _repository.GetMammalByName(mammelName, includeFamilies);
+                var result = await _repository.GetMammalByName(mammalName, includeFamilies);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+
+                if(includeFamilies)
+                {
+                    foreach(MammalDTO mammal in mappedResult)
+                    {    
+                            mammal.Family.Mammals = null;
+                    }
+                }
+                
                 return Ok(mappedResult);
             }
             catch (Exception e)

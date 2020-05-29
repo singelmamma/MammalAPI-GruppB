@@ -28,14 +28,14 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<List<Mammal>> GetMammalByName(string mammelName, bool includeFamilies)
+        public async Task<List<Mammal>> GetMammalByName(string mammalName, bool includeFamilies)
         {
-            _logger.LogInformation($"Getting mammals by name: {mammelName}");
+            _logger.LogInformation($"Getting mammals by name: {mammalName}");
 
             IQueryable<Mammal> query = _dBContext.Mammals
-                .Where(x => x.MammalHabitats.Any(z => z.Mammal.Name == mammelName));
+                .Where(x => x.MammalHabitats.Any(z => z.Mammal.Name == mammalName));
 
-            if (query == null) throw new Exception($"Not found: { mammelName }");
+            if (query == null) throw new Exception($"Not found: { mammalName }");
 
             if(includeFamilies)
             {
