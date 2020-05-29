@@ -25,7 +25,6 @@ namespace MammalAPI.Controllers
             _mapper = mapper;
         }
 
-
         [HttpGet("family/{includeFamily}/habitat{includeHabitat}",Name ="GetAll")]
         public async Task<ActionResult<MammalDTO[]>> Get(bool includeFamily = false, bool includeHabitat = false)
         {
@@ -82,7 +81,6 @@ namespace MammalAPI.Controllers
                 var result = await _repository.GetMammalsByHabitatId(habitatId, includeFamilies);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
                 return Ok(mappedResult);
-
             }
             catch (Exception e)
             {
@@ -91,12 +89,22 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
-        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear)
+        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
-                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear);
+                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                if(includeHabitat)
+                {
+                    foreach(MammalDTO mammal in mappedResult)
+                    {
+                        foreach(HabitatDTO habitat in mammal.Habitats)
+                        {
+                            habitat.Mammal = null;
+                        }
+                    }
+                }
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -106,7 +114,6 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("byfamilyname/{familyName}")]
-
         public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
         {
             try
@@ -134,8 +141,7 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-                
-                return Ok(mappedResult);
+                                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -172,7 +178,6 @@ namespace MammalAPI.Controllers
                     }
                 }
                 
-
                 return Ok(mappedResult);
             }
             catch (Exception e)

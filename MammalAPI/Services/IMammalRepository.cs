@@ -13,7 +13,7 @@ namespace MammalAPI.Services
         Task<List<Mammal>> GetMammalsByHabitatId(int id, bool includeFamilies);
         Task<List<Mammal>> GetMammalsByHabitat(string habitatName);
         Task<List<Mammal>> GetMammalsByLifeSpan(int fromYear, int toYear);
-        Task<List<Mammal>> GetMammalsByFamily(string familyName, bool includeHabitat, bool includeFamily = false);
+        Task<List<Mammal>> GetMammalsByFamily(string familyName, bool includeHabitat = false, bool includeFamily = false);
         Task<List<Mammal>> GetMammalsByFamilyId(int id, bool includeHabitat = false, bool includeFamily = false);
     }
 }

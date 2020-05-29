@@ -25,7 +25,7 @@ namespace MammalAPI.Configuration
                     .Select(y => y.Mammal)
                     .ToList()))
                 .ReverseMap();
-
+                
             CreateMap<Family, FamilyDTO>().ReverseMap();
         }
     }
