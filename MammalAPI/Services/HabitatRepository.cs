@@ -12,7 +12,7 @@ namespace MammalAPI.Services
 {
     public class HabitatRepository : Repository, IHabitatRepository
     {
-        public HabitatRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base(DBContext, logger)
+        public HabitatRepository(DBContext DBContext, ILogger<HabitatRepository> logger) : base(DBContext, logger)
         { }
 
         public async Task<List<Habitat>> GetAllHabitats(bool includeMammal=false)

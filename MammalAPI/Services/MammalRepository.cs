@@ -62,27 +62,41 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<List<Mammal>> GetMammalsByHabitatId(int id)
+        public async Task<List<Mammal>> GetMammalsByHabitatId(int id, bool includeFamilies)
         {
             _logger.LogInformation($"Getting mammals in habitat by id: {id}");
 
-            var query = _dBContext.Mammals
+            IQueryable<Mammal> query = _dBContext.Mammals
                 .Where(i => i.MammalHabitats.Any(i => i.Habitat.HabitatID == id));
 
             if (query == null) throw new Exception($"Not found: { id }");
 
+            if(includeFamilies)
+            {
+                query = query.Include(f => f.Family);
+            }
 
             return await query.ToListAsync();
         }
 
-        public async Task<List<Mammal>> GetMammalsByLifeSpan(int fromYear, int toYear)
+        public async Task<List<Mammal>> GetMammalsByLifeSpan(int fromYear, int toYear, bool includeFamily, bool includeHabitat)
         {
             _logger.LogInformation($"Getting mammals by lifespan: {fromYear}-{toYear}");
+            
             var query = _dBContext.Mammals
                 .Where(x => x.Lifespan >= fromYear && x.Lifespan <= toYear);
 
             if (query == null) throw new Exception($"Not found: { fromYear } and { toYear }");
 
+            if(includeFamily)
+            {
+                query = query.Include(f => f.Family);
+            }
+            if(includeHabitat)
+            {
+                query = query.Include(mh => mh.MammalHabitats)
+                    .ThenInclude(h => h.Habitat);
+            }
 
             return await query.ToListAsync(); 
         }
