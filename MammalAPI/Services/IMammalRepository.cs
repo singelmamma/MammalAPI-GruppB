@@ -16,6 +16,5 @@ namespace MammalAPI.Services
         Task<List<Mammal>> GetMammalsByHabitat(string habitatName);
         Task<List<Mammal>> GetMammalsByFamilyId(int id, bool includeHabitat = false, bool includeFamily = false);
         Task<List<Mammal>> GetMammalsByFamily(string familyName, bool includeHabitat = false, bool includeFamily = false);
-        
     }
 }
