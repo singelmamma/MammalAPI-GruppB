@@ -63,8 +63,8 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat/all             To get all habitats
-        [HttpGet("all")]
-        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats()
+        [HttpGet()]
+        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats(bool includeMammal=false)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace MammalAPI.Controllers
                 {
                     return NotFound();
                 }
-                var result = await _habitatRepository.GetAllHabitats();
+                var result = await _habitatRepository.GetAllHabitats(includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO[]>(result);
                 return Ok(mappedResult);
             }
