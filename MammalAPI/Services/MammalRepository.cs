@@ -18,11 +18,18 @@ namespace MammalAPI.Services
         public MammalRepository(DBContext DBContext, ILogger<MammalRepository> logger): base(DBContext, logger)
         {}
 
-        public async Task<List<Mammal>> GetAllMammals()
+        public async Task<List<Mammal>> GetAllMammals(bool includeFamily, bool includeHabitat)
         {
             _logger.LogInformation($"Getting all mammals");
-
-            var query = _dBContext.Mammals;
+            IQueryable<Mammal> query = _dBContext.Mammals;
+            if (includeFamily)
+            {
+               query = query.Include(f => f.Family);
+            }
+            if (includeHabitat)
+            {
+                query = query.Include(mh => mh.MammalHabitats).ThenInclude(h => h.Habitat);
+            }
 
             return await query.ToListAsync();
         }
