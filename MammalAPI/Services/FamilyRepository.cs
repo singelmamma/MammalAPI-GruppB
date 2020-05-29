@@ -49,14 +49,14 @@ namespace MammalAPI.Services
         
         public async Task<Family[]> GetAllFamilies(bool includeMammals)
         {
-            IQueryable<Family> queary = _dBContext.Families;
+            IQueryable<Family> query = _dBContext.Families;
 
-            if (includeMammals == true)
+            if (includeMammals)
             {
-                queary = queary.Include(m => m.Mammals);
+                query = query.Include(m => m.Mammals);
             }
 
-            return await queary.ToArrayAsync();
+            return await query.ToArrayAsync();
         }
     }
 }

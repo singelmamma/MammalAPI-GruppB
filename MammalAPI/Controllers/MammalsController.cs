@@ -73,7 +73,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("byhabitatid/{habitatId}")]
+        [HttpGet("habitatid/{habitatId}")]
         public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
@@ -89,12 +89,22 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
-        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear)
+        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
-                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear);
+                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                if(includeHabitat)
+                {
+                    foreach(MammalDTO mammal in mappedResult)
+                    {
+                        foreach(HabitatDTO habitat in mammal.Habitats)
+                        {
+                            habitat.Mammal = null;
+                        }
+                    }
+                }
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -131,8 +141,7 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-                
-                return Ok(mappedResult);
+                                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -176,7 +185,7 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
         }
-        
+
         [HttpPost]
         public async Task<ActionResult<MammalDTO>> PostMammal(MammalDTO mammalDTO)
         {
