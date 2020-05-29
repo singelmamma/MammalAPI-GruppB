@@ -34,11 +34,14 @@ namespace XUnitTest
             Assert.Equal(4, testResult.Result.Count);
         }
 
-        [Fact]
-        public void GetHabitatByName_FourDifferentHabitats_NameIsEast()
+        [Theory]
+        [InlineData("North", "North")]
+        [InlineData("East", "East")]
+        [InlineData("West", "West")]
+        [InlineData("South", "South")]
+        public void GetHabitatByName_FourDifferentHabitats_HabitatNameExpected(string inlineHabitatName, string expected)
         {
             // Arrange
-            var habitatName = "East";
             var habitats = GetMoqHabitats();
             var contextMock = new Mock<DBContext>();
             contextMock.Setup(h => h.Habitats).ReturnsDbSet(habitats);
@@ -47,14 +50,14 @@ namespace XUnitTest
             var habitatRepository = new HabitatRepository(contextMock.Object, logger);
 
             // Act
-            var testResult = habitatRepository.GetHabitatByName(habitatName);
+            var testResult = habitatRepository.GetHabitatByName(inlineHabitatName);
 
             // Assert
-            Assert.Equal(habitatName, testResult.Result.Name);
+            Assert.Equal(expected, testResult.Result.Name);
         }
 
         [Fact]
-        public void GetHabitatByName_MisspelledHabitatName_Exception()
+        public void GetHabitatByName_MisspelledHabitatName_ExceptionExpected()
         {
             // Arrange
             var habitatName = "Eastss";
@@ -69,7 +72,12 @@ namespace XUnitTest
             Assert.ThrowsAsync<Exception>(() => habitatRepository.GetHabitatByName(habitatName));
         }
 
-        public void GetHabitatById_FourTestHabitats_GetIdOne()
+        [Theory]
+        [InlineData(1, "North")]
+        [InlineData(2, "East")]
+        [InlineData(3, "South")]
+        [InlineData(4, "West")]
+        public void GetHabitatById_FourTestHabitats_HabitatIdExpected(int inlineHabitatId, string expected)
         {
             // Arrange
             var contextMock = new Mock<DBContext>();
@@ -79,10 +87,10 @@ namespace XUnitTest
             var habitatRepository = new HabitatRepository(contextMock.Object, logger);
 
             // Act
-            var expected = habitatRepository.GetHabitatById(1);
+            var result = habitatRepository.GetHabitatById(inlineHabitatId);
 
             // Assert
-            Assert.Equal(1, expected.Result.Id);
+            Assert.Equal(expected, result.Result.Name);
 
         }
 
