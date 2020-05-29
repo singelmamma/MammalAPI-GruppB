@@ -55,7 +55,7 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<List<Mammal>> GetMammalsByHabitatId(int id, bool inCludeFamilies)
+        public async Task<List<Mammal>> GetMammalsByHabitatId(int id, bool includeFamilies)
         {
             _logger.LogInformation($"Getting mammals in habitat by id: {id}");
 
@@ -64,7 +64,7 @@ namespace MammalAPI.Services
 
             if (query == null) throw new Exception($"Not found: { id }");
 
-            if(inCludeFamilies)
+            if(includeFamilies)
             {
                 query = query.Include(f => f.Family);
             }
