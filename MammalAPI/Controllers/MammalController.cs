@@ -93,7 +93,19 @@ namespace MammalAPI.Controllers
             {
                 var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                if(includeHabitat)
+                {
+                    foreach(MammalDTO mammal in mappedResult)
+                    {
+                        foreach(HabitatDTO habitat in mammal.Habitats)
+                        {
+                            habitat.Mammal = null;
+                        }
+                    }
+                }
+
                 return Ok(mappedResult);
+
             }
             catch (Exception e)
             {

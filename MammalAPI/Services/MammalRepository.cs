@@ -71,6 +71,7 @@ namespace MammalAPI.Services
         public async Task<List<Mammal>> GetMammalsByLifeSpan(int fromYear, int toYear, bool includeFamily, bool includeHabitat)
         {
             _logger.LogInformation($"Getting mammals by lifespan: {fromYear}-{toYear}");
+            
             var query = _dBContext.Mammals
                 .Where(x => x.Lifespan >= fromYear && x.Lifespan <= toYear);
 
