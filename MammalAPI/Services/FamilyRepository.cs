@@ -2,14 +2,8 @@
 using MammalAPI.Models;
 using MammalAPI.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
-using MammalAPI.DTO;
 using Microsoft.Extensions.Logging;
-
-
-
-
 
 namespace MammalAPI.Services
 {
@@ -18,19 +12,16 @@ namespace MammalAPI.Services
         public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
         { }
 
-        public async Task<Family> GetFamilyByName(string name, bool includeMammals = false)
+        public async Task<Family[]> GetAllFamilies(bool includeMammals)
         {
-            _logger.LogInformation($"Getting mammal family by { name }.");
-            var query = _dBContext.Families.Where(f => f.Name == name);
-
-            if (query == null) throw new System.Exception($"Not found {name}");
+            IQueryable<Family> query = _dBContext.Families;
 
             if (includeMammals)
             {
-                query = query.Include(f => f.Mammals);
+                query = query.Include(m => m.Mammals);
             }
 
-            return await query.FirstOrDefaultAsync();
+            return await query.ToArrayAsync();
         }
 
         public async Task<Family> GetFamilyById(int id, bool includeMammals = false)
@@ -47,17 +38,20 @@ namespace MammalAPI.Services
 
             return await query.FirstOrDefaultAsync();
         }
-        
-        public async Task<Family[]> GetAllFamilies(bool includeMammals)
+
+        public async Task<Family> GetFamilyByName(string name, bool includeMammals = false)
         {
-            IQueryable<Family> query = _dBContext.Families;
+            _logger.LogInformation($"Getting mammal family by { name }.");
+            var query = _dBContext.Families.Where(f => f.Name == name);
+
+            if (query == null) throw new System.Exception($"Not found {name}");
 
             if (includeMammals)
             {
-                query = query.Include(m => m.Mammals);
+                query = query.Include(f => f.Mammals);
             }
 
-            return await query.ToArrayAsync();
+            return await query.FirstOrDefaultAsync();
         }
     }
 }
