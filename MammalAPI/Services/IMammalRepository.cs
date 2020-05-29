@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
-using MammalAPI.DTO;
 using MammalAPI.Models;
 
 namespace MammalAPI.Services
