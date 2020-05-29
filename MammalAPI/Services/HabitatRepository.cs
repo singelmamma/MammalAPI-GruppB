@@ -15,10 +15,17 @@ namespace MammalAPI.Services
         public HabitatRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base(DBContext, logger)
         { }
 
-        public async Task<List<Habitat>> GetAllHabitats()
+        public async Task<List<Habitat>> GetAllHabitats(bool includeMammal=false)
         {
             _logger.LogInformation("Getting all habitats");
-            return await _dBContext.Habitats.ToListAsync();
+            IQueryable<Habitat> query = _dBContext.Habitats;
+
+            if (includeMammal)
+            {
+                query = query.Include(x => x.MammalHabitats).ThenInclude(x => x.Mammal);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Habitat> GetHabitatByName(string name, bool includeMammal=false)
