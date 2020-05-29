@@ -24,6 +24,7 @@ namespace MammalAPI.Services
             var query = _dBContext.Families.Where(f => f.Name == name);
 
             if (query == null) throw new System.Exception($"Not found {name}");
+
             if (includeMammals)
             {
                 query = query.Include(f => f.Mammals);

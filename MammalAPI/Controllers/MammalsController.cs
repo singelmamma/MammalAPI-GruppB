@@ -42,6 +42,30 @@ namespace MammalAPI.Controllers
             }
         }
 
+        [HttpGet("{mammalName}")]
+        public async Task<IActionResult> GetMammalByName(string mammalName, bool includeFamilies = false)
+        {
+            try
+            {
+                var result = await _repository.GetMammalByName(mammalName, includeFamilies);
+                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+
+                if(includeFamilies)
+                {
+                    foreach(MammalDTO mammal in mappedResult)
+                    {    
+                            mammal.Family.Mammals = null;
+                    }
+                }
+                
+                return Ok(mappedResult);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: { e.Message }");
+            }
+        }
+
         [HttpGet("{id:int}", Name = "GetMammalAsync")]
         public async Task<IActionResult> GetMammalById(int id,[FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
@@ -177,7 +201,6 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-                
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -185,7 +208,7 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
         }
-
+        
         [HttpPost]
         public async Task<ActionResult<MammalDTO>> PostMammal(MammalDTO mammalDTO)
         {
