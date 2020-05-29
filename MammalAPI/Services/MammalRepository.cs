@@ -19,7 +19,7 @@ namespace MammalAPI.Services
         public MammalRepository(DBContext DBContext, ILogger<MammalRepository> logger): base(DBContext, logger)
         {}
 
-        public async Task<List<Mammal>> GetAllMammals(bool includeFamily, bool includeHabitat)
+        public async Task<List<Mammal>> GetAllMammals(bool includeFamily = false, bool includeHabitat = false)
         {
             _logger.LogInformation($"Getting all mammals");
             IQueryable<Mammal> query = _dBContext.Mammals;
@@ -52,17 +52,23 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<Mammal> GetMammalById(int id)
+        public async Task<Mammal> GetMammalById(int id, bool includeFamily = false, bool includeHabitat = false)
         {
             _logger.LogInformation($"Getting mammal with {id}");
 
-            var query = _dBContext.Mammals
-                .Include(f => f.Family)
-                .Include(mh => mh.MammalHabitats)
-                .Where(x => x.MammalId == id);
+            IQueryable<Mammal> query = _dBContext.Mammals.Where(m => m.MammalId == id);
 
             if (query == null) throw new Exception($"Not found: { id }");
-  
+            
+            if (includeFamily)
+            {
+                query = query.Include(f => f.Family);
+            }
+            if (includeHabitat)
+            {
+                query = query.Include(mh => mh.MammalHabitats).ThenInclude(h => h.Habitat);
+            }
+
             return await query.SingleOrDefaultAsync();
         }
 
@@ -80,7 +86,7 @@ namespace MammalAPI.Services
             return await query.ToListAsync();
         }
 
-        public async Task<List<Mammal>> GetMammalsByHabitatId(int id, bool includeFamilies)
+        public async Task<List<Mammal>> GetMammalsByHabitatId(int id, bool includeFamily = false, bool includeHabitat = false)
         {
             _logger.LogInformation($"Getting mammals in habitat by id: {id}");
 
@@ -89,9 +95,14 @@ namespace MammalAPI.Services
 
             if (query == null) throw new Exception($"Not found: { id }");
 
-            if(includeFamilies)
+            if (includeFamily)
             {
                 query = query.Include(f => f.Family);
+            }
+            
+            if (includeHabitat)
+            {
+                query = query.Include(mh => mh.MammalHabitats).ThenInclude(h => h.Habitat);
             }
 
             return await query.ToListAsync();

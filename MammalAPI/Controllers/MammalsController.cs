@@ -25,8 +25,8 @@ namespace MammalAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("family/{includeFamily}/habitat{includeHabitat}",Name ="GetAll")]
-        public async Task<ActionResult<MammalDTO[]>> Get(bool includeFamily = false, bool includeHabitat = false)
+        [HttpGet(Name ="GetAll")]
+        public async Task<ActionResult<MammalDTO[]>> Get([FromQuery]bool includeFamily = false, [FromQuery]bool includeHabitat = false)
         {
             try
             {
@@ -67,14 +67,14 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetMammalAsync")]
-        public async Task<IActionResult> GetMammalById(int id)
+        public async Task<IActionResult> GetMammalById(int id,[FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
-                var result = await _repository.GetMammalById(id);
+                var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
 
-                return Ok(HateoasMainLinks(mappedResult));
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -97,12 +97,12 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("habitatId={habitatId}")]
-        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, bool includeFamilies = false)
+        [HttpGet("habitatid/{habitatId}")]
+        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
-                var result = await _repository.GetMammalsByHabitatId(habitatId, includeFamilies);
+                var result = await _repository.GetMammalsByHabitatId(habitatId, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
                 return Ok(mappedResult);
             }
