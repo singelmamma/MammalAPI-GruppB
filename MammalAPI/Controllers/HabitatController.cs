@@ -26,7 +26,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat/all             To get all habitats
-        [HttpGet()]
+        [HttpGet]
         public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats(bool includeMammal = false)
         {
             try
@@ -63,7 +63,7 @@ namespace MammalAPI.Controllers
 
         // /api/v1.0/habitat/name=pacific ocean                To get habitat by name
         ///habitat/name=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
-        [HttpGet("name={name}")]
+        [HttpGet("{name}")]
         public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal=false)
         {
             try

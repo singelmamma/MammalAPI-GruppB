@@ -82,21 +82,6 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("habitat/{habitatName}")]
-        public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
-        {
-            try
-            {
-                var result = await _repository.GetMammalsByHabitat(habitatName);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-                return Ok(mappedResult);
-            }
-            catch (Exception e)
-            {
-                return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: { e.Message }");
-            }
-        }
-
         [HttpGet("habitatid/{habitatId}")]
         public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
@@ -112,34 +97,13 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("byfamilyname/{familyName}")]
-        public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
+        [HttpGet("habitat/{habitatName}")]
+        public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
         {
             try
             {
-                var result = await _repository.GetMammalsByFamily(familyName, includeHabitat, includeFamily);
+                var result = await _repository.GetMammalsByHabitat(habitatName);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-
-                //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
-                //where we filter the DTO to stop recursion
-                if (includeHabitat)
-                {
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        foreach (HabitatDTO habitat in mammal.Habitats)
-                        {
-                            habitat.Mammal = null;
-                        }
-                    }
-                }
-
-                if (includeFamily)
-                {
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        mammal.Family.Mammals = null;
-                    }
-                }
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -181,6 +145,42 @@ namespace MammalAPI.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
+            }
+        }
+
+        [HttpGet("byfamilyname/{familyName}")]
+        public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
+        {
+            try
+            {
+                var result = await _repository.GetMammalsByFamily(familyName, includeHabitat, includeFamily);
+                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+
+                //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
+                //where we filter the DTO to stop recursion
+                if (includeHabitat)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        foreach (HabitatDTO habitat in mammal.Habitats)
+                        {
+                            habitat.Mammal = null;
+                        }
+                    }
+                }
+
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        mammal.Family.Mammals = null;
+                    }
+                }
+                return Ok(mappedResult);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: { e.Message }");
             }
         }
 
