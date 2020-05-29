@@ -46,7 +46,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/Phocidae      Get family by name
         [HttpGet("{name}")]
-        public async Task<ActionResult> GetFamilyByName(string name)
+        public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeMammals = false)
         {
             try
             {
