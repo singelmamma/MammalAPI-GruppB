@@ -2,7 +2,6 @@
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using AutoMapper;
@@ -42,29 +41,8 @@ namespace MammalAPI.Controllers
             }
         }
 
-
-        ///api/v1.0/family/Phocidae      Get family by name
-        [HttpGet("{name}")]
-        public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeMammals = false)
-        {
-            try
-            {
-                var result = await _familyRepository.GetFamilyByName(name);
-                var mappedResult = _mapper.Map<FamilyDTO>(result);
-                return Ok(mappedResult);
-            }
-            catch (TimeoutException e)
-            {
-                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
-            }
-            catch (Exception e)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
-            }
-        }
-
         ///api/v1.0/family/1   Get family by id
-        [HttpGet("{id:int}")] 
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetFamilyById(int id)
         {
             try
@@ -81,6 +59,26 @@ namespace MammalAPI.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
 
+            }
+        }
+
+        ///api/v1.0/family/Phocidae      Get family by name
+        [HttpGet("{name}")]
+        public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeMammals = false)
+        {
+            try
+            {
+                var result = await _familyRepository.GetFamilyByName(name, includeMammals);
+                var mappedResult = _mapper.Map<FamilyDTO>(result);
+                return Ok(mappedResult);
+            }
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
 

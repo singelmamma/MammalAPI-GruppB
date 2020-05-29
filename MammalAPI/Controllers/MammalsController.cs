@@ -42,6 +42,22 @@ namespace MammalAPI.Controllers
             }
         }
 
+        [HttpGet("{id:int}", Name = "GetMammalAsync")]
+        public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
+        {
+            try
+            {
+                var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+
+                return Ok(mappedResult);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
+            }
+        }
+
         [HttpGet("{mammalName}")]
         public async Task<IActionResult> GetMammalByName(string mammalName, bool includeFamilies = false)
         {
@@ -66,14 +82,13 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "GetMammalAsync")]
-        public async Task<IActionResult> GetMammalById(int id,[FromQuery] bool includeFamily = false, bool includeHabitat = false)
+        [HttpGet("habitatid/{habitatId}")]
+        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
-                var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
-                var mappedResult = _mapper.Map<MammalDTO>(result);
-
+                var result = await _repository.GetMammalsByHabitatId(habitatId, includeFamily, includeHabitat);
+                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -97,36 +112,32 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("habitatid/{habitatId}")]
-        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
+        [HttpGet("byfamilyid/{id}")]
+        public async Task<IActionResult> GetMammalsByFamilyId(int id, bool includeHabitat = false, bool includeFamily = false)
         {
             try
             {
-                var result = await _repository.GetMammalsByHabitatId(habitatId, includeFamily, includeHabitat);
+                var result = await _repository.GetMammalsByFamilyId(id, includeHabitat, includeFamily);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-                return Ok(mappedResult);
-            }
-            catch (Exception e)
-            {
-                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
-            }
-        }
 
-        [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
-        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily = false, bool includeHabitat = false)
-        {
-            try
-            {
-                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-                if(includeHabitat)
+                //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
+                //where we filter the DTO to stop recursion
+                if (includeHabitat)
                 {
-                    foreach(MammalDTO mammal in mappedResult)
+                    foreach (MammalDTO mammal in mappedResult)
                     {
-                        foreach(HabitatDTO habitat in mammal.Habitats)
+                        foreach (HabitatDTO habitat in mammal.Habitats)
                         {
                             habitat.Mammal = null;
                         }
+                    }
+                }
+
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        mammal.Family.Mammals = null;
                     }
                 }
                 return Ok(mappedResult);
@@ -155,7 +166,7 @@ namespace MammalAPI.Controllers
                         {
                             habitat.Mammal = null;
                         }
-                    }                    
+                    }
                 }
 
                 if (includeFamily)
@@ -165,7 +176,7 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-                                return Ok(mappedResult);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -173,32 +184,21 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("byfamilyid/{id}")]
-        public async Task<IActionResult> GetMammalsByFamilyId(int id, bool includeHabitat = false, bool includeFamily = false)
+        [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
+        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
-                var result= await _repository.GetMammalsByFamilyId(id, includeHabitat, includeFamily);
+                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-
-                //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
-                //where we filter the DTO to stop recursion
-                if (includeHabitat)
+                if(includeHabitat)
                 {
-                    foreach (MammalDTO mammal in mappedResult)
+                    foreach(MammalDTO mammal in mappedResult)
                     {
-                        foreach (HabitatDTO habitat in mammal.Habitats)
+                        foreach(HabitatDTO habitat in mammal.Habitats)
                         {
                             habitat.Mammal = null;
                         }
-                    }
-                }
-
-                if (includeFamily)
-                {
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        mammal.Family.Mammals = null;
                     }
                 }
                 return Ok(mappedResult);
