@@ -42,6 +42,22 @@ namespace MammalAPI.Controllers
             }
         }
 
+        [HttpGet("{id:int}", Name = "GetMammalAsync")]
+        public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
+        {
+            try
+            {
+                var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+
+                return Ok(mappedResult);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
+            }
+        }
+
         [HttpGet("{mammalName}")]
         public async Task<IActionResult> GetMammalByName(string mammalName, bool includeFamilies = false)
         {
@@ -63,22 +79,6 @@ namespace MammalAPI.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: { e.Message }");
-            }
-        }
-
-        [HttpGet("{id:int}", Name = "GetMammalAsync")]
-        public async Task<IActionResult> GetMammalById(int id,[FromQuery] bool includeFamily = false, bool includeHabitat = false)
-        {
-            try
-            {
-                var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
-                var mappedResult = _mapper.Map<MammalDTO>(result);
-
-                return Ok(mappedResult);
-            }
-            catch (Exception e)
-            {
-                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
         }
 
@@ -112,31 +112,6 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
-        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily = false, bool includeHabitat = false)
-        {
-            try
-            {
-                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-                if(includeHabitat)
-                {
-                    foreach(MammalDTO mammal in mappedResult)
-                    {
-                        foreach(HabitatDTO habitat in mammal.Habitats)
-                        {
-                            habitat.Mammal = null;
-                        }
-                    }
-                }
-                return Ok(mappedResult);
-            }
-            catch (Exception e)
-            {
-                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
-            }
-        }
-
         [HttpGet("byfamilyname/{familyName}")]
         public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
         {
@@ -155,7 +130,7 @@ namespace MammalAPI.Controllers
                         {
                             habitat.Mammal = null;
                         }
-                    }                    
+                    }
                 }
 
                 if (includeFamily)
@@ -165,7 +140,7 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-                                return Ok(mappedResult);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -178,7 +153,7 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result= await _repository.GetMammalsByFamilyId(id, includeHabitat, includeFamily);
+                var result = await _repository.GetMammalsByFamilyId(id, includeHabitat, includeFamily);
                 var mappedResult = _mapper.Map<List<MammalDTO>>(result);
 
                 //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
@@ -199,6 +174,31 @@ namespace MammalAPI.Controllers
                     foreach (MammalDTO mammal in mappedResult)
                     {
                         mammal.Family.Mammals = null;
+                    }
+                }
+                return Ok(mappedResult);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
+            }
+        }
+
+        [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
+        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily = false, bool includeHabitat = false)
+        {
+            try
+            {
+                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
+                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                if(includeHabitat)
+                {
+                    foreach(MammalDTO mammal in mappedResult)
+                    {
+                        foreach(HabitatDTO habitat in mammal.Habitats)
+                        {
+                            habitat.Mammal = null;
+                        }
                     }
                 }
                 return Ok(mappedResult);
