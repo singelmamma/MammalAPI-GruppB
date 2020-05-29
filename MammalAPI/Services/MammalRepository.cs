@@ -4,13 +4,8 @@ using MammalAPI.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using MammalAPI.DTO;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
 using System;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MammalAPI.Services
 {
