@@ -2,14 +2,8 @@
 using MammalAPI.Models;
 using MammalAPI.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
-using MammalAPI.DTO;
 using Microsoft.Extensions.Logging;
-
-
-
-
 
 namespace MammalAPI.Services
 {
