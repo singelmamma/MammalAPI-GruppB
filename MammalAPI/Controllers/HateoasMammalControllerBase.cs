@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-
 using MammalAPI.HATEOAS;
 using MammalAPI.DTO;
 
@@ -43,23 +41,6 @@ namespace MammalAPI.Controllers
             mammalDto.Links.Add(UrlLink("_self", "GetMammalAsync", new { id = mammalDto.MammalID }));
 
             return mammalDto;
-        }
-
-        /// <summary>
-        /// Custom extention method
-        /// Use this method for possible further implementation sidelinks the team come up with.
-        /// Can also duplicate this method to new methods with tailored links to be grouped.
-        /// Wollter
-        /// </summary>
-        /// <param name="mammal"></param>
-        /// <returns></returns>
-        internal MammalDTO HateoasSideLinks(MammalDTO mammal)
-        {
-            MammalDTO mammalDto = mammal;
-
-            throw new System.NotImplementedException();
-
-            //return mammalDto;
         }
     }
 }

@@ -19,8 +19,10 @@ namespace XUnitTest
     public class MammalRepositoryTest
     {
 
-        [Fact]
-        public void GetMammalById_TwoTestMammals_GetIdTwo()
+        [Theory]
+        [InlineData(1, "Test Mammal One")]
+        [InlineData(2, "Test Mammal Two")]
+        public void GetMammalById_MammalNameExpected(int inlineMammalId, string expected)
         {
             // Arrange
             var contextMock = new Mock<DBContext>();
@@ -30,12 +32,11 @@ namespace XUnitTest
             var mammalRepository = new MammalRepository(contextMock.Object, logger);
 
             // Act
-            var expected = mammalRepository.GetMammalById(2);
+            var result = mammalRepository.GetMammalById(inlineMammalId);
 
             // Assert
-            //Assert.Equal(2, expected.Result.MammalId);
+            Assert.Equal(expected, result.Result.Name);
         }
-
 
         private List<Mammal> GetTestMammals()
         {
