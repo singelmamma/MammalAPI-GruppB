@@ -52,7 +52,7 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result = await _familyRepository.GetFamilyById(id);
+                var result = await _familyRepository.GetFamilyById(id, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
                 return Ok(mappedResult);
             }
