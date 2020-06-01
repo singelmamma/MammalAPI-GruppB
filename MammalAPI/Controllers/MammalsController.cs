@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using MammalAPI.Authentication;
 
 namespace MammalAPI.Controllers
 {
@@ -208,7 +209,7 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
         }
-        
+        [ApiKeyAuthentication]
         [HttpPost]
         public async Task<ActionResult<MammalDTO>> PostMammal(MammalDTO mammalDTO)
         {
@@ -228,7 +229,7 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
         }
-
+        [ApiKeyAuthentication]
         [HttpPut("{mammalId}")]
         public async Task<ActionResult<MammalDTO>> PutMammal (int mammalId, MammalDTO mammalDTO)
         {
@@ -254,7 +255,7 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
         }
-
+        [ApiKeyAuthentication]
         [HttpDelete("{mammalId}")]
         public async Task<ActionResult> DeleteMammal(int mammalId)
         {

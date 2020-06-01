@@ -8,6 +8,8 @@ using AutoMapper;
 using MammalAPI.Models;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MammalAPI.Authentication;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MammalAPI.Controllers
 {
@@ -24,14 +26,16 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/family       Get all families
-        [HttpGet]
+        [HttpGet(Name = "GetAllFamilies")]
         public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeMammals = false)
         {
             try
             {
                 var results = await _familyRepository.GetAllFamilies(includeMammals);
-                var mappedResult = _mapper.Map<FamilyDTO[]>(results);
-                return Ok(mappedResult);
+                IEnumerable<FamilyDTO> mappedResult = _mapper.Map<FamilyDTO[]>(results);
+                IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(r => HateoasMainLinks(r));
+
+                return Ok(resultWithLinks);
             }
             catch (TimeoutException e)
             {
@@ -44,12 +48,12 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/family/1   Get family by id
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetFamilyByIdAsync")]
         public async Task<IActionResult> GetFamilyById(int id)
         {
             try
             {
-                var result = await _familyRepository.GetFamilyById(id);
+                var result = await _familyRepository.GetFamilyById(id, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
                 return Ok(mappedResult);
             }
@@ -84,7 +88,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost(Name = "PostFamily")]
         [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> PostFamily(FamilyDTO familyDTO)
         {
@@ -107,7 +111,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/family/##       Put a family by id
-        [HttpPut("{familyId}")]
+        [HttpPut("{familyId}", Name = "PutFamily")]
         [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> PutFamily (int familyId, FamilyDTO familyDTO)
         {
@@ -137,9 +141,8 @@ namespace MammalAPI.Controllers
 
             return BadRequest();
         }
-
-
-        [HttpDelete("{familyId}")]
+        
+        [HttpDelete("{familyId}", Name = "DeleteFamily")]
         [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> DeleteFamily (int familyId)
         {

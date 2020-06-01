@@ -53,10 +53,31 @@ namespace MammalAPI.Controllers
         {
             FamilyDTO familyDto = family;
 
-            familyDto.Links.Add(UrlLink("all", "GetAll", null));
+            familyDto.Links.Add(UrlLink("all", "GetAllFamilies", null));
             familyDto.Links.Add(UrlLink("_self", "GetFamilyByIdAsync", new { id = familyDto.FamilyID }));
 
+            //CRUD
+            familyDto.Links.Add(UrlLink(null, "PostFamily", null));
+            familyDto.Links.Add(UrlLink("_self", "PutFamily", familyDto));
+            familyDto.Links.Add(UrlLink("_self", "DeleteFamily", familyDto));
+
             return familyDto;
+        }
+
+        /// <summary>
+        /// Overload 3, adds HATEOAS links to supplied object.
+        /// Ted Henriksson
+        /// </summary>
+        /// <param name="habitat"></param>
+        /// <returns></returns>
+        internal HabitatDTO HateoasMainLinks(HabitatDTO habitat)
+        {
+            HabitatDTO habitatDTO = habitat;
+
+            habitatDTO.Links.Add(UrlLink("all", "GetAllHabitat", null));
+            habitatDTO.Links.Add(UrlLink("_self", "GetHabitatByID", new { id = habitatDTO.HabitatID }));
+
+            return habitatDTO;
         }
     }
 }
