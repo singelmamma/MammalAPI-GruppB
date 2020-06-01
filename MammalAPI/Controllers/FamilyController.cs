@@ -7,6 +7,7 @@ using System;
 using AutoMapper;
 using MammalAPI.Models;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using MammalAPI.Authentication;
 
 namespace MammalAPI.Controllers
 {
@@ -84,6 +85,7 @@ namespace MammalAPI.Controllers
         }
 
         [HttpPost]
+        [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> PostFamily(FamilyDTO familyDTO)
         {
             try
@@ -106,6 +108,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/##       Put a family by id
         [HttpPut("{familyId}")]
+        [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> PutFamily (int familyId, FamilyDTO familyDTO)
         {
             try
@@ -137,6 +140,7 @@ namespace MammalAPI.Controllers
 
 
         [HttpDelete("{familyId}")]
+        [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> DeleteFamily (int familyId)
         {
             try
