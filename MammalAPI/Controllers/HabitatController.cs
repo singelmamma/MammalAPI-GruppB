@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 
@@ -60,8 +61,7 @@ namespace MammalAPI.Controllers
             {
                 var result = await _habitatRepository.GetHabitatById(id, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
-                
-                return Ok(mappedResult);
+                return Ok(HateoasMainLinks(mappedResult));
             }
             catch (Exception e)
             {
