@@ -14,7 +14,7 @@ namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class FamilyController : HateoasFamilyControllerBase
+    public class FamilyController : HateoasBase
     {
         private readonly IFamilyRepository _familyRepository;
         private readonly IMapper _mapper;
@@ -24,15 +24,17 @@ namespace MammalAPI.Controllers
             _mapper = mapper;
         }
 
-        ///api/v1.0/family       Get all families
-        [HttpGet]
-        public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeMammals = false)
+        ///api/v1.0/family/all       Get all families
+        [HttpGet("GetAll", Name = "GetAllFamily")]
+        public async Task<IActionResult> Get([FromQuery]bool includeMammals)
         {
             try
             {
                 var results = await _familyRepository.GetAllFamilies(includeMammals);
-                var mappedResult = _mapper.Map<FamilyDTO[]>(results);
-                return Ok(mappedResult);
+                IEnumerable<FamilyDTO> mappedResult = _mapper.Map<FamilyDTO[]>(results);
+                IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(m => HateoasMainLinks(m));
+
+                return Ok(resultWithLinks);
             }
             catch (TimeoutException e)
             {
@@ -45,14 +47,15 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/family/byid/1   Get family by id
-        [HttpGet("{id:int}", Name = "GetFamilyAsync")] 
+        [HttpGet("{id:int}", Name = "GetFamilyByIdAsync")] 
         public async Task<IActionResult> GetFamilyById(int id)
         {
             try
             {
                 var result = await _familyRepository.GetFamilyById(id);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
-                return Ok(mappedResult);
+                var resultWithLinks = HateoasMainLinks(mappedResult);
+                return Ok(resultWithLinks);
             }
             catch (TimeoutException e)
             {
@@ -65,17 +68,16 @@ namespace MammalAPI.Controllers
             }
         }
 
-        ///api/v1.0/family/all       Get all families
-        [HttpGet("GetAll", Name = "GetAllFamily")]
-        public async Task<IActionResult> Get([FromQuery]bool includeMammals)
+        ///api/v1.0/family/byid/1   Get family by id
+        [HttpGet("{name}", Name = "GetFamilyByNameAsync")]
+        public async Task<IActionResult> GetFamilyById(string name)
         {
             try
             {
-                var results = await _familyRepository.GetAllFamilies(includeMammals);
-                IEnumerable<FamilyDTO> mappedResult = _mapper.Map<FamilyDTO[]>(results);
-                IEnumerable<FamilyDTO> familysresult = mappedResult.Select(m => HateoasMainLinks(m));
-                
-                return Ok(familysresult);
+                var result = await _familyRepository.GetFamilyByName(name);
+                var mappedResult = _mapper.Map<FamilyDTO>(result);
+                var resultWithLinks = HateoasMainLinks(mappedResult);
+                return Ok(resultWithLinks);
             }
             catch (TimeoutException e)
             {
@@ -84,6 +86,7 @@ namespace MammalAPI.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+
             }
         }
 

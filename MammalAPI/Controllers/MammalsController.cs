@@ -15,7 +15,7 @@ namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class MammalsController : HateoasMammalControllerBase
+    public class MammalsController : HateoasBase
     {
         private readonly IMammalRepository _repository;
         private readonly IMapper _mapper;
@@ -50,6 +50,7 @@ namespace MammalAPI.Controllers
             {
                 var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
+                var mammalResult = HateoasMainLinks(mappedResult);
 
                 return Ok(mappedResult);
             }
