@@ -61,8 +61,8 @@ namespace MammalAPI.Controllers
             }
         }
 
-       // /api/v1.0/habitat/name=pacific ocean                To get habitat by name
-        ///habitat/name=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
+       // /api/v1.0/habitat/=pacific ocean                To get habitat by name
+        ///habitat/=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
         [HttpGet("{name}")]
         public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal = false)
         {
