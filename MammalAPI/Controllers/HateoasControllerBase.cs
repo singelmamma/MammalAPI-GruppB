@@ -58,5 +58,21 @@ namespace MammalAPI.Controllers
 
             return familyDto;
         }
+
+        /// <summary>
+        /// Overload 3, adds HATEOAS links to supplied object.
+        /// Ted Henriksson
+        /// </summary>
+        /// <param name="habitat"></param>
+        /// <returns></returns>
+        internal HabitatDTO HateoasMainLinks(HabitatDTO habitat)
+        {
+            HabitatDTO habitatDTO = habitat;
+
+            habitatDTO.Links.Add(UrlLink("all", "GetAllHabitat", null));
+            habitatDTO.Links.Add(UrlLink("_self", "GetHabitatByID", new { id = habitatDTO.HabitatID }));
+
+            return habitatDTO;
+        }
     }
 }
