@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using MammalAPI.Authentication;
 using MammalAPI.DTO;
 using MammalAPI.Models;
 using MammalAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace MammalAPI.Controllers
 {
+    [ApiKeyAuthentication]
     [ApiController]
     [Route("api/v1.0/[controller]")]
     public class HabitatController : ControllerBase
