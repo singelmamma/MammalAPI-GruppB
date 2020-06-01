@@ -6,19 +6,22 @@ using System.Threading.Tasks;
 using System;
 using AutoMapper;
 using MammalAPI.Models;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class FamilyController : ControllerBase
+    public class FamilyController : HateoasFamilyControllerBase
     {
         private readonly IFamilyRepository _familyRepository;
         private readonly IMapper _mapper;
-        public FamilyController(IFamilyRepository familyRepository, IMapper mapper)
+        public FamilyController(IFamilyRepository repository, IMapper mapper, IActionDescriptorCollectionProvider actionDescriptorCollectionProvider) : base(actionDescriptorCollectionProvider)
         {
-            _familyRepository = familyRepository;
-            this._mapper = mapper;
+            _familyRepository = repository;
+            _mapper = mapper;
         }
 
         ///api/v1.0/family       Get all families
@@ -41,8 +44,8 @@ namespace MammalAPI.Controllers
             }
         }
 
-        ///api/v1.0/family/1   Get family by id
-        [HttpGet("{id:int}")]
+        ///api/v1.0/family/byid/1   Get family by id
+        [HttpGet("{id:int}", Name = "GetFamilyAsync")] 
         public async Task<IActionResult> GetFamilyById(int id)
         {
             try
@@ -62,15 +65,17 @@ namespace MammalAPI.Controllers
             }
         }
 
-        ///api/v1.0/family/Phocidae      Get family by name
-        [HttpGet("{name}")]
-        public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeMammals = false)
+        ///api/v1.0/family/all       Get all families
+        [HttpGet("GetAll", Name = "GetAllFamily")]
+        public async Task<IActionResult> Get([FromQuery]bool includeMammals)
         {
             try
             {
-                var result = await _familyRepository.GetFamilyByName(name, includeMammals);
-                var mappedResult = _mapper.Map<FamilyDTO>(result);
-                return Ok(mappedResult);
+                var results = await _familyRepository.GetAllFamilies(includeMammals);
+                IEnumerable<FamilyDTO> mappedResult = _mapper.Map<FamilyDTO[]>(results);
+                IEnumerable<FamilyDTO> familysresult = mappedResult.Select(m => HateoasMainLinks(m));
+                
+                return Ok(familysresult);
             }
             catch (TimeoutException e)
             {
