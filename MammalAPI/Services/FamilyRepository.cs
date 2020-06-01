@@ -38,7 +38,6 @@ namespace MammalAPI.Services
 
             return await query.FirstOrDefaultAsync();
         }
-
         public async Task<Family> GetFamilyByName(string name, bool includeMammals = false)
         {
             _logger.LogInformation($"Getting mammal family by { name }.");
