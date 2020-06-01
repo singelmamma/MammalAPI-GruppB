@@ -25,7 +25,7 @@ namespace MammalAPI.Controllers
             _mapper = mapper;
         }
 
-        ///api/v1.0/habitat/all             To get all habitats
+        ///api/v1.0/habitat             To get all habitats
         [HttpGet]
         public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats(bool includeMammal = false)
         {
@@ -47,7 +47,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/habitat/1    To get one habitat by id
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetHabitatById(int id, [FromQuery]bool includeMammal = false)
+        public async Task<ActionResult<HabitatDTO>> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
         {
             try
             {
@@ -61,10 +61,10 @@ namespace MammalAPI.Controllers
             }
         }
 
-        // /api/v1.0/habitat/name=pacific ocean                To get habitat by name
-        ///habitat/name=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
+       // /api/v1.0/habitat/=pacific ocean                To get habitat by name
+        ///habitat/=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
         [HttpGet("{name}")]
-        public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal=false)
+        public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal = false)
         {
             try
             {
