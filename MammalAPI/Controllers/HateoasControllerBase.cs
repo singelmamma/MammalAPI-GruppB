@@ -61,8 +61,6 @@ namespace MammalAPI.Controllers
             familyDto.Links.Add(UrlLink("_self", "PutFamily", familyDto));
             familyDto.Links.Add(UrlLink("_self", "DeleteFamily", familyDto));
 
-            familyDto = AddPostPutDeleteLinks(familyDto);
-
             return familyDto;
         }
     }
