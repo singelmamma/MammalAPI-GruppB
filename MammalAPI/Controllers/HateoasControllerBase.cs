@@ -76,6 +76,7 @@ namespace MammalAPI.Controllers
 
             habitatDTO.Links.Add(UrlLink("all", "GetAllHabitat", null));
             habitatDTO.Links.Add(UrlLink("_self", "GetHabitatByID", new { id = habitatDTO.HabitatID }));
+            habitatDTO.Links.Add(UrlLink("self", "GetHabitatByName", new { name = habitatDTO.Name }));
 
             return habitatDTO;
         }
