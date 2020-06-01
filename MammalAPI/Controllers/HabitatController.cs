@@ -1,32 +1,38 @@
 ﻿using AutoMapper;
+using MammalAPI.Authentication;
 using MammalAPI.DTO;
 using MammalAPI.Models;
 using MammalAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
 
 namespace MammalAPI.Controllers
 {
+    [ApiKeyAuthentication]
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class HabitatController : ControllerBase
+    public class HabitatController : HateoasControllerBase
     {
 
         private readonly IHabitatRepository _habitatRepository;
         private readonly IMapper _mapper;
 
-        public HabitatController(IHabitatRepository habitatRepository, IMapper mapper)
+        public HabitatController(IHabitatRepository habitatRepository, IMapper mapper, IActionDescriptorCollectionProvider actionDescriptorCollectionProvider) : base(actionDescriptorCollectionProvider)
         {
             _habitatRepository = habitatRepository;
             _mapper = mapper;
         }
 
         ///api/v1.0/habitat             To get all habitats
-        [HttpGet]
+        [HttpGet(Name = "GetAllHabitat")]
         public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats(bool includeMammal = false)
         {
             try
@@ -36,8 +42,9 @@ namespace MammalAPI.Controllers
                     return NotFound();
                 }
                 var result = await _habitatRepository.GetAllHabitats(includeMammal);
-                var mappedResult = _mapper.Map<HabitatDTO[]>(result);
-                return Ok(mappedResult);
+                IEnumerable<HabitatDTO> mappedResult = _mapper.Map<HabitatDTO[]>(result);
+                IEnumerable<HabitatDTO> habitatResult = mappedResult.Select(h => HateoasMainLinks(h));
+                return Ok(habitatResult);
             }
             catch (Exception e)
             {
@@ -46,13 +53,14 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat/1    To get one habitat by id
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetHabitatByID")]
         public async Task<ActionResult<HabitatDTO>> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
         {
             try
             {
                 var result = await _habitatRepository.GetHabitatById(id, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
+                
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -83,7 +91,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat           To create a post
-        [HttpPost]
+        [HttpPost(Name = "postHabitat")]
         public async Task<ActionResult<HabitatDTO>> PostHabitat(HabitatDTO habitatDto)
         {
             try
@@ -103,7 +111,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat/8       To change a habitat
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "putHabitat")]
         public async Task<ActionResult> PutHabitat(int id, HabitatDTO habitatDto)
         {
             try
@@ -129,7 +137,7 @@ namespace MammalAPI.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("{habitatId}")]
+        [HttpDelete("{habitatId}", Name = "deleteHabitat")]
         public async Task<ActionResult<HabitatDTO>> DeleteHabitat (int habitatId)
         {
             try
