@@ -9,11 +9,11 @@ using MammalAPI.DTO;
 
 namespace MammalAPI.Controllers
 {
-    public class HateoasMammalControllerBase : ControllerBase
+    public class HateoasControllerBase : ControllerBase
     {
         private readonly IReadOnlyList<ActionDescriptor> _routes;
 
-        public HateoasMammalControllerBase(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider)
+        public HateoasControllerBase(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider)
         {
             _routes = actionDescriptorCollectionProvider.ActionDescriptors.Items;
         }
@@ -27,7 +27,7 @@ namespace MammalAPI.Controllers
         }
 
         /// <summary>
-        /// Use this method for your mainlinks. Eg CRUD, just add
+        /// Overload 1, Use this method for your mainlinks. Eg CRUD, just add
         /// more links to your CRUD methods inside
         /// Wollter
         /// </summary>
@@ -41,6 +41,22 @@ namespace MammalAPI.Controllers
             mammalDto.Links.Add(UrlLink("_self", "GetMammalAsync", new { id = mammalDto.MammalID }));
 
             return mammalDto;
+        }
+
+        /// <summary>
+        /// Overload 2, adds HATEOAS links to supplied object.
+        /// Hampus Kjellstrand
+        /// </summary>
+        /// <param name="family"></param>
+        /// <returns></returns>
+        internal FamilyDTO HateoasMainLinks(FamilyDTO family)
+        {
+            FamilyDTO familyDto = family;
+
+            familyDto.Links.Add(UrlLink("all", "GetAll", null));
+            familyDto.Links.Add(UrlLink("_self", "GetFamilyByIdAsync", new { id = familyDto.FamilyID }));
+
+            return familyDto;
         }
     }
 }
