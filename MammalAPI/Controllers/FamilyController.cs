@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 using System;
 using AutoMapper;
 using MammalAPI.Models;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class FamilyController : ControllerBase
+    public class FamilyController : HateoasControllerBase
     {
         private readonly IFamilyRepository _familyRepository;
         private readonly IMapper _mapper;
-        public FamilyController(IFamilyRepository familyRepository, IMapper mapper)
+        public FamilyController(IFamilyRepository familyRepository, IMapper mapper, IActionDescriptorCollectionProvider actionDescriptorCollectionProvider) : base(actionDescriptorCollectionProvider)
         {
             _familyRepository = familyRepository;
             this._mapper = mapper;

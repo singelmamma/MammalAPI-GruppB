@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using MammalAPI.HATEOAS;
+using System.Collections.Generic;
 
 namespace MammalAPI.DTO
 {
-    public class FamilyDTO
+    public class FamilyDTO : HateoasLinkBase
     {
         public int FamilyID { get; set; }
         public string Name { get; set; }

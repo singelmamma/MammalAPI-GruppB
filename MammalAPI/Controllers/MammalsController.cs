@@ -14,7 +14,7 @@ namespace MammalAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/[controller]")]
-    public class MammalsController : HateoasMammalControllerBase
+    public class MammalsController : HateoasControllerBase
     {
         private readonly IMammalRepository _repository;
         private readonly IMapper _mapper;

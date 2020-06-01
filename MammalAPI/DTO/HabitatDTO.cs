@@ -1,3 +1,4 @@
+using MammalAPI.HATEOAS;
 using System.Collections.Generic;
 
 namespace MammalAPI.DTO
