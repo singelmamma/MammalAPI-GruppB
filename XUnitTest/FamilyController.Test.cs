@@ -1,65 +1,73 @@
 using System;
 using Xunit;
 using System.Collections.Generic;
-using System.Linq;
-using MammalAPI;
 using MammalAPI.Models;
 using MammalAPI.Controllers;
 using MammalAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using MammalAPI.Context;
-using Microsoft.Extensions.Logging;
-
 using MammalAPI.DTO;
 using System.Threading.Tasks;
 using Moq;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace XUnitTest
 {
     public class FamilyControllerTest
     {
-        //Error looking into it later
-        //[Fact]
-        //public async Task GetReturnsFamilyById_ExpectCorrectIdAsync()
-        //{
-        //    //Arrange
-        //    var responseObject = GetItem();
+        [Fact]
+        public async void PostFamilyTest()
+        {
+            // Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            IMapper mapper = new Mapper(configuration);
+
+                //Mock Repo
+            var familyRepoMock = new Mock<IFamilyRepository>();
+            familyRepoMock.Setup(r => r.Add<Family>(It.IsAny<Family>()));
+            familyRepoMock.Setup(r => r.GetAllFamilies(It.IsAny<Boolean>())).Returns(Task.FromResult(new Family[1]));
+            familyRepoMock.Setup(r => r.Save()).Returns(Task.FromResult(true));
+
+                //Mock IActionDescriptorCollectionProvider
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo = new AttributeRouteInfo()
+                    {
+                        Template = "/test",
+                    },
+                    RouteValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "action", "Test" },
+                        { "controller", "Test" },
+                    },
+                },
+            };
+            var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+                //Setup new controller based on mocks
+            var controller = new FamilyController(familyRepoMock.Object, mapper, mockDescriptorProvider.Object);
             
-        //    var mockRepository = new Mock<IFamilyRepository>();
-        //    mockRepository.Setup(x => x.GetFamilyById(1))
-        //        .Returns(responseObject);
+                //Create new DTO
+            var dto = new FamilyDTO
+            {
+                Name = "test",
+                FamilyID = 1
+            };
 
-        //    var controller = new FamilyController(mockRepository.Object);
 
-        //    //Act          
-        //    Task<IActionResult> actionResult = controller.GetFamilyById(1);
-        //    var contentResult = await actionResult as OkObjectResult;
-        //    var expectedObject = new IdNameDTO
-        //    {
-        //        Id = 1,
-        //        Name = "Phocidae"
-        //    };
+            // Act
+            var result = await controller.PostFamily(dto);
 
-        //    //Assert
-        //    Assert.NotNull(contentResult);
-        //    Assert.Equal(200, contentResult.StatusCode);
-
-        //    IdNameDTO actualObject = contentResult.Value as IdNameDTO;
-        //    Assert.Equal(expectedObject.Id, actualObject.Id);
-        //    Assert.Equal(expectedObject.Name, actualObject.Name);
-        //}
-
-        //private async Task<IdNameDTO> GetItem()
-        //{
-        //    var itemToReturn = new IdNameDTO
-        //    {
-        //        Id = 1,
-        //        Name = "Phocidae"
-        //    };
-
-        //    return itemToReturn;
-        //}
-
+            // Assert
+            var r = result.Result as CreatedResult;
+            var dtoResult = (FamilyDTO)r.Value;
+            Assert.Equal("test", dtoResult.Name);
+        }
     }
 }

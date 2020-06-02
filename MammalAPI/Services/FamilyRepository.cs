@@ -9,10 +9,15 @@ namespace MammalAPI.Services
 {
     public class FamilyRepository : Repository, IFamilyRepository
     {
+        public FamilyRepository()
+        {
+
+        }
+
         public FamilyRepository(DBContext DBContext, ILogger<FamilyRepository> logger) : base (DBContext, logger)
         { }
 
-        public async Task<Family[]> GetAllFamilies(bool includeMammals)
+        public virtual async Task<Family[]> GetAllFamilies(bool includeMammals)
         {
             IQueryable<Family> query = _dBContext.Families;
 
@@ -24,7 +29,7 @@ namespace MammalAPI.Services
             return await query.ToArrayAsync();
         }
 
-        public async Task<Family> GetFamilyById(int id, bool includeMammals = false)
+        public virtual async Task<Family> GetFamilyById(int id, bool includeMammals = false)
         {
             _logger.LogInformation($"Getting mammal family by { id }.");
             var query = _dBContext.Families.Where(f => f.FamilyId == id);
@@ -39,7 +44,7 @@ namespace MammalAPI.Services
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Family> GetFamilyByName(string name, bool includeMammals = false)
+        public virtual async Task<Family> GetFamilyByName(string name, bool includeMammals = false)
         {
             _logger.LogInformation($"Getting mammal family by { name }.");
             var query = _dBContext.Families.Where(f => f.Name == name);
