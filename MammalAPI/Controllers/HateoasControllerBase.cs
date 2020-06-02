@@ -40,6 +40,9 @@ namespace MammalAPI.Controllers
             mammalDto.Links.Add(UrlLink("all", "GetAll", null));
             mammalDto.Links.Add(UrlLink("_self", "GetMammalAsync", new { id = mammalDto.MammalID }));
             mammalDto.Links.Add(UrlLink("_self", "GetMammalName", new {mammalName = mammalDto.Name }));
+            mammalDto.Links.Add(UrlLink("_self", "GetMammalByHabitatId", new { habitatId = mammalDto.Habitats }));
+
+
 
             return mammalDto;
         }
