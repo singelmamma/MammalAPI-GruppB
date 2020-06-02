@@ -50,7 +50,7 @@ namespace MammalAPI.Services
             return await query.SingleOrDefaultAsync();
         }
 
-        public async Task<List<Mammal>> GetMammalByName(string mammalName, bool includeFamilies)
+        public async Task<Mammal> GetMammalByName(string mammalName, bool includeFamilies)
         {
             _logger.LogInformation($"Getting mammals by name: {mammalName}");
 
@@ -64,7 +64,7 @@ namespace MammalAPI.Services
                 query = query.Include(f => f.Family);
             }
 
-            return await query.ToListAsync();
+            return await query.SingleOrDefaultAsync();
         }
 
         public async Task<List<Mammal>> GetMammalsByLifeSpan(int fromYear, int toYear, bool includeFamily, bool includeHabitat)

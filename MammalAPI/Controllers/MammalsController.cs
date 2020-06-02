@@ -43,15 +43,16 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "GetMammalAsync")]
+        [HttpGet("{id:int}", Name="GetMammalAsync")]
         public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
                 var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
+                var mappedMammals = HateoasMainLinks(mappedResult);
 
-                return Ok(mappedResult);
+                return Ok(mappedMammals);
             }
             catch (Exception e)
             {
@@ -59,23 +60,21 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{mammalName}")]
+        [HttpGet("{mammalName}", Name="GetMammalName")]
         public async Task<IActionResult> GetMammalByName(string mammalName, bool includeFamilies = false)
         {
             try
             {
                 var result = await _repository.GetMammalByName(mammalName, includeFamilies);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
+                var mappedMammal = HateoasMainLinks(mappedResult);
 
-                if(includeFamilies)
+                if (includeFamilies)
                 {
-                    foreach(MammalDTO mammal in mappedResult)
-                    {    
-                            mammal.Family.Mammals = null;
-                    }
+                       mappedMammal.Family.Mammals = null;
                 }
                 
-                return Ok(mappedResult);
+                return Ok(mappedMammal);
             }
             catch (Exception e)
             {
