@@ -33,16 +33,16 @@ namespace MammalAPI.Controllers
             {
                 var results = await _familyRepository.GetAllFamilies(includeMammals);
                 IEnumerable<FamilyDTO> mappedResult = _mapper.Map<FamilyDTO[]>(results);
-                IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(r => HateoasMainLinks(r));
 
                 if (includeMammals)
                 {
-                    foreach (var family in resultWithLinks)
+                    foreach (var family in mappedResult)
                     {
                         family.Mammals = family.Mammals.Select(m => HateoasMainLinks(m)).ToList();
                     }
                 }
-
+                
+                IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(r => HateoasMainLinks(r));
                 return Ok(resultWithLinks);
             }
             catch (TimeoutException e)
