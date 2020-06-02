@@ -37,7 +37,6 @@ namespace MammalAPI.Controllers
 
                 if (includeMammals)
                 {
-                    resultWithLinks.
                     foreach (var mammalList in resultWithLinks)
                     {
                         mammalList.Mammals = mammalList.Mammals.Select(m => HateoasMainLinks(m)).ToList();
