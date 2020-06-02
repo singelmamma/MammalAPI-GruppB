@@ -35,6 +35,15 @@ namespace MammalAPI.Controllers
                 IEnumerable<FamilyDTO> mappedResult = _mapper.Map<FamilyDTO[]>(results);
                 IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(r => HateoasMainLinks(r));
 
+                if (includeMammals)
+                {
+                    resultWithLinks.
+                    foreach (var mammalList in resultWithLinks)
+                    {
+                        mammalList.Mammals = mammalList.Mammals.Select(m => HateoasMainLinks(m)).ToList();
+                    }
+                }
+
                 return Ok(resultWithLinks);
             }
             catch (TimeoutException e)
@@ -55,6 +64,11 @@ namespace MammalAPI.Controllers
             {
                 var result = await _familyRepository.GetFamilyById(id, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
+                
+                if (includeMammals)
+                {
+                    mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();  
+                }
                 
                 return Ok(HateoasMainLinks(mappedResult));
             }
@@ -77,6 +91,12 @@ namespace MammalAPI.Controllers
             {
                 var result = await _familyRepository.GetFamilyByName(name, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
+
+                if (includeMammals)
+                {
+                    mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();
+                }
+
                 return Ok(HateoasMainLinks(mappedResult));
             }
             catch (TimeoutException e)
