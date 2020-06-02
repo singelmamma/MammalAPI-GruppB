@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using MammalAPI.Authentication;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MammalAPI.Controllers
 {
@@ -33,8 +34,17 @@ namespace MammalAPI.Controllers
             {
                 var results = await _repository.GetAllMammals(includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                if (includeFamily)
+                {
+                    foreach(var mammal in mappedResult)
+                    {
+                        if(mammal.Family != null)
+                        {
+                            mammal.Family = HateoasMainLinks(mammal.Family);
+                        }
+                    }
+                }
                 IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
-
                 return Ok(mammalsresult);
             }
             catch (Exception e)
@@ -71,7 +81,7 @@ namespace MammalAPI.Controllers
                 {
                     mappedResult.Family.Mammals = null;
                 }
-                
+
                 return Ok(HateoasMainLinks(mappedResult));
             }
             catch (Exception e)
