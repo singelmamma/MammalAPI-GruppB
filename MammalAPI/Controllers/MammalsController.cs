@@ -43,7 +43,7 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "GetMammalAsync")]
+        [HttpGet("{id:int}", Name="GetMammalAsync")]
         public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
@@ -51,7 +51,7 @@ namespace MammalAPI.Controllers
                 var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
 
-                return Ok(mappedResult);
+                return Ok(HateoasMainLinks(mappedResult));
             }
             catch (Exception e)
             {
@@ -59,23 +59,20 @@ namespace MammalAPI.Controllers
             }
         }
 
-        [HttpGet("{mammalName}")]
+        [HttpGet("{mammalName}", Name="GetMammalName")]
         public async Task<IActionResult> GetMammalByName(string mammalName, bool includeFamilies = false)
         {
             try
             {
                 var result = await _repository.GetMammalByName(mammalName, includeFamilies);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                var mappedResult = _mapper.Map<MammalDTO>(result);
 
-                if(includeFamilies)
+                if (includeFamilies)
                 {
-                    foreach(MammalDTO mammal in mappedResult)
-                    {    
-                            mammal.Family.Mammals = null;
-                    }
+                    mappedResult.Family.Mammals = null;
                 }
                 
-                return Ok(mappedResult);
+                return Ok(HateoasMainLinks(mappedResult));
             }
             catch (Exception e)
             {
@@ -88,9 +85,23 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result = await _repository.GetMammalsByHabitatId(habitatId, includeFamily, includeHabitat);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-                return Ok(mappedResult);
+                var results = await _repository.GetMammalsByHabitatId(habitatId, includeFamily, includeHabitat);
+                IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
+
+
+                if (includeHabitat)
+                {
+                    foreach (MammalDTO mammal in mammalsresult)
+                    {
+                        foreach (HabitatDTO habitat in mammal.Habitats)
+                        {
+                            habitat.Mammal = null;
+                        }
+                    }
+                }
+
+                return Ok(mammalsresult);
             }
             catch (Exception e)
             {
@@ -103,9 +114,10 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result = await _repository.GetMammalsByHabitat(habitatName);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-                return Ok(mappedResult);
+                var results = await _repository.GetMammalsByHabitat(habitatName);
+                IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
+                return Ok(mammalsresult);
             }
             catch (Exception e)
             {
@@ -118,8 +130,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result = await _repository.GetMammalsByFamilyId(id, includeHabitat, includeFamily);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                var results = await _repository.GetMammalsByFamilyId(id, includeHabitat, includeFamily);
+                IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
 
                 //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
                 //where we filter the DTO to stop recursion
@@ -141,7 +154,7 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-                return Ok(mappedResult);
+                return Ok(mammalsresult);
             }
             catch (Exception e)
             {
@@ -154,8 +167,9 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result = await _repository.GetMammalsByFamily(familyName, includeHabitat, includeFamily);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
+                var results = await _repository.GetMammalsByFamily(familyName, includeHabitat, includeFamily);
+                IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
 
                 //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
                 //where we filter the DTO to stop recursion
@@ -177,7 +191,7 @@ namespace MammalAPI.Controllers
                         mammal.Family.Mammals = null;
                     }
                 }
-                return Ok(mappedResult);
+                return Ok(mammalsresult);
             }
             catch (Exception e)
             {
@@ -190,9 +204,11 @@ namespace MammalAPI.Controllers
         {
             try
             {
-                var result= await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
-                var mappedResult = _mapper.Map<List<MammalDTO>>(result);
-                if(includeHabitat)
+                var results = await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
+                IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
+
+                if (includeHabitat)
                 {
                     foreach(MammalDTO mammal in mappedResult)
                     {
@@ -202,7 +218,7 @@ namespace MammalAPI.Controllers
                         }
                     }
                 }
-                return Ok(mappedResult);
+                return Ok(mammalsresult);
             }
             catch (Exception e)
             {
