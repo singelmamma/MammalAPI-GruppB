@@ -90,6 +90,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat           To create a post
+        [ApiKeyAuthentication]
         [HttpPost(Name = "postHabitat")]
         public async Task<ActionResult<HabitatDTO>> PostHabitat(HabitatDTO habitatDto)
         {
@@ -110,6 +111,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat/8       To change a habitat
+        [ApiKeyAuthentication]
         [HttpPut("{id}", Name = "putHabitat")]
         public async Task<ActionResult> PutHabitat(int id, HabitatDTO habitatDto)
         {
@@ -136,6 +138,7 @@ namespace MammalAPI.Controllers
             return BadRequest();
         }
 
+        [ApiKeyAuthentication]
         [HttpDelete("{habitatId}", Name = "deleteHabitat")]
         public async Task<ActionResult<HabitatDTO>> DeleteHabitat (int habitatId)
         {
