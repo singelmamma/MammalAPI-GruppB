@@ -49,7 +49,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/1   Get family by id
         [HttpGet("{id:int}", Name = "GetFamilyByIdAsync")]
-        public async Task<IActionResult> GetFamilyById(int id)
+        public async Task<IActionResult> GetFamilyById(int id, bool includeMammals)
         {
             try
             {

@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 
 namespace MammalAPI.Controllers
 {
-    [ApiKeyAuthentication]
     [ApiController]
     [Route("api/v1.0/[controller]")]
     public class HabitatController : HateoasControllerBase
