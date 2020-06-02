@@ -55,7 +55,8 @@ namespace MammalAPI.Controllers
             {
                 var result = await _familyRepository.GetFamilyById(id, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
-                return Ok(mappedResult);
+                
+                return Ok(HateoasMainLinks(mappedResult));
             }
             catch (TimeoutException e)
             {
@@ -76,7 +77,7 @@ namespace MammalAPI.Controllers
             {
                 var result = await _familyRepository.GetFamilyByName(name, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
-                return Ok(mappedResult);
+                return Ok(HateoasMainLinks(mappedResult));
             }
             catch (TimeoutException e)
             {
