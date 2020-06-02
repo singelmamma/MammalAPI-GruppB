@@ -49,7 +49,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/1   Get family by id
         [HttpGet("{id:int}", Name = "GetFamilyByIdAsync")]
-        public async Task<IActionResult> GetFamilyById(int id, bool includeMammals)
+        public async Task<IActionResult> GetFamilyById(int id, bool includeMammals = false)
         {
             try
             {
@@ -64,7 +64,6 @@ namespace MammalAPI.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
-
             }
         }
 
