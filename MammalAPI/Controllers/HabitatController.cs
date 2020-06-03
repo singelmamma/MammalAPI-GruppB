@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 
@@ -59,8 +60,7 @@ namespace MammalAPI.Controllers
             {
                 var result = await _habitatRepository.GetHabitatById(id, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
-                
-                return Ok(mappedResult);
+                return Ok(HateoasMainLinks(mappedResult));
             }
             catch (Exception e)
             {
@@ -69,15 +69,15 @@ namespace MammalAPI.Controllers
         }
 
        // /api/v1.0/habitat/=pacific ocean                To get habitat by name
-        ///habitat/=Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
-        [HttpGet("{name}")]
+        ///habitat/Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
+        [HttpGet("{name}", Name ="GetHabitatByName")]
         public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal = false)
         {
             try
             {
                 var result= await _habitatRepository.GetHabitatByName(name, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
-                return Ok(mappedResult);
+                return Ok(HateoasMainLinks(mappedResult));
             }
             catch (TimeoutException e)
             {
@@ -90,6 +90,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat           To create a post
+        [ApiKeyAuthentication]
         [HttpPost(Name = "postHabitat")]
         public async Task<ActionResult<HabitatDTO>> PostHabitat(HabitatDTO habitatDto)
         {
@@ -110,6 +111,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat/8       To change a habitat
+        [ApiKeyAuthentication]
         [HttpPut("{id}", Name = "putHabitat")]
         public async Task<ActionResult> PutHabitat(int id, HabitatDTO habitatDto)
         {
@@ -136,6 +138,7 @@ namespace MammalAPI.Controllers
             return BadRequest();
         }
 
+        [ApiKeyAuthentication]
         [HttpDelete("{habitatId}", Name = "deleteHabitat")]
         public async Task<ActionResult<HabitatDTO>> DeleteHabitat (int habitatId)
         {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MammalAPI.HATEOAS;
 using MammalAPI.DTO;
+using MammalAPI.Models;
 
 namespace MammalAPI.Controllers
 {
@@ -39,6 +40,9 @@ namespace MammalAPI.Controllers
 
             mammalDto.Links.Add(UrlLink("all", "GetAll", null));
             mammalDto.Links.Add(UrlLink("_self", "GetMammalAsync", new { id = mammalDto.MammalID }));
+            mammalDto.Links.Add(UrlLink("_self", "GetMammalName", new {mammalName = mammalDto.Name }));
+
+
 
             return mammalDto;
         }
@@ -76,6 +80,7 @@ namespace MammalAPI.Controllers
 
             habitatDTO.Links.Add(UrlLink("all", "GetAllHabitat", null));
             habitatDTO.Links.Add(UrlLink("_self", "GetHabitatByID", new { id = habitatDTO.HabitatID }));
+            habitatDTO.Links.Add(UrlLink("self", "GetHabitatByName", new { name = habitatDTO.Name }));
 
             return habitatDTO;
         }
