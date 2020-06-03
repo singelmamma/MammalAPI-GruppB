@@ -71,13 +71,19 @@ namespace MammalAPI.Controllers
        // /api/v1.0/habitat/=pacific ocean                To get habitat by name
         ///habitat/Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
         [HttpGet("{name}", Name ="GetHabitatByName")]
-        public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal = false)
+        public async Task<IActionResult> GetHabitatByName(string name, [FromQuery] bool includeLinks = true, [FromQuery] bool includeMammal = false)
         {
             try
             {
                 var result= await _habitatRepository.GetHabitatByName(name, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
-                return Ok(HateoasMainLinks(mappedResult));
+
+                if (includeLinks)
+                {
+                    return Ok(HateoasMainLinks(mappedResult));
+                }
+
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
