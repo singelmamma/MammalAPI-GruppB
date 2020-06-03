@@ -74,6 +74,53 @@ namespace XUnitTest
             Assert.Equal("test", dtoResult.Name);
         }
 
+        [Fact]
+        public async void GetAllFamilies_FetchListOfAllFamilies_LengthOfTwoExpected()
+        {
+            // Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            IMapper mapper = new Mapper(configuration);
+
+            //Mock context
+            var testFamilies = GetTestFamilies();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(f => f.Families).ReturnsDbSet(testFamilies);
+
+            //Mock Repo
+            var logger = Mock.Of<ILogger<FamilyRepository>>();
+            var familyRepoMock = new FamilyRepository(contextMock.Object, logger);
+
+            //Mock IActionDescriptorCollectionProvider
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo = new AttributeRouteInfo()
+                    {
+                        Template = "/test",
+                    },
+                    RouteValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "action", "Test" },
+                        { "controller", "Test" },
+                    },
+                }
+            };
+            var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            //Setup new controller based on mocks
+            var controller = new FamilyController(familyRepoMock, mapper, mockDescriptorProvider.Object);
+
+            //Act
+            var result = await controller.GetAllFamilies(false);
+            var contentResult = result as OkObjectResult;
+            FamilyDTO[] dto = (FamilyDTO[])contentResult.Value;
+
+            //Assert
+            Assert.Equal(2, dto.Length);
+        }
 
         [Theory]
         [InlineData(1, 1)]
