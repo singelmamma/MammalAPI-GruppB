@@ -27,7 +27,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family       Get all families
         [HttpGet(Name = "GetAllFamilies")]
-        public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeLinks = false, [FromQuery]bool includeMammals = false)
+        public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeLinks = true, [FromQuery]bool includeMammals = false)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/1   Get family by id
         [HttpGet("{id:int}", Name = "GetFamilyByIdAsync")]
-        public async Task<IActionResult> GetFamilyById(int id, [FromQuery]bool includeLinks = false, [FromQuery]bool includeMammals = false)
+        public async Task<IActionResult> GetFamilyById(int id, [FromQuery]bool includeLinks = true, [FromQuery]bool includeMammals = false)
         {
             try
             {

@@ -117,7 +117,7 @@ namespace XUnitTest
             var controller = new FamilyController(familyRepoMock, mapper, mockDescriptorProvider.Object);
             
             //Act
-            var result = await controller.GetFamilyById(inlineFamilyID);
+            var result = await controller.GetFamilyById(inlineFamilyID, false);
             var contentResult = result as OkObjectResult;
             FamilyDTO dto = (FamilyDTO) contentResult.Value;
 
