@@ -27,23 +27,28 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family       Get all families
         [HttpGet(Name = "GetAllFamilies")]
-        public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeMammals = false)
+        public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeLinks = true, [FromQuery]bool includeMammals = false)
         {
             try
             {
                 var results = await _familyRepository.GetAllFamilies(includeMammals);
                 IEnumerable<FamilyDTO> mappedResult = _mapper.Map<FamilyDTO[]>(results);
 
-                if (includeMammals)
+                if (includeLinks)
                 {
                     foreach (var family in mappedResult)
                     {
                         family.Mammals = family.Mammals.Select(m => HateoasMainLinks(m)).ToList();
                     }
                 }
-                
-                IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(r => HateoasMainLinks(r));
-                return Ok(resultWithLinks);
+
+                if (includeLinks)
+                {
+                    IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(r => HateoasMainLinks(r));
+                    return Ok(resultWithLinks);
+                }
+
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
@@ -57,19 +62,24 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/1   Get family by id
         [HttpGet("{id:int}", Name = "GetFamilyByIdAsync")]
-        public async Task<IActionResult> GetFamilyById(int id, bool includeMammals)
+        public async Task<IActionResult> GetFamilyById(int id, [FromQuery]bool includeLinks = true, [FromQuery]bool includeMammals = false)
         {
             try
             {
                 var result = await _familyRepository.GetFamilyById(id, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
                 
-                if (includeMammals)
+                if (includeLinks)
                 {
                     mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();  
                 }
-                
-                return Ok(HateoasMainLinks(mappedResult));
+
+                if (includeLinks)
+                {
+                    return Ok(HateoasMainLinks(mappedResult));
+                }
+
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
@@ -78,25 +88,29 @@ namespace MammalAPI.Controllers
             catch (Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
-
             }
         }
 
         ///api/v1.0/family/Phocidae      Get family by name
         [HttpGet("{name}")]
-        public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeMammals = false)
+        public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeLinks = true, [FromQuery] bool includeMammals = false)
         {
             try
             {
                 var result = await _familyRepository.GetFamilyByName(name, includeMammals);
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
 
-                if (includeMammals)
+                if (includeLinks)
                 {
                     mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();
                 }
 
-                return Ok(HateoasMainLinks(mappedResult));
+                if (includeLinks)
+                {
+                    return Ok(HateoasMainLinks(mappedResult));
+                }
+
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
