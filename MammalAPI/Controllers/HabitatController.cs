@@ -43,6 +43,15 @@ namespace MammalAPI.Controllers
                 }
                 var result = await _habitatRepository.GetAllHabitats(includeMammal);
                 IEnumerable<HabitatDTO> mappedResult = _mapper.Map<HabitatDTO[]>(result);
+
+                if (includeMammal)
+                {
+                    foreach (var habitat in mappedResult)
+                    {
+                        habitat.Mammal = habitat.Mammal.Select(m => HateoasMainLinks(m)).ToList();
+                    }
+                }
+
                 IEnumerable<HabitatDTO> habitatResult = mappedResult.Select(h => HateoasMainLinks(h));
                 return Ok(habitatResult);
             }
@@ -60,6 +69,11 @@ namespace MammalAPI.Controllers
             {
                 var result = await _habitatRepository.GetHabitatById(id, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
+
+                if (includeMammal)
+                {
+                    mappedResult.Mammal = mappedResult.Mammal.Select(m => HateoasMainLinks(m)).ToList();
+                }
                 return Ok(HateoasMainLinks(mappedResult));
             }
             catch (Exception e)
@@ -77,6 +91,11 @@ namespace MammalAPI.Controllers
             {
                 var result= await _habitatRepository.GetHabitatByName(name, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
+
+                if (includeMammal)
+                {
+                    mappedResult.Mammal = mappedResult.Mammal.Select(m => HateoasMainLinks(m)).ToList();
+                }
                 return Ok(HateoasMainLinks(mappedResult));
             }
             catch (TimeoutException e)
