@@ -81,7 +81,7 @@ namespace XUnitTest
         }
 
         [Fact]
-        public async void GetHabitatByID_ShoulrReturn_OK()
+        public async void GetHabitatByID_ShoulrReturn_anObjectAndAName()
         {
 
             // Arrange
