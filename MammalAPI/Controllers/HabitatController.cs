@@ -33,7 +33,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/habitat             To get all habitats
         [HttpGet(Name = "GetAllHabitat")]
-        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats(bool includeMammal = false)
+        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats([FromQuery] bool includeLinks = true, [FromQuery] bool includeMammal = false)
         {
             try
             {
@@ -44,16 +44,17 @@ namespace MammalAPI.Controllers
                 var result = await _habitatRepository.GetAllHabitats(includeMammal);
                 IEnumerable<HabitatDTO> mappedResult = _mapper.Map<HabitatDTO[]>(result);
 
-                if (includeMammal)
+                if (includeLinks)
                 {
                     foreach (var habitat in mappedResult)
                     {
                         habitat.Mammal = habitat.Mammal.Select(m => HateoasMainLinks(m)).ToList();
                     }
+                    IEnumerable<HabitatDTO> habitatResult = mappedResult.Select(h => HateoasMainLinks(h));
+                    return Ok(habitatResult);
                 }
 
-                IEnumerable<HabitatDTO> habitatResult = mappedResult.Select(h => HateoasMainLinks(h));
-                return Ok(habitatResult);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
