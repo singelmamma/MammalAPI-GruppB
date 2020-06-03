@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using MammalAPI.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace MammalAPI.Controllers
 {
@@ -44,6 +45,13 @@ namespace MammalAPI.Controllers
                         }
                     }
                 }
+                if (includeHabitat)
+                {
+                    foreach(var mammal in mappedResult)
+                    {
+                        mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
+                    }
+                }
                 IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
                 return Ok(mammalsresult);
             }
@@ -60,6 +68,15 @@ namespace MammalAPI.Controllers
             {
                 var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
+                if(includeFamily)
+                {
+                    mappedResult.Family = HateoasMainLinks(mappedResult.Family);
+                }
+
+                if (includeHabitat)
+                {
+                    mappedResult.Habitats =mappedResult.Habitats.Select(m => HateoasMainLinks(m)).ToList();
+                }
 
                 return Ok(HateoasMainLinks(mappedResult));
             }
@@ -79,7 +96,7 @@ namespace MammalAPI.Controllers
 
                 if (includeFamilies)
                 {
-                    mappedResult.Family.Mammals = null;
+                    mappedResult.Family = HateoasMainLinks(mappedResult.Family);
                 }
 
                 return Ok(HateoasMainLinks(mappedResult));
@@ -97,12 +114,11 @@ namespace MammalAPI.Controllers
             {
                 var results = await _repository.GetMammalsByHabitatId(habitatId, includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
-
+                Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
 
                 if (includeHabitat)
                 {
-                    foreach (MammalDTO mammal in mammalsresult)
+                    foreach (MammalDTO mammal in mappedResult)
                     {
                         foreach (HabitatDTO habitat in mammal.Habitats)
                         {
@@ -110,8 +126,30 @@ namespace MammalAPI.Controllers
                         }
                     }
                 }
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        if(mammal.Family != null)
+                        {
+                            if (!items.ContainsKey(mammal.Family.Name))
+                            {
+                                items.Add(mammal.Family.Name, HateoasMainLinks(mammal.Family));
+                            }
+                            mammal.Family.Mammals = null;
+                        }
+                    }
 
-                return Ok(mammalsresult);
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        if (mammal.Family != null)
+                        {
+                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                        }
+                    }
+                }
+
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
