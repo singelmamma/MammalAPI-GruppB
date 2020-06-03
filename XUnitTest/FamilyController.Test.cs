@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System.Web;
+using MammalAPI.Context;
+using Microsoft.Extensions.Logging;
+using Moq.EntityFrameworkCore;
 
 namespace XUnitTest
 {
@@ -72,19 +75,24 @@ namespace XUnitTest
         }
 
 
-        [Fact]
-        public async void GetFamilyById()
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void GetFamilyById(int inlineFamilyID, int expected)
         {
             // Arrange
             var profile = new MammalAPI.Configuration.Mapper();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             IMapper mapper = new Mapper(configuration);
 
+            //Mock context
+            var testFamilies = GetTestFamilies();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(f => f.Families).ReturnsDbSet(testFamilies);
+
             //Mock Repo
-            var familyRepoMock = new Mock<IFamilyRepository>();
-            familyRepoMock.Setup(r => r.Add<Family>(It.IsAny<Family>()));
-            familyRepoMock.Setup(r => r.GetAllFamilies(It.IsAny<Boolean>())).Returns(Task.FromResult(new Family[1]));
-            familyRepoMock.Setup(r => r.Save()).Returns(Task.FromResult(true));
+            var logger = Mock.Of<ILogger<FamilyRepository>>();
+            var familyRepoMock = new FamilyRepository(contextMock.Object, logger);
 
             //Mock IActionDescriptorCollectionProvider
             var actions = new List<ActionDescriptor>
@@ -100,29 +108,38 @@ namespace XUnitTest
                         { "action", "Test" },
                         { "controller", "Test" },
                     },
-                },
+                }
             };
             var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
             mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
 
             //Setup new controller based on mocks
-            var controller = new FamilyController(familyRepoMock.Object, mapper, mockDescriptorProvider.Object);
+            var controller = new FamilyController(familyRepoMock, mapper, mockDescriptorProvider.Object);
             
-            //Create new DTO and add it
-            var dto = new FamilyDTO
-            {
-                Name = "test",
-                FamilyID = 1
-            };
-            var bla = await controller.PostFamily(dto);
-
-            // Act
-            var result = controller.GetFamilyById(1);
-            var contentResult = (FamilyDTO) result.Result;
-            
+            //Act
+            var result = await controller.GetFamilyById(inlineFamilyID);
+            var contentResult = result as OkObjectResult;
+            FamilyDTO dto = (FamilyDTO) contentResult.Value;
 
             //Assert
-            //Assert.Equal(result, dtoResult.FamilyID);
+            Assert.Equal(expected, dto.FamilyID);
+        }
+
+        private List<Family> GetTestFamilies()
+        {
+            var sessions = new List<Family>();
+            sessions.Add(new Family()
+            {
+                FamilyId = 1,
+                Name = "Test Family One",
+
+            });
+            sessions.Add(new Family()
+            {
+                FamilyId = 2,
+                Name = "Test Family Two",
+            });
+            return sessions;
         }
     }
 }

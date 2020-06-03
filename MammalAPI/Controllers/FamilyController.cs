@@ -27,7 +27,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family       Get all families
         [HttpGet(Name = "GetAllFamilies")]
-        public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeMammals = false)
+        public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeLinks = false, [FromQuery]bool includeMammals = false)
         {
             try
             {
@@ -41,9 +41,14 @@ namespace MammalAPI.Controllers
                         family.Mammals = family.Mammals.Select(m => HateoasMainLinks(m)).ToList();
                     }
                 }
-                
-                IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(r => HateoasMainLinks(r));
-                return Ok(resultWithLinks);
+
+                if (includeLinks)
+                {
+                    IEnumerable<FamilyDTO> resultWithLinks = mappedResult.Select(r => HateoasMainLinks(r));
+                    return Ok(resultWithLinks);
+                }
+
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
@@ -57,7 +62,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/1   Get family by id
         [HttpGet("{id:int}", Name = "GetFamilyByIdAsync")]
-        public async Task<IActionResult> GetFamilyById(int id, bool includeMammals = false)
+        public async Task<IActionResult> GetFamilyById(int id, [FromQuery]bool includeLinks = false, [FromQuery]bool includeMammals = false)
         {
             try
             {
@@ -68,8 +73,13 @@ namespace MammalAPI.Controllers
                 {
                     mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();  
                 }
-                
-                return Ok(HateoasMainLinks(mappedResult));
+
+                if (includeLinks)
+                {
+                    return Ok(HateoasMainLinks(mappedResult));
+                }
+
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
