@@ -81,8 +81,9 @@ namespace XUnitTest
         }
 
         [Fact]
-        public async void GetHabitatByID()
+        public async void GetHabitatByID_ShoulrReturn_OK()
         {
+
             // Arrange
             var profile = new MammalAPI.Configuration.Mapper();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
