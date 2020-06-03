@@ -10,6 +10,7 @@ namespace MammalAPI.Context
         public virtual DbSet<Habitat> Habitats { get; set; }
         public virtual DbSet<Mammal> Mammals { get; set; }
         public virtual DbSet<MammalHabitat> MammalHabitats { get; set; }
+        public virtual DbSet<UserAccount> UserAccounts { get; set; }
 
         public DBContext()
         {}
