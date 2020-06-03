@@ -114,8 +114,8 @@ namespace XUnitTest
 
             var dto = new MammalDTO
             {
-                Name = "test",
-                MammalID = 1
+                MammalID = 1,
+                Name = "Leopard Seal",
             };
 
             var controller = new MammalsController(mammalRepo.Object, mapper, mockDescriptorProvider.Object);
@@ -126,6 +126,7 @@ namespace XUnitTest
 
             // Assert
             Assert.IsAssignableFrom<ObjectResult>(result);
+            Assert.Equal("Leopard Seal", dto.Name);
         }
     }
 }
