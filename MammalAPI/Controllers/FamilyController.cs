@@ -25,7 +25,13 @@ namespace MammalAPI.Controllers
             this._mapper = mapper;
         }
 
-        ///api/v1.0/family       Get all families
+
+        /// <summary>
+        /// Test1
+        /// </summary>
+        /// <remarks>
+        /// <h1>Något Coolt</h1>
+        /// </remarks>
         [HttpGet(Name = "GetAllFamilies")]
         public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeLinks = true, [FromQuery]bool includeMammals = false)
         {
