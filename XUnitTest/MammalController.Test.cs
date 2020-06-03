@@ -121,7 +121,7 @@ namespace XUnitTest
             var controller = new MammalsController(mammalRepo.Object, mapper, mockDescriptorProvider.Object);
 
             //Act
-            var result = await controller.GetMammalById(1);
+            var result = await controller.GetMammalById(dto.MammalID);
 
 
             // Assert
