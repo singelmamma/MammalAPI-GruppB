@@ -14,7 +14,7 @@ namespace MammalAPI.Configuration
             
             CreateMap<Family, FamilyDTO>().ForMember(dto => dto.Mammals, opt => opt.MapFrom(x => x.Mammals
                         .Select(y => new Mammal {MammalId = y.MammalId, Name = y.Name,
-                        MammalHabitats = null}).ToList())).ReverseMap() ;
+                        MammalHabitats = null}).ToList())).ReverseMap();
 
             CreateMap<Habitat, HabitatDTO>().ForMember(dto => dto.Mammal, opt => opt.MapFrom(x => x.MammalHabitats
                    .Select(y => new Mammal { 
