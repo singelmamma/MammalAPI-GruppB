@@ -12,6 +12,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Routing;
+using System.Web;
 
 namespace XUnitTest
 {
@@ -71,7 +72,6 @@ namespace XUnitTest
         }
 
 
-        //Not working
         [Fact]
         public async void GetFamilyById()
         {
@@ -117,7 +117,9 @@ namespace XUnitTest
             var bla = await controller.PostFamily(dto);
 
             // Act
-            var result = await controller.GetFamilyById(1);
+            var result = controller.GetFamilyById(1);
+            var contentResult = (FamilyDTO) result.Result;
+            
 
             //Assert
             //Assert.Equal(result, dtoResult.FamilyID);
