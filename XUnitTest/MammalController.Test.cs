@@ -83,9 +83,8 @@ namespace XUnitTest
         [Theory]
         [InlineData(1, 1)]
         [InlineData(2, 2)]
-        public async void GetHabitatByID_FetchMammalBasedOnId_SameIdAsInputExpected(int inlineFamilyId, int expected)
+        public async void GetHabitatByID_FetchMammalBasedOnId_SameIdAsInputExpected(int inlineMammalId, int expected)
         {
-
             // Arrange
             var profile = new MammalAPI.Configuration.Mapper();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
@@ -97,13 +96,10 @@ namespace XUnitTest
             contextMock.Setup(m => m.Mammals).ReturnsDbSet(testMammals);
 
             //Mock Repo
-            var logger = Mock.Of<ILogger<FamilyRepository>>();
-            var familyRepoMock = new FamilyRepository(contextMock.Object, logger);
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var mammalRepoMock = new MammalRepository(contextMock.Object, logger);
 
-            var mammalRepo = new Mock<IMammalRepository>();
-            mammalRepo.Setup(r => r.GetMammalById(1, It.IsAny<Boolean>(), It.IsAny<Boolean>()));
-
-
+            //Mock IActionDescriptorCollectionProvider
             var actions = new List<ActionDescriptor>
             {
                 new ActionDescriptor
@@ -117,26 +113,21 @@ namespace XUnitTest
                         { "action", "Test" },
                         { "controller", "Test" },
                     },
-                },
+                }
             };
             var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
             mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
 
-            var dto = new MammalDTO
-            {
-                MammalID = 1,
-                Name = "Leopard Seal",
-            };
-
-            var controller = new MammalsController(mammalRepo.Object, mapper, mockDescriptorProvider.Object);
+            //Setup new controller based on mocks
+            var controller = new MammalsController(mammalRepoMock, mapper, mockDescriptorProvider.Object);
 
             //Act
-            var result = await controller.GetMammalById(dto.MammalID);
+            var result = await controller.GetMammalById(inlineMammalId, false);
+            var contentResult = result as OkObjectResult;
+            MammalDTO dto = (MammalDTO)contentResult.Value;
 
-
-            // Assert
-            Assert.IsAssignableFrom<ObjectResult>(result);
-            Assert.Equal("Leopard Seal", dto.Name);
+            //Assert
+            Assert.Equal(expected, dto.MammalID);
         }
 
         private List<Mammal> GetTestMammals()
