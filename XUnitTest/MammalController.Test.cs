@@ -25,6 +25,7 @@ namespace XUnitTest
 {
     public class MammalControllerTest
     {
+
         [Fact]
         public async void PostMammal_Should_SaveOneMammal()
         {
@@ -77,6 +78,55 @@ namespace XUnitTest
             var r = result.Result as CreatedResult;
             var dtoResult = (MammalDTO)r.Value;
             Assert.Equal("test", dtoResult.Name);
+        }
+
+        [Fact]
+        public async void GetHabitatByID_ShoulrReturn_anObjectAndAName()
+        {
+
+            // Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            IMapper mapper = new Mapper(configuration);
+            List<Mammal> mammals = new List<Mammal>();
+
+            var mammalRepo = new Mock<IMammalRepository>();
+            mammalRepo.Setup(r => r.GetMammalById(1, It.IsAny<Boolean>(), It.IsAny<Boolean>()));
+
+
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo = new AttributeRouteInfo()
+                    {
+                        Template = "/test",
+                    },
+                    RouteValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "action", "Test" },
+                        { "controller", "Test" },
+                    },
+                },
+            };
+            var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            var dto = new MammalDTO
+            {
+                MammalID = 1,
+                Name = "Leopard Seal",
+            };
+
+            var controller = new MammalsController(mammalRepo.Object, mapper, mockDescriptorProvider.Object);
+
+            //Act
+            var result = await controller.GetMammalById(dto.MammalID);
+
+
+            // Assert
+            Assert.IsAssignableFrom<ObjectResult>(result);
+            Assert.Equal("Leopard Seal", dto.Name);
         }
     }
 }
