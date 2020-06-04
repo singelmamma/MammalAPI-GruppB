@@ -273,7 +273,7 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
-        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily = false, bool includeHabitat = false)
+        public async Task<IActionResult> GetMammalsByLifeSpan(int fromYear, int toYear, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamily = false, [FromQuery] bool includeHabitat = false)
         {
             try
             {
@@ -281,17 +281,24 @@ namespace MammalAPI.Controllers
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
 
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        if (mammal.Family != null)
+                        {
+                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                        }
+                    }
+                }
 
-                if (includeHabitat)
+                if (includeLinks)
                 {
                     foreach (var mammal in mappedResult)
                     {
                         mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                     }
-                }
 
-                if (includeFamily)
-                {
                     foreach (MammalDTO mammal in mappedResult)
                     {
                         if (mammal.Family != null)
@@ -304,14 +311,10 @@ namespace MammalAPI.Controllers
                         }
                     }
 
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        if (mammal.Family != null)
-                        {
-                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
-                        }
-                    }
+                    mappedResult = mappedResult.Select(x => HateoasMainLinks(x)).ToList();
+                    return Ok(mappedResult);
                 }
+
                 return Ok(mappedResult);
             }
             catch (Exception e)
