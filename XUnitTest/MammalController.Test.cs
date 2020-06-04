@@ -80,54 +80,7 @@ namespace XUnitTest
             Assert.Equal("test", dtoResult.Name);
         }
 
-        [Fact]
-        public async void GetHabitatByID_ShoulrReturn_anObjectAndAName()
-        {
-
-            // Arrange
-            var profile = new MammalAPI.Configuration.Mapper();
-            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
-            IMapper mapper = new Mapper(configuration);
-            List<Mammal> mammals = new List<Mammal>();
-
-            var mammalRepo = new Mock<IMammalRepository>();
-            mammalRepo.Setup(r => r.GetMammalById(1, It.IsAny<Boolean>(), It.IsAny<Boolean>()));
-
-
-            var actions = new List<ActionDescriptor>
-            {
-                new ActionDescriptor
-                {
-                    AttributeRouteInfo = new AttributeRouteInfo()
-                    {
-                        Template = "/test",
-                    },
-                    RouteValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-                    {
-                        { "action", "Test" },
-                        { "controller", "Test" },
-                    },
-                },
-            };
-            var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
-            mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
-
-            var dto = new MammalDTO
-            {
-                MammalID = 1,
-                Name = "Leopard Seal",
-            };
-
-            var controller = new MammalsController(mammalRepo.Object, mapper, mockDescriptorProvider.Object);
-
-            //Act
-            var result = await controller.GetMammalById(dto.MammalID);
-
-
-            // Assert
-            Assert.IsAssignableFrom<ObjectResult>(result);
-            Assert.Equal("Leopard Seal", dto.Name);
-        }
+        
 
         private List<Mammal> GetTestMammals()
         {
@@ -140,12 +93,29 @@ namespace XUnitTest
                 Length = 100,
                 Lifespan = 38,
                 Weight = 500
-
             });
             sessions.Add(new Mammal()
             {
                 MammalId = 2,
                 Name = "Test Mammal Two",
+                LatinName = "Testidae",
+                Length = 50,
+                Lifespan = 38,
+                Weight = 100
+            });
+            sessions.Add(new Mammal()
+            {
+                MammalId = 3,
+                Name = "Test Mammal Three",
+                LatinName = "Testus Testus",
+                Length = 50,
+                Lifespan = 200,
+                Weight = 100
+            });
+            sessions.Add(new Mammal()
+            {
+                MammalId = 4,
+                Name = "Test Mammal Four",
                 LatinName = "Testus Testus",
                 Length = 50,
                 Lifespan = 200,
