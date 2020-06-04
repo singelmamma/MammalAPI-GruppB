@@ -55,7 +55,7 @@ namespace MammalAPI.Services
             _logger.LogInformation($"Getting mammals by name: {mammalName}");
 
             IQueryable<Mammal> query = _dBContext.Mammals
-                .Where(x => x.MammalHabitats.Any(z => z.Mammal.Name == mammalName));
+                .Where(z => z.Name == mammalName);
 
             if (query == null) throw new Exception($"Not found: { mammalName }");
 

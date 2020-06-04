@@ -25,7 +25,12 @@ namespace MammalAPI.Controllers
             this._mapper = mapper;
         }
 
-        ///api/v1.0/family       Get all families
+        /// <summary>
+        /// All Families
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get all Families and you can also include mammals!</h1>
+        /// </remarks>
         [HttpGet(Name = "GetAllFamilies")]
         public async Task<IActionResult> GetAllFamilies([FromQuery]bool includeLinks = true, [FromQuery]bool includeMammals = false)
         {
@@ -61,6 +66,13 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/family/1   Get family by id
+        
+        /// <summary>
+        /// Get Family by ID
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get specific family and you can also include mammals!</h1>
+        /// </remarks>
         [HttpGet("{id:int}", Name = "GetFamilyByIdAsync")]
         public async Task<IActionResult> GetFamilyById(int id, [FromQuery]bool includeLinks = true, [FromQuery]bool includeMammals = false)
         {
@@ -89,6 +101,12 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/family/Phocidae      Get family by name
 
+        /// <summary>
+        /// Get Family by Name
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get specific family and you can also include mammals!</h1>
+        /// </remarks>
         [HttpGet("{name}")]
         public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeLinks = true, [FromQuery] bool includeMammals = false)
         {
@@ -115,6 +133,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Post Family
+        /// </summary>
+        /// <remarks>
+        /// <h1>Post Info in family</h1>
+        /// </remarks>
         [HttpPost(Name = "PostFamily")]
         [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> PostFamily(FamilyDTO familyDTO)
@@ -138,6 +162,13 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/family/##       Put a family by id
+        
+        /// <summary>
+        /// Put Family by ID
+        /// </summary>
+        /// <remarks>
+        /// <h1>Put family by specific Id</h1>
+        /// </remarks>
         [HttpPut("{familyId}", Name = "PutFamily")]
         [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> PutFamily (int familyId, FamilyDTO familyDTO)
@@ -168,7 +199,13 @@ namespace MammalAPI.Controllers
 
             return BadRequest();
         }
-        
+
+        /// <summary>
+        /// Delete family by id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Delete family by Id!</h1>
+        /// </remarks>
         [HttpDelete("{familyId}", Name = "DeleteFamily")]
         [ApiKeyAuthentication]
         public async Task<ActionResult<FamilyDTO>> DeleteFamily (int familyId)

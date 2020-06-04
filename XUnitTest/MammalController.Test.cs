@@ -80,7 +80,56 @@ namespace XUnitTest
             Assert.Equal("test", dtoResult.Name);
         }
 
-        
+        [Theory]
+        [InlineData(0, 1, 0)]
+        [InlineData(150, 200, 2)]
+        [InlineData(0, 100, 2)]
+        public async void GetHabitatByLifeSpan_FetchMammalBasedOnLifeSpan_ListLengthOfMammalsWithCorrespondingSpanExpected(int inlineMammalFromLifeSpan, int inlineMammalToLifeSpan, int expected)
+        {
+            // Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            IMapper mapper = new Mapper(configuration);
+
+            //Mock context
+            var testMammals = GetTestMammals();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(m => m.Mammals).ReturnsDbSet(testMammals);
+
+            //Mock Repo
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var mammalRepoMock = new MammalRepository(contextMock.Object, logger);
+
+            //Mock IActionDescriptorCollectionProvider
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo = new AttributeRouteInfo()
+                    {
+                        Template = "/test",
+                    },
+                    RouteValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "action", "Test" },
+                        { "controller", "Test" },
+                    },
+                }
+            };
+            var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            //Setup new controller based on mocks
+            var controller = new MammalsController(mammalRepoMock, mapper, mockDescriptorProvider.Object);
+
+            //Act
+            var result = await controller.GetMammalsByLifeSpan(inlineMammalFromLifeSpan, inlineMammalToLifeSpan, false);
+            var contentResult = result as OkObjectResult;
+            MammalDTO[] dto = (MammalDTO[])contentResult.Value;
+
+            //Assert
+            Assert.Equal(expected, dto.Length);
+        }
 
         private List<Mammal> GetTestMammals()
         {
@@ -122,6 +171,75 @@ namespace XUnitTest
                 Weight = 100
             });
             return sessions;
+        }
+
+        [Fact]
+        public async void GetAllMammal_ShouldReturnMammal()
+        {
+            //Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var config = new MapperConfiguration(s => s.AddProfile(profile));
+            IMapper mapper = new Mapper(config);
+
+            //mockContext
+            var mammal = GenerateMammal();
+            var mockContext = new Mock<DBContext>();
+            mockContext.Setup(x => x.Mammals).ReturnsDbSet(mammal);
+
+            //Mocking 
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var mockRepo = new MammalRepository(mockContext.Object, logger);
+
+            //actionDescriptor
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo= new AttributeRouteInfo
+                    {
+                        Template="/test"
+                    },
+                    RouteValues= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        {"action", "test" },
+                        {"controller", "test "}
+                    }
+                }
+            };
+
+            var mockDescriptor = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptor.Setup(z => z.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            //setting up controller
+            var controller = new MammalsController(mockRepo, mapper, mockDescriptor.Object);
+
+            //Act
+            var result = await controller.Get(false);
+            var content = result.Result as OkObjectResult;
+            MammalDTO[] mammals = (MammalDTO[])content.Value;
+
+            //Assert
+            Assert.Equal(1, (int)mammals.Length);
+        }
+
+        public List<Mammal> GenerateMammal()
+        {
+            var mammals = new List<Mammal>
+            {
+                new Mammal
+                {
+                    MammalId=1,
+                    Name="Test",
+                    Family=null,
+                    MammalHabitats=null,
+                    LatinName="tester",
+                    Length=1,
+                    Lifespan=2,
+                    Weight=2
+                }
+            };
+            return mammals;
+
         }
     }
 }
