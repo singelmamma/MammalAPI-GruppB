@@ -80,15 +80,25 @@ namespace XUnitTest
             Assert.Equal("test", dtoResult.Name);
         }
 
-        [Fact]
-        public async void GetHabitatByID_ShoulrReturn_anObjectAndAName()
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async void GetHabitatByID_FetchMammalBasedOnId_SameIdAsInputExpected(int inlineFamilyId, int expected)
         {
 
             // Arrange
             var profile = new MammalAPI.Configuration.Mapper();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             IMapper mapper = new Mapper(configuration);
-            List<Mammal> mammals = new List<Mammal>();
+
+            //Mock context
+            var testMammals = GetTestMammals();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(m => m.Mammals).ReturnsDbSet(testMammals);
+
+            //Mock Repo
+            var logger = Mock.Of<ILogger<FamilyRepository>>();
+            var familyRepoMock = new FamilyRepository(contextMock.Object, logger);
 
             var mammalRepo = new Mock<IMammalRepository>();
             mammalRepo.Setup(r => r.GetMammalById(1, It.IsAny<Boolean>(), It.IsAny<Boolean>()));
