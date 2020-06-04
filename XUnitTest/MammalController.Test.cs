@@ -80,20 +80,27 @@ namespace XUnitTest
             Assert.Equal("test", dtoResult.Name);
         }
 
-        [Fact]
-        public async void GetHabitatByID_ShoulrReturn_anObjectAndAName()
+        [Theory]
+        [InlineData(0, 1, 0)]
+        [InlineData(150, 200, 2)]
+        [InlineData(0, 100, 2)]
+        public async void GetHabitatByLifeSpan_FetchMammalBasedOnLifeSpan_ListLengthOfMammalsWithCorrespondingSpanExpected(int inlineMammalFromLifeSpan, int inlineMammalToLifeSpan, int expected)
         {
-
             // Arrange
             var profile = new MammalAPI.Configuration.Mapper();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             IMapper mapper = new Mapper(configuration);
-            List<Mammal> mammals = new List<Mammal>();
 
-            var mammalRepo = new Mock<IMammalRepository>();
-            mammalRepo.Setup(r => r.GetMammalById(1, It.IsAny<Boolean>(), It.IsAny<Boolean>()));
+            //Mock context
+            var testMammals = GetTestMammals();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(m => m.Mammals).ReturnsDbSet(testMammals);
 
+            //Mock Repo
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var mammalRepoMock = new MammalRepository(contextMock.Object, logger);
 
+            //Mock IActionDescriptorCollectionProvider
             var actions = new List<ActionDescriptor>
             {
                 new ActionDescriptor
@@ -107,26 +114,21 @@ namespace XUnitTest
                         { "action", "Test" },
                         { "controller", "Test" },
                     },
-                },
+                }
             };
             var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
             mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
 
-            var dto = new MammalDTO
-            {
-                MammalID = 1,
-                Name = "Leopard Seal",
-            };
-
-            var controller = new MammalsController(mammalRepo.Object, mapper, mockDescriptorProvider.Object);
+            //Setup new controller based on mocks
+            var controller = new MammalsController(mammalRepoMock, mapper, mockDescriptorProvider.Object);
 
             //Act
-            var result = await controller.GetMammalById(dto.MammalID);
+            var result = await controller.GetMammalsByLifeSpan(inlineMammalFromLifeSpan, inlineMammalToLifeSpan, false);
+            var contentResult = result as OkObjectResult;
+            MammalDTO[] dto = (MammalDTO[])contentResult.Value;
 
-
-            // Assert
-            Assert.IsAssignableFrom<ObjectResult>(result);
-            Assert.Equal("Leopard Seal", dto.Name);
+            //Assert
+            Assert.Equal(expected, dto.Length);
         }
 
         private List<Mammal> GetTestMammals()
@@ -146,6 +148,24 @@ namespace XUnitTest
             {
                 MammalId = 2,
                 Name = "Test Mammal Two",
+                LatinName = "Testidae",
+                Length = 50,
+                Lifespan = 38,
+                Weight = 100
+            });
+            sessions.Add(new Mammal()
+            {
+                MammalId = 3,
+                Name = "Test Mammal Three",
+                LatinName = "Testus Testus",
+                Length = 50,
+                Lifespan = 200,
+                Weight = 100
+            });
+            sessions.Add(new Mammal()
+            {
+                MammalId = 4,
+                Name = "Test Mammal Four",
                 LatinName = "Testus Testus",
                 Length = 50,
                 Lifespan = 200,
