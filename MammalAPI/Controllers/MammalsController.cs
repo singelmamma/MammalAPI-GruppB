@@ -85,19 +85,20 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("{mammalName}", Name="GetMammalName")]
-        public async Task<IActionResult> GetMammalByName(string mammalName, bool includeFamilies = false)
+        public async Task<IActionResult> GetMammalByName(string mammalName, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamilies = false)
         {
             try
             {
                 var result = await _repository.GetMammalByName(mammalName, includeFamilies);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
 
-                if (includeFamilies)
+                if (includeLinks)
                 {
                     mappedResult.Family = HateoasMainLinks(mappedResult.Family);
+                    return Ok(HateoasMainLinks(mappedResult));
                 }
 
-                return Ok(HateoasMainLinks(mappedResult));
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
