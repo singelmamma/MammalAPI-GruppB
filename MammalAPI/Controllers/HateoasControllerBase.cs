@@ -42,8 +42,6 @@ namespace MammalAPI.Controllers
             mammalDto.Links.Add(UrlLink("_self", "GetMammalAsync", new { id = mammalDto.MammalID }));
             mammalDto.Links.Add(UrlLink("_self", "GetMammalName", new {mammalName = mammalDto.Name }));
 
-
-
             return mammalDto;
         }
 
@@ -55,15 +53,12 @@ namespace MammalAPI.Controllers
         /// <returns></returns>
         internal FamilyDTO HateoasMainLinks(FamilyDTO family)
         {
+            
             FamilyDTO familyDto = family;
 
             familyDto.Links.Add(UrlLink("all", "GetAllFamilies", null));
             familyDto.Links.Add(UrlLink("_self", "GetFamilyByIdAsync", new { id = familyDto.FamilyID }));
-
-            //CRUD
-            familyDto.Links.Add(UrlLink(null, "PostFamily", null));
-            familyDto.Links.Add(UrlLink("_self", "PutFamily", familyDto));
-            familyDto.Links.Add(UrlLink("_self", "DeleteFamily", familyDto));
+            familyDto.Links.Add(UrlLink("_self", "GetFamilyByName", new { name = familyDto.Name }));
 
             return familyDto;
         }
