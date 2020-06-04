@@ -72,10 +72,6 @@ namespace MammalAPI.Controllers
                 if (includeLinks)
                 {
                     mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();  
-                }
-
-                if (includeLinks)
-                {
                     return Ok(HateoasMainLinks(mappedResult));
                 }
 
@@ -92,6 +88,7 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/family/Phocidae      Get family by name
+
         [HttpGet("{name}")]
         public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeLinks = true, [FromQuery] bool includeMammals = false)
         {
@@ -103,10 +100,6 @@ namespace MammalAPI.Controllers
                 if (includeLinks)
                 {
                     mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();
-                }
-
-                if (includeLinks)
-                {
                     return Ok(HateoasMainLinks(mappedResult));
                 }
 
