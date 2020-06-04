@@ -131,6 +131,57 @@ namespace XUnitTest
             Assert.Equal(expected, dto.Length);
         }
 
+        [Theory]
+        [InlineData("Test family One", 2)]
+        [InlineData("Test family Two", 1)]
+        [InlineData("Test family Three", 1)]
+        public async void GetMammalsByFamilyName_FetchMammalsBasedOnFamilyName_ListLengthOfMammalsWithCorrespondingFamilyName(string inlineFamilyName, int expected)
+        {
+            // Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            IMapper mapper = new Mapper(configuration);
+
+            //Mock context
+            var testMammals = GetTestMammals();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(m => m.Mammals).ReturnsDbSet(testMammals);
+
+            //Mock Repo
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var mammalRepoMock = new MammalRepository(contextMock.Object, logger);
+
+            //Mock IActionDescriptorCollectionProvider
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo = new AttributeRouteInfo()
+                    {
+                        Template = "/test",
+                    },
+                    RouteValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "action", "Test" },
+                        { "controller", "Test" },
+                    },
+                }
+            };
+            var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            //Setup new controller based on mocks
+            var controller = new MammalsController(mammalRepoMock, mapper, mockDescriptorProvider.Object);
+
+            //Act
+            var result = await controller.GetMammalsByFamilyName(inlineFamilyName, false);
+            var contentResult = result as OkObjectResult;
+            MammalDTO[] dto = (MammalDTO[])contentResult.Value;
+
+            //Assert
+            Assert.Equal(expected, dto.Length);
+        }
+
         private List<Mammal> GetTestMammals()
         {
             var sessions = new List<Mammal>();
@@ -141,8 +192,12 @@ namespace XUnitTest
                 LatinName = "Testidae",
                 Length = 100,
                 Lifespan = 38,
-                Weight = 500
-
+                Weight = 500,
+                Family = new Family
+                {
+                    FamilyId = 1,
+                    Name = "Test family One"
+                }
             });
             sessions.Add(new Mammal()
             {
@@ -151,7 +206,12 @@ namespace XUnitTest
                 LatinName = "Testidae",
                 Length = 50,
                 Lifespan = 38,
-                Weight = 100
+                Weight = 100,
+                Family = new Family
+                {
+                    FamilyId = 1,
+                    Name = "Test family One"
+                }
             });
             sessions.Add(new Mammal()
             {
@@ -160,7 +220,12 @@ namespace XUnitTest
                 LatinName = "Testus Testus",
                 Length = 50,
                 Lifespan = 200,
-                Weight = 100
+                Weight = 100,
+                Family = new Family
+                {
+                    FamilyId = 2,
+                    Name = "Test family Two"
+                }
             });
             sessions.Add(new Mammal()
             {
@@ -169,7 +234,12 @@ namespace XUnitTest
                 LatinName = "Testus Testus",
                 Length = 50,
                 Lifespan = 200,
-                Weight = 100
+                Weight = 100,
+                Family = new Family
+                {
+                    FamilyId = 3,
+                    Name = "Test family Three"
+                }
             });
             return sessions;
         }
