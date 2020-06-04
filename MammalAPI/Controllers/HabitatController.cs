@@ -33,7 +33,7 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/habitat             To get all habitats
         [HttpGet(Name = "GetAllHabitat")]
-        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats(bool includeMammal = false)
+        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats([FromQuery] bool includeLinks = true, [FromQuery] bool includeMammal = false)
         {
             try
             {
@@ -43,8 +43,18 @@ namespace MammalAPI.Controllers
                 }
                 var result = await _habitatRepository.GetAllHabitats(includeMammal);
                 IEnumerable<HabitatDTO> mappedResult = _mapper.Map<HabitatDTO[]>(result);
-                IEnumerable<HabitatDTO> habitatResult = mappedResult.Select(h => HateoasMainLinks(h));
-                return Ok(habitatResult);
+
+                if (includeLinks)
+                {
+                    foreach (var habitat in mappedResult)
+                    {
+                        habitat.Mammal = habitat.Mammal.Select(m => HateoasMainLinks(m)).ToList();
+                    }
+                    IEnumerable<HabitatDTO> habitatResult = mappedResult.Select(h => HateoasMainLinks(h));
+                    return Ok(habitatResult);
+                }
+
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -54,13 +64,20 @@ namespace MammalAPI.Controllers
 
         ///api/v1.0/habitat/1    To get one habitat by id
         [HttpGet("{id:int}", Name = "GetHabitatByID")]
-        public async Task<ActionResult<HabitatDTO>> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
+        public async Task<ActionResult<HabitatDTO>> GetHabitatById(int id, [FromQuery]bool includeLinks = true, [FromQuery]bool includeMammal=false)
         {
             try
             {
                 var result = await _habitatRepository.GetHabitatById(id, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
-                return Ok(HateoasMainLinks(mappedResult));
+
+                if (includeLinks)
+                {
+                    mappedResult.Mammal = mappedResult.Mammal.Select(m => HateoasMainLinks(m)).ToList();
+                    return Ok(HateoasMainLinks(mappedResult));
+                }
+
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -71,13 +88,21 @@ namespace MammalAPI.Controllers
        // /api/v1.0/habitat/=pacific ocean                To get habitat by name
         ///habitat/Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
         [HttpGet("{name}", Name ="GetHabitatByName")]
-        public async Task<IActionResult> GetHabitatByName(string name, bool includeMammal = false)
+        public async Task<IActionResult> GetHabitatByName(string name, [FromQuery] bool includeLinks = true, [FromQuery] bool includeMammal = false)
         {
             try
             {
                 var result= await _habitatRepository.GetHabitatByName(name, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
-                return Ok(HateoasMainLinks(mappedResult));
+
+                if (includeLinks)
+                {
+                    mappedResult = HateoasMainLinks(mappedResult);
+                    mappedResult.Mammal = mappedResult.Mammal.Select(m => HateoasMainLinks(m)).ToList();
+                    return Ok(HateoasMainLinks(mappedResult));
+                }
+
+                return Ok(mappedResult);
             }
             catch (TimeoutException e)
             {
