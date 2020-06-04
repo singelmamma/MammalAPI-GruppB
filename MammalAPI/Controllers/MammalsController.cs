@@ -62,23 +62,21 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet("{id:int}", Name="GetMammalAsync")]
-        public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
+        public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
                 var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
-                if(includeFamily)
+
+                if(includeLinks)
                 {
                     mappedResult.Family = HateoasMainLinks(mappedResult.Family);
+                    mappedResult.Habitats = mappedResult.Habitats.Select(m => HateoasMainLinks(m)).ToList();
+                    return Ok(HateoasMainLinks(mappedResult));
                 }
 
-                if (includeHabitat)
-                {
-                    mappedResult.Habitats =mappedResult.Habitats.Select(m => HateoasMainLinks(m)).ToList();
-                }
-
-                return Ok(HateoasMainLinks(mappedResult));
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
