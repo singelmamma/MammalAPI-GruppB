@@ -128,6 +128,31 @@ namespace XUnitTest
             Assert.IsAssignableFrom<ObjectResult>(result);
             Assert.Equal("Leopard Seal", dto.Name);
         }
+
+        private List<Mammal> GetTestMammals()
+        {
+            var sessions = new List<Mammal>();
+            sessions.Add(new Mammal()
+            {
+                MammalId = 1,
+                Name = "Test Mammal One",
+                LatinName = "Testidae",
+                Length = 100,
+                Lifespan = 38,
+                Weight = 500
+
+            });
+            sessions.Add(new Mammal()
+            {
+                MammalId = 2,
+                Name = "Test Mammal Two",
+                LatinName = "Testus Testus",
+                Length = 50,
+                Lifespan = 200,
+                Weight = 100
+            });
+            return sessions;
+        }
     }
 }
 
