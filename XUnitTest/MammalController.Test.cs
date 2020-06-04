@@ -131,6 +131,42 @@ namespace XUnitTest
             Assert.Equal(expected, dto.Length);
         }
 
+        [Theory]
+        [InlineData("Pacific Ocean", 2)]
+        [InlineData("Atlantic Ocean", 2)]
+        public async void GetMammalByHabitatName_ShouldReturnMammal(string inlineHabitatName, int expected)
+        {
+            //Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var config = new MapperConfiguration(x => x.AddProfile(profile));
+            IMapper mapper = new Mapper(config);
+
+            //Mocking
+            var mammal = GetTestMammals();
+            var mockContext = new Mock<DBContext>();
+            mockContext.Setup(z => z.Mammals).ReturnsDbSet(mammal);
+
+            //Mocking repo
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var repo = new MammalRepository(mockContext.Object, logger);
+
+            //mocking IActionDescriptor
+            var actions = new List<ActionDescriptor>();
+            var mockDescriptor = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptor.Setup(x => x.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            // setting up controller
+            var controller = new MammalsController(repo, mapper, mockDescriptor.Object);
+
+            //Act
+            var result = await controller.GetMammalsByHabitatName(inlineHabitatName, false);
+            var content = result as OkObjectResult;
+            var dto = (MammalDTO[])content.Value;
+
+            //Assert
+            Assert.Equal(2, dto.Length);
+        }
+
         private List<Mammal> GetTestMammals()
         {
             var sessions = new List<Mammal>();
@@ -141,8 +177,18 @@ namespace XUnitTest
                 LatinName = "Testidae",
                 Length = 100,
                 Lifespan = 38,
-                Weight = 500
-
+                Weight = 500,
+                MammalHabitats = new List<MammalHabitat>
+                {
+                    new MammalHabitat
+                    {
+                        Habitat= new Habitat
+                        {
+                            HabitatID = 1,
+                            Name="Pacific Ocean",
+                        }
+                    }
+                }
             });
             sessions.Add(new Mammal()
             {
@@ -151,7 +197,18 @@ namespace XUnitTest
                 LatinName = "Testidae",
                 Length = 50,
                 Lifespan = 38,
-                Weight = 100
+                Weight = 100,
+                MammalHabitats = new List<MammalHabitat>
+                {
+                    new MammalHabitat
+                    {
+                        Habitat= new Habitat
+                        {
+                            HabitatID = 1,
+                            Name="Pacific Ocean",
+                        }
+                    }
+                }
             });
             sessions.Add(new Mammal()
             {
@@ -160,7 +217,18 @@ namespace XUnitTest
                 LatinName = "Testus Testus",
                 Length = 50,
                 Lifespan = 200,
-                Weight = 100
+                Weight = 100,
+                MammalHabitats = new List<MammalHabitat>
+                {
+                    new MammalHabitat
+                    {
+                        Habitat= new Habitat
+                        {
+                            HabitatID = 2,
+                            Name="Atlantic Ocean",
+                        }
+                    }
+                }
             });
             sessions.Add(new Mammal()
             {
@@ -169,7 +237,18 @@ namespace XUnitTest
                 LatinName = "Testus Testus",
                 Length = 50,
                 Lifespan = 200,
-                Weight = 100
+                Weight = 100,
+                MammalHabitats = new List<MammalHabitat>
+                {
+                    new MammalHabitat
+                    {
+                        Habitat= new Habitat
+                        {
+                            HabitatID = 2,
+                            Name="Atlantic Ocean",
+                        }
+                    }
+                }
             });
             return sessions;
         }

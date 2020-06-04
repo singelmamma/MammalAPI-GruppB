@@ -185,14 +185,19 @@ namespace MammalAPI.Controllers
         /// <h1>Get Mammal by HabitatName!</h1>
         /// </remarks>
         [HttpGet("habitat/{habitatName}")]
-        public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
+        public async Task<IActionResult> GetMammalsByHabitatName(string habitatName, [FromQuery] bool includeLinks = true)
         {
             try
             {
                 var results = await _repository.GetMammalsByHabitat(habitatName);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
-                return Ok(mammalsresult);
+
+                if (includeLinks)
+                {
+                    mappedResult = mappedResult.Select(m => HateoasMainLinks(m));
+                }
+                
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
