@@ -30,7 +30,7 @@ namespace MammalAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "MammalApi", Version = "v1", Description ="The great Mammal Api" });
-                c.OperationFilter<HeaderParameterSwagger>();
+                c.OperationFilter<HeaderParameter>();
             });
         }
 

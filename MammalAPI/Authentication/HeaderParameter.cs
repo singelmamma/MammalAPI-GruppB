@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace MammalAPI.Authentication
 {
     
-    public class HeaderParameterSwagger : IOperationFilter
+    public class HeaderParameter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
