@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using Microsoft.OpenApi.Models;
+using MammalAPI.Authentication;
 
 namespace MammalAPI
 {
@@ -29,6 +30,7 @@ namespace MammalAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "MammalApi", Version = "v1", Description ="The great Mammal Api" });
+                c.OperationFilter<HeaderParameter>();
             });
         }
 
