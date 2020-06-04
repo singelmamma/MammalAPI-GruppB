@@ -28,6 +28,12 @@ namespace MammalAPI.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get all Mammals
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get all Mammals and you can also include Family and Habitat!</h1>
+        /// </remarks>
         [HttpGet(Name ="GetAll")]
         public async Task<ActionResult<MammalDTO[]>> Get([FromQuery]bool includeLinks = true, [FromQuery]bool includeFamily = false, [FromQuery]bool includeHabitat = false)
         {
@@ -61,6 +67,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get specific Mammal by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get specific Mammal by id and you can also include Family and Habitat!</h1>
+        /// </remarks>
         [HttpGet("{id:int}", Name="GetMammalAsync")]
         public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
@@ -84,6 +96,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Mammal by name
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Mammal by Name and you can also include Family!</h1>
+        /// </remarks>
         [HttpGet("{mammalName}", Name="GetMammalName")]
         public async Task<IActionResult> GetMammalByName(string mammalName, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamilies = false)
         {
@@ -106,6 +124,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get specific Mammal by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get specific Mammal by Id and you can also include Family and Habitat!</h1>
+        /// </remarks>
         [HttpGet("habitatid/{habitatId}")]
         public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
@@ -154,6 +178,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Mammal by HabitatName
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Mammal by HabitatName!</h1>
+        /// </remarks>
         [HttpGet("habitat/{habitatName}")]
         public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
         {
@@ -220,6 +250,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Mammal by FamilyName
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Mammal by FamilyName and you can also include Habitat and Family!</h1>
+        /// </remarks>
         [HttpGet("byfamilyname/{familyName}")]
         public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
         {
@@ -270,6 +306,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Mammal by Lifespan
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Mammal by Lifespan and you can also include Family and Habitat!</h1>
+        /// </remarks>
         [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
         public async Task<IActionResult> GetMammalsByLifeSpan(int fromYear, int toYear, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamily = false, [FromQuery] bool includeHabitat = false)
         {
@@ -320,6 +362,13 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
         }
+
+        /// <summary>
+        /// Post Mammal
+        /// </summary>
+        /// <remarks>
+        /// <h1>Post Mammal!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpPost]
         public async Task<ActionResult<MammalDTO>> PostMammal(MammalDTO mammalDTO)
@@ -340,6 +389,13 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
         }
+
+        /// <summary>
+        /// Put Mammal by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Put Mammal by Id!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpPut("{mammalId}")]
         public async Task<ActionResult<MammalDTO>> PutMammal (int mammalId, MammalDTO mammalDTO)
@@ -366,6 +422,13 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
         }
+
+        /// <summary>
+        /// Delete Mammal by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Delete Mammal by Id!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpDelete("{mammalId}")]
         public async Task<ActionResult> DeleteMammal(int mammalId)
