@@ -32,6 +32,13 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat             To get all habitats
+        
+        /// <summary>
+        /// Get all Habitat 
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get all Habitat!</h1>
+        /// </remarks>
         [HttpGet(Name = "GetAllHabitat")]
         public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats(bool includeMammal = false)
         {
@@ -62,6 +69,13 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat/1    To get one habitat by id
+        
+        /// <summary>
+        /// Get specific Habitat by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get specific Habitat by Id and you can include mammals!</h1>
+        /// </remarks>
         [HttpGet("{id:int}", Name = "GetHabitatByID")]
         public async Task<ActionResult<HabitatDTO>> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
         {
@@ -82,8 +96,14 @@ namespace MammalAPI.Controllers
             }
         }
 
-       // /api/v1.0/habitat/=pacific ocean                To get habitat by name
-        ///habitat/Pacific Ocean?includeMammal=true       To get habitat by name and include mammal   
+        ///api/v1.0/habitat/=pacific ocean                To get habitat by name
+
+        /// <summary>
+        /// Get Habitat by specific Name
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Habitat by Name and you can include mammals!</h1>
+        /// </remarks>
         [HttpGet("{name}", Name ="GetHabitatByName")]
         public async Task<IActionResult> GetHabitatByName(string name, [FromQuery] bool includeLinks = true, [FromQuery] bool includeMammal = false)
         {
@@ -112,6 +132,13 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat           To create a post
+        
+        /// <summary>
+        /// Post Habitat by name
+        /// </summary>
+        /// <remarks>
+        /// <h1>Post Habitat by name!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpPost(Name = "postHabitat")]
         public async Task<ActionResult<HabitatDTO>> PostHabitat(HabitatDTO habitatDto)
@@ -133,6 +160,13 @@ namespace MammalAPI.Controllers
         }
 
         ///api/v1.0/habitat/8       To change a habitat
+
+        /// <summary>
+        /// Put Habitat by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Put Habitat by id!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpPut("{id}", Name = "putHabitat")]
         public async Task<ActionResult> PutHabitat(int id, HabitatDTO habitatDto)
@@ -160,6 +194,12 @@ namespace MammalAPI.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Delete specific Habitat by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Delete specific Habitat by Id!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpDelete("{habitatId}", Name = "deleteHabitat")]
         public async Task<ActionResult<HabitatDTO>> DeleteHabitat (int habitatId)

@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
 using System;
+using MammalAPI.Header;
 
 namespace MammalAPI
 {
@@ -31,9 +32,27 @@ namespace MammalAPI
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "MammalApi", Version = "v1", Description ="The great Mammal Api" });
-                
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.OperationFilter<AddCommonParameOperationFilter>();
+
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1.0",
+                    Title = $"The Great MammalAPI",
+                    Description = "v1 API",
+                    TermsOfService = new Uri("https://www.c-sharpcorner.com/members/catcher-wong"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Group B",
+                        
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Apache-2.0",
+                        Url = new Uri("https://www.apache.org/licenses/LICENSE-2.0.html")
+                    }
+                });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
@@ -50,9 +69,9 @@ namespace MammalAPI
 
             app.UseSwagger();
 
-            app.UseSwaggerUI(s =>
+            app.UseSwaggerUI(c =>
             {
-                s.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "MammalApi");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "The Great MammalAPI v1.0");
             });
         }
     }
