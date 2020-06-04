@@ -25,7 +25,6 @@ namespace MammalAPI.Controllers
             this._mapper = mapper;
         }
 
-
         /// <summary>
         /// All Families
         /// </summary>
@@ -85,10 +84,6 @@ namespace MammalAPI.Controllers
                 if (includeLinks)
                 {
                     mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();  
-                }
-
-                if (includeLinks)
-                {
                     return Ok(HateoasMainLinks(mappedResult));
                 }
 
@@ -123,10 +118,6 @@ namespace MammalAPI.Controllers
                 if (includeLinks)
                 {
                     mappedResult.Mammals = mappedResult.Mammals.Select(m => HateoasMainLinks(m)).ToList();
-                }
-
-                if (includeLinks)
-                {
                     return Ok(HateoasMainLinks(mappedResult));
                 }
 
@@ -176,7 +167,7 @@ namespace MammalAPI.Controllers
         /// Put Family by ID
         /// </summary>
         /// <remarks>
-        /// <h1>Put family bu specific Id</h1>
+        /// <h1>Put family by specific Id</h1>
         /// </remarks>
         [HttpPut("{familyId}", Name = "PutFamily")]
         [ApiKeyAuthentication]

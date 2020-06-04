@@ -40,7 +40,7 @@ namespace MammalAPI.Controllers
         /// <h1>Get all Habitat!</h1>
         /// </remarks>
         [HttpGet(Name = "GetAllHabitat")]
-        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats(bool includeMammal = false)
+        public async Task<ActionResult<HabitatDTO[]>> GetAllHabitats([FromQuery] bool includeLinks = true, [FromQuery] bool includeMammal = false)
         {
             try
             {
@@ -51,16 +51,17 @@ namespace MammalAPI.Controllers
                 var result = await _habitatRepository.GetAllHabitats(includeMammal);
                 IEnumerable<HabitatDTO> mappedResult = _mapper.Map<HabitatDTO[]>(result);
 
-                if (includeMammal)
+                if (includeLinks)
                 {
                     foreach (var habitat in mappedResult)
                     {
                         habitat.Mammal = habitat.Mammal.Select(m => HateoasMainLinks(m)).ToList();
                     }
+                    IEnumerable<HabitatDTO> habitatResult = mappedResult.Select(h => HateoasMainLinks(h));
+                    return Ok(habitatResult);
                 }
 
-                IEnumerable<HabitatDTO> habitatResult = mappedResult.Select(h => HateoasMainLinks(h));
-                return Ok(habitatResult);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -77,18 +78,20 @@ namespace MammalAPI.Controllers
         /// <h1>Get specific Habitat by Id and you can include mammals!</h1>
         /// </remarks>
         [HttpGet("{id:int}", Name = "GetHabitatByID")]
-        public async Task<ActionResult<HabitatDTO>> GetHabitatById(int id, [FromQuery]bool includeMammal=false)
+        public async Task<ActionResult<HabitatDTO>> GetHabitatById(int id, [FromQuery]bool includeLinks = true, [FromQuery]bool includeMammal=false)
         {
             try
             {
                 var result = await _habitatRepository.GetHabitatById(id, includeMammal);
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
 
-                if (includeMammal)
+                if (includeLinks)
                 {
                     mappedResult.Mammal = mappedResult.Mammal.Select(m => HateoasMainLinks(m)).ToList();
+                    return Ok(HateoasMainLinks(mappedResult));
                 }
-                return Ok(HateoasMainLinks(mappedResult));
+
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
