@@ -128,6 +128,75 @@ namespace XUnitTest
             Assert.IsAssignableFrom<ObjectResult>(result);
             Assert.Equal("Leopard Seal", dto.Name);
         }
+
+        [Fact]
+        public async void GetAllMammal_ShouldReturnMammal()
+        {
+            //Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var config = new MapperConfiguration(s => s.AddProfile(profile));
+            IMapper mapper = new Mapper(config);
+
+            //mockContext
+            var mammal = GenerateMammal();
+            var mockContext = new Mock<DBContext>();
+            mockContext.Setup(x => x.Mammals).ReturnsDbSet(mammal);
+
+            //Mocking 
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var mockRepo = new MammalRepository(mockContext.Object, logger);
+
+            //actionDescriptor
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo= new AttributeRouteInfo
+                    {
+                        Template="/test"
+                    },
+                    RouteValues= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        {"action", "test" },
+                        {"controller", "test "}
+                    }
+                }
+            };
+
+            var mockDescriptor = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptor.Setup(z => z.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            //setting up controller
+            var controller = new MammalsController(mockRepo, mapper, mockDescriptor.Object);
+
+            //Act
+            var result = await controller.Get(false);
+            var content = result.Result as OkObjectResult;
+            MammalDTO[] mammals = (MammalDTO[])content.Value;
+
+            //Assert
+            Assert.Equal(1, (int)mammals.Length);
+        }
+
+        public List<Mammal> GenerateMammal()
+        {
+            var mammals = new List<Mammal>
+            {
+                new Mammal
+                {
+                    MammalId=1,
+                    Name="Test",
+                    Family=null,
+                    MammalHabitats=null,
+                    LatinName="tester",
+                    Length=1,
+                    Lifespan=2,
+                    Weight=2
+                }
+            };
+            return mammals;
+
+        }
     }
 }
 

@@ -29,13 +29,13 @@ namespace MammalAPI.Controllers
         }
 
         [HttpGet(Name ="GetAll")]
-        public async Task<ActionResult<MammalDTO[]>> Get([FromQuery]bool includeFamily = false, [FromQuery]bool includeHabitat = false)
+        public async Task<ActionResult<MammalDTO[]>> Get([FromQuery]bool includeLinks = true, [FromQuery]bool includeFamily = false, [FromQuery]bool includeHabitat = false)
         {
             try
             {
                 var results = await _repository.GetAllMammals(includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                if (includeFamily)
+                if (includeLinks)
                 {
                     foreach(var mammal in mappedResult)
                     {
@@ -44,16 +44,16 @@ namespace MammalAPI.Controllers
                             mammal.Family = HateoasMainLinks(mammal.Family);
                         }
                     }
-                }
-                if (includeHabitat)
-                {
-                    foreach(var mammal in mappedResult)
+                    foreach (var mammal in mappedResult)
                     {
                         mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                     }
+                    mappedResult = mappedResult.Select(x => HateoasMainLinks(x)).ToList();
+                    return Ok(mappedResult);
+
                 }
-                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
-                return Ok(mammalsresult);
+
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
