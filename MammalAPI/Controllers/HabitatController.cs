@@ -117,7 +117,6 @@ namespace MammalAPI.Controllers
 
                 if (includeLinks)
                 {
-                    mappedResult = HateoasMainLinks(mappedResult);
                     mappedResult.Mammal = mappedResult.Mammal.Select(m => HateoasMainLinks(m)).ToList();
                     return Ok(HateoasMainLinks(mappedResult));
                 }
