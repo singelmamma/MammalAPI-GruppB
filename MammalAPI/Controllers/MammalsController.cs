@@ -262,7 +262,7 @@ namespace MammalAPI.Controllers
         /// <h1>Get Mammal by FamilyName and you can also include Habitat and Family!</h1>
         /// </remarks>
         [HttpGet("byfamilyname/{familyName}")]
-        public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
+        public async Task<IActionResult> GetMammalsByFamilyName(string familyName, [FromQuery] bool includeLinks = true, [FromQuery] bool includeHabitat = false, [FromQuery] bool includeFamily = false)
         {
             try
             {
@@ -270,19 +270,24 @@ namespace MammalAPI.Controllers
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
 
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        if (mammal.Family != null)
+                        {
+                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                        }
+                    }
+                }
 
-                //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
-                //where we filter the DTO to stop recursion
-                if (includeHabitat)
+                if (includeLinks)
                 {
                     foreach (var mammal in mappedResult)
                     {
                         mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                     }
-                }
 
-                if (includeFamily)
-                {
                     foreach (MammalDTO mammal in mappedResult)
                     {
                         if (mammal.Family != null)
@@ -294,15 +299,8 @@ namespace MammalAPI.Controllers
                             mammal.Family.Mammals = null;
                         }
                     }
-
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        if (mammal.Family != null)
-                        {
-                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
-                        }
-                    }
                 }
+                
                 return Ok(mappedResult);
             }
             catch (Exception e)
