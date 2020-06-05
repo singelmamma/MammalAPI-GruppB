@@ -37,7 +37,7 @@ namespace MammalAPI
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
-                //c.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "MammalApi", Version = "v1", Description ="The great Mammal Api" });
+                c.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "MammalApi", Version = "v1", Description ="The great Mammal Api" });
                 c.OperationFilter<HeaderParameter>();
             });
         }
