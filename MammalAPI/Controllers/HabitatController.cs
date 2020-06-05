@@ -83,8 +83,11 @@ namespace MammalAPI.Controllers
             try
             {
                 var result = await _habitatRepository.GetHabitatById(id, includeMammal);
-                var mappedResult = _mapper.Map<HabitatDTO>(result);
+                
+                if (result == null) throw new System.Exception($"Habitat with {id} does not exist");
 
+                var mappedResult = _mapper.Map<HabitatDTO>(result);
+                
                 if (includeLinks)
                 {
                     mappedResult.Mammal = mappedResult.Mammal.Select(m => HateoasMainLinks(m)).ToList();
@@ -93,9 +96,13 @@ namespace MammalAPI.Controllers
 
                 return Ok(mappedResult);
             }
+            catch (TimeoutException e)
+            {
+                return this.StatusCode(StatusCodes.Status408RequestTimeout, $"Request timeout: {e.Message}");
+            }
             catch (Exception e)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return this.StatusCode(StatusCodes.Status404NotFound, $"Something went wrong: {e.Message}");
             }
         }
 
@@ -113,11 +120,11 @@ namespace MammalAPI.Controllers
             try
             {
                 var result= await _habitatRepository.GetHabitatByName(name, includeMammal);
+                if (result == null) throw new System.Exception($"Habitat with {name} does not exist");
                 var mappedResult = _mapper.Map<HabitatDTO>(result);
 
                 if (includeLinks)
                 {
-                    mappedResult = HateoasMainLinks(mappedResult);
                     mappedResult.Mammal = mappedResult.Mammal.Select(m => HateoasMainLinks(m)).ToList();
                     return Ok(HateoasMainLinks(mappedResult));
                 }
@@ -152,7 +159,7 @@ namespace MammalAPI.Controllers
                 _habitatRepository.Add(mappedEntity);
                 if (await _habitatRepository.Save())
                 {
-                    return Created($"/api/v1.0/habitat/id/{habitatDto.HabitatID}", _mapper.Map<HabitatDTO>(mappedEntity));
+                    return Created($"Post succeeded: /api/v1.0/habitat/id/{habitatDto.HabitatID}", _mapper.Map<HabitatDTO>(mappedEntity));
                 }
             }
             catch (Exception e)
