@@ -84,7 +84,7 @@ namespace XUnitTest
         [InlineData(0, 1, 0)]
         [InlineData(150, 200, 2)]
         [InlineData(0, 100, 2)]
-        public async void GetHabitatByLifeSpan_FetchMammalBasedOnLifeSpan_ListLengthOfMammalsWithCorrespondingSpanExpected(int inlineMammalFromLifeSpan, int inlineMammalToLifeSpan, int expected)
+        public async void GetMammalByLifeSpan_FetchMammalsBasedOnLifeSpan_ListLengthOfMammalsWithCorrespondingSpanExpected(int inlineMammalFromLifeSpan, int inlineMammalToLifeSpan, int expected)
         {
             // Arrange
             var profile = new MammalAPI.Configuration.Mapper();
@@ -182,9 +182,10 @@ namespace XUnitTest
             Assert.Equal(expected, dto.Length);
         }
       
+        [Theory]
         [InlineData("Pacific Ocean", 2)]
         [InlineData("Atlantic Ocean", 2)]
-        public async void GetMammalByHabitatName_ShouldReturnMammal(string inlineHabitatName, int expected)
+        public async void GetMammalsByHabitatName_ShouldReturnMammal(string inlineHabitatName, int expected)
         {
             //Arrange
             var profile = new MammalAPI.Configuration.Mapper();
