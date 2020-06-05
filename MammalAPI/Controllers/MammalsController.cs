@@ -229,17 +229,6 @@ namespace MammalAPI.Controllers
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
 
-                if (includeFamily)
-                {
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        if (mammal.Family != null)
-                        {
-                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
-                        }
-                    }
-                }
-
                 if (includeLinks)
                 {
                     foreach (var mammal in mappedResult)
@@ -258,6 +247,16 @@ namespace MammalAPI.Controllers
                             mammal.Family.Mammals = null;
                         }
                     }
+
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        if (mammal.Family != null)
+                        {
+                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                        }
+                    }
+
+                    mappedResult = mappedResult.Select(m => HateoasMainLinks(m));
                 }
 
                 return Ok(mappedResult);
