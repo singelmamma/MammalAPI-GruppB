@@ -71,7 +71,7 @@ namespace MammalAPI.Services
         {
             _logger.LogInformation($"Getting mammals by lifespan: {fromYear}-{toYear}");
 
-            var query = _dBContext.Mammals
+            IQueryable<Mammal> query = _dBContext.Mammals
                 .Where(x => x.Lifespan >= fromYear && x.Lifespan <= toYear);
 
             if (query == null) throw new Exception($"Not found: { fromYear } and { toYear }");

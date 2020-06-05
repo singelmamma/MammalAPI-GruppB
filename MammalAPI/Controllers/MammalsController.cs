@@ -373,7 +373,7 @@ namespace MammalAPI.Controllers
                 var results = await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
-                if (results == null) throw new System.Exception($"Mammal with lifespand {fromYear} and {toYear} does not exist");
+                if (results.Count == 0) throw new System.Exception($"Mammal with lifespan {fromYear} and {toYear} does not exist");
 
                 if (includeLinks)
                 {
