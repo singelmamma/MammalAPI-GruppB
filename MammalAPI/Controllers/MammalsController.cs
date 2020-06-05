@@ -28,14 +28,20 @@ namespace MammalAPI.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get all Mammals
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get all Mammals and you can also include Family and Habitat!</h1>
+        /// </remarks>
         [HttpGet(Name ="GetAll")]
-        public async Task<ActionResult<MammalDTO[]>> Get([FromQuery]bool includeFamily = false, [FromQuery]bool includeHabitat = false)
+        public async Task<ActionResult<MammalDTO[]>> Get([FromQuery]bool includeLinks = true, [FromQuery]bool includeFamily = false, [FromQuery]bool includeHabitat = false)
         {
             try
             {
                 var results = await _repository.GetAllMammals(includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                if (includeFamily)
+                if (includeLinks)
                 {
                     foreach(var mammal in mappedResult)
                     {
@@ -44,16 +50,16 @@ namespace MammalAPI.Controllers
                             mammal.Family = HateoasMainLinks(mammal.Family);
                         }
                     }
-                }
-                if (includeHabitat)
-                {
-                    foreach(var mammal in mappedResult)
+                    foreach (var mammal in mappedResult)
                     {
                         mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                     }
+                    mappedResult = mappedResult.Select(x => HateoasMainLinks(x)).ToList();
+                    return Ok(mappedResult);
+
                 }
-                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
-                return Ok(mammalsresult);
+
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -61,24 +67,28 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get specific Mammal by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get specific Mammal by id and you can also include Family and Habitat!</h1>
+        /// </remarks>
         [HttpGet("{id:int}", Name="GetMammalAsync")]
-        public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
+        public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
                 var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
-                if(includeFamily)
+
+                if(includeLinks)
                 {
                     mappedResult.Family = HateoasMainLinks(mappedResult.Family);
+                    mappedResult.Habitats = mappedResult.Habitats.Select(m => HateoasMainLinks(m)).ToList();
+                    return Ok(HateoasMainLinks(mappedResult));
                 }
 
-                if (includeHabitat)
-                {
-                    mappedResult.Habitats =mappedResult.Habitats.Select(m => HateoasMainLinks(m)).ToList();
-                }
-
-                return Ok(HateoasMainLinks(mappedResult));
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -86,20 +96,27 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Mammal by name
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Mammal by Name and you can also include Family!</h1>
+        /// </remarks>
         [HttpGet("{mammalName}", Name="GetMammalName")]
-        public async Task<IActionResult> GetMammalByName(string mammalName, bool includeFamilies = false)
+        public async Task<IActionResult> GetMammalByName(string mammalName, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamilies = false)
         {
             try
             {
                 var result = await _repository.GetMammalByName(mammalName, includeFamilies);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
 
-                if (includeFamilies)
+                if (includeLinks)
                 {
                     mappedResult.Family = HateoasMainLinks(mappedResult.Family);
+                    return Ok(HateoasMainLinks(mappedResult));
                 }
 
-                return Ok(HateoasMainLinks(mappedResult));
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -107,6 +124,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get specific Mammal by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get specific Mammal by Id and you can also include Family and Habitat!</h1>
+        /// </remarks>
         [HttpGet("habitatid/{habitatId}")]
         public async Task<ActionResult<MammalDTO>> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeLinks=true, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
@@ -155,15 +178,26 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Mammal by HabitatName
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Mammal by HabitatName!</h1>
+        /// </remarks>
         [HttpGet("habitat/{habitatName}")]
-        public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
+        public async Task<IActionResult> GetMammalsByHabitatName(string habitatName, [FromQuery] bool includeLinks = true)
         {
             try
             {
                 var results = await _repository.GetMammalsByHabitat(habitatName);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
-                return Ok(mammalsresult);
+
+                if (includeLinks)
+                {
+                    mappedResult = mappedResult.Select(m => HateoasMainLinks(m));
+                }
+                
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -221,6 +255,12 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Mammal by FamilyName
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Mammal by FamilyName and you can also include Habitat and Family!</h1>
+        /// </remarks>
         [HttpGet("byfamilyname/{familyName}")]
         public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
         {
@@ -271,8 +311,14 @@ namespace MammalAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Mammal by Lifespan
+        /// </summary>
+        /// <remarks>
+        /// <h1>Get Mammal by Lifespan and you can also include Family and Habitat!</h1>
+        /// </remarks>
         [HttpGet("lifespan/fromYear={fromYear}&toYear={toYear}")]
-        public async Task<IActionResult> GetMammalByLifeSpan(int fromYear, int toYear, bool includeFamily = false, bool includeHabitat = false)
+        public async Task<IActionResult> GetMammalsByLifeSpan(int fromYear, int toYear, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamily = false, [FromQuery] bool includeHabitat = false)
         {
             try
             {
@@ -280,17 +326,24 @@ namespace MammalAPI.Controllers
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
 
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        if (mammal.Family != null)
+                        {
+                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                        }
+                    }
+                }
 
-                if (includeHabitat)
+                if (includeLinks)
                 {
                     foreach (var mammal in mappedResult)
                     {
                         mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                     }
-                }
 
-                if (includeFamily)
-                {
                     foreach (MammalDTO mammal in mappedResult)
                     {
                         if (mammal.Family != null)
@@ -303,14 +356,10 @@ namespace MammalAPI.Controllers
                         }
                     }
 
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        if (mammal.Family != null)
-                        {
-                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
-                        }
-                    }
+                    mappedResult = mappedResult.Select(x => HateoasMainLinks(x)).ToList();
+                    return Ok(mappedResult);
                 }
+
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -318,6 +367,13 @@ namespace MammalAPI.Controllers
                 return this.StatusCode(StatusCodes.Status400BadRequest, $"Something went wrong: { e.Message }");
             }
         }
+
+        /// <summary>
+        /// Post Mammal
+        /// </summary>
+        /// <remarks>
+        /// <h1>Post Mammal!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpPost]
         public async Task<ActionResult<MammalDTO>> PostMammal(MammalDTO mammalDTO)
@@ -338,6 +394,13 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
         }
+
+        /// <summary>
+        /// Put Mammal by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Put Mammal by Id!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpPut("{mammalId}")]
         public async Task<ActionResult<MammalDTO>> PutMammal (int mammalId, MammalDTO mammalDTO)
@@ -364,6 +427,13 @@ namespace MammalAPI.Controllers
             }
             return BadRequest();
         }
+
+        /// <summary>
+        /// Delete Mammal by Id
+        /// </summary>
+        /// <remarks>
+        /// <h1>Delete Mammal by Id!</h1>
+        /// </remarks>
         [ApiKeyAuthentication]
         [HttpDelete("{mammalId}")]
         public async Task<ActionResult> DeleteMammal(int mammalId)

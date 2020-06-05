@@ -80,20 +80,27 @@ namespace XUnitTest
             Assert.Equal("test", dtoResult.Name);
         }
 
-        [Fact]
-        public async void GetHabitatByID_ShoulrReturn_anObjectAndAName()
+        [Theory]
+        [InlineData(0, 1, 0)]
+        [InlineData(150, 200, 2)]
+        [InlineData(0, 100, 2)]
+        public async void GetHabitatByLifeSpan_FetchMammalBasedOnLifeSpan_ListLengthOfMammalsWithCorrespondingSpanExpected(int inlineMammalFromLifeSpan, int inlineMammalToLifeSpan, int expected)
         {
-
             // Arrange
             var profile = new MammalAPI.Configuration.Mapper();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             IMapper mapper = new Mapper(configuration);
-            List<Mammal> mammals = new List<Mammal>();
 
-            var mammalRepo = new Mock<IMammalRepository>();
-            mammalRepo.Setup(r => r.GetMammalById(1, It.IsAny<Boolean>(), It.IsAny<Boolean>()));
+            //Mock context
+            var testMammals = GetTestMammals();
+            var contextMock = new Mock<DBContext>();
+            contextMock.Setup(m => m.Mammals).ReturnsDbSet(testMammals);
 
+            //Mock Repo
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var mammalRepoMock = new MammalRepository(contextMock.Object, logger);
 
+            //Mock IActionDescriptorCollectionProvider
             var actions = new List<ActionDescriptor>
             {
                 new ActionDescriptor
@@ -107,26 +114,57 @@ namespace XUnitTest
                         { "action", "Test" },
                         { "controller", "Test" },
                     },
-                },
+                }
             };
             var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
             mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
 
-            var dto = new MammalDTO
-            {
-                MammalID = 1,
-                Name = "Leopard Seal",
-            };
-
-            var controller = new MammalsController(mammalRepo.Object, mapper, mockDescriptorProvider.Object);
+            //Setup new controller based on mocks
+            var controller = new MammalsController(mammalRepoMock, mapper, mockDescriptorProvider.Object);
 
             //Act
-            var result = await controller.GetMammalById(dto.MammalID);
+            var result = await controller.GetMammalsByLifeSpan(inlineMammalFromLifeSpan, inlineMammalToLifeSpan, false);
+            var contentResult = result as OkObjectResult;
+            MammalDTO[] dto = (MammalDTO[])contentResult.Value;
 
+            //Assert
+            Assert.Equal(expected, dto.Length);
+        }
 
-            // Assert
-            Assert.IsAssignableFrom<ObjectResult>(result);
-            Assert.Equal("Leopard Seal", dto.Name);
+        [Theory]
+        [InlineData("Pacific Ocean", 2)]
+        [InlineData("Atlantic Ocean", 2)]
+        public async void GetMammalByHabitatName_ShouldReturnMammal(string inlineHabitatName, int expected)
+        {
+            //Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var config = new MapperConfiguration(x => x.AddProfile(profile));
+            IMapper mapper = new Mapper(config);
+
+            //Mocking
+            var mammal = GetTestMammals();
+            var mockContext = new Mock<DBContext>();
+            mockContext.Setup(z => z.Mammals).ReturnsDbSet(mammal);
+
+            //Mocking repo
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var repo = new MammalRepository(mockContext.Object, logger);
+
+            //mocking IActionDescriptor
+            var actions = new List<ActionDescriptor>();
+            var mockDescriptor = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptor.Setup(x => x.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            // setting up controller
+            var controller = new MammalsController(repo, mapper, mockDescriptor.Object);
+
+            //Act
+            var result = await controller.GetMammalsByHabitatName(inlineHabitatName, false);
+            var content = result as OkObjectResult;
+            var dto = (MammalDTO[])content.Value;
+
+            //Assert
+            Assert.Equal(2, dto.Length);
         }
 
         [Fact]
@@ -179,38 +217,146 @@ namespace XUnitTest
                 Weight = 500,
                 MammalHabitats = new List<MammalHabitat>
                 {
-                        new MammalHabitat
+                    new MammalHabitat
+                    {
+                        Habitat= new Habitat
                         {
-                            Habitat= new Habitat
-                            {
-                                HabitatID=1,
-                                Name="pacific ocean",
-                            }
+                            HabitatID = 1,
+                            Name="Pacific Ocean",
                         }
+                    }
                 }
-
             });
             sessions.Add(new Mammal()
             {
                 MammalId = 2,
                 Name = "Test Mammal Two",
+                LatinName = "Testidae",
+                Length = 50,
+                Lifespan = 38,
+                Weight = 100,
+                MammalHabitats = new List<MammalHabitat>
+                {
+                    new MammalHabitat
+                    {
+                        Habitat= new Habitat
+                        {
+                            HabitatID = 1,
+                            Name="Pacific Ocean",
+                        }
+                    }
+                }
+            });
+            sessions.Add(new Mammal()
+            {
+                MammalId = 3,
+                Name = "Test Mammal Three",
                 LatinName = "Testus Testus",
                 Length = 50,
                 Lifespan = 200,
                 Weight = 100,
                 MammalHabitats = new List<MammalHabitat>
                 {
-                        new MammalHabitat
+                    new MammalHabitat
+                    {
+                        Habitat= new Habitat
                         {
-                            Habitat= new Habitat
-                            {
-                                HabitatID=1,
-                                Name="pacific ocean",
-                            }
+                            HabitatID = 2,
+                            Name="Atlantic Ocean",
                         }
+                    }
+                }
+            });
+            sessions.Add(new Mammal()
+            {
+                MammalId = 4,
+                Name = "Test Mammal Four",
+                LatinName = "Testus Testus",
+                Length = 50,
+                Lifespan = 200,
+                Weight = 100,
+                MammalHabitats = new List<MammalHabitat>
+                {
+                    new MammalHabitat
+                    {
+                        Habitat= new Habitat
+                        {
+                            HabitatID = 2,
+                            Name="Atlantic Ocean",
+                        }
+                    }
                 }
             });
             return sessions;
+        }
+
+        [Fact]
+        public async void GetAllMammal_ShouldReturnMammal()
+        {
+            //Arrange
+            var profile = new MammalAPI.Configuration.Mapper();
+            var config = new MapperConfiguration(s => s.AddProfile(profile));
+            IMapper mapper = new Mapper(config);
+
+            //mockContext
+            var mammal = GenerateMammal();
+            var mockContext = new Mock<DBContext>();
+            mockContext.Setup(x => x.Mammals).ReturnsDbSet(mammal);
+
+            //Mocking 
+            var logger = Mock.Of<ILogger<MammalRepository>>();
+            var mockRepo = new MammalRepository(mockContext.Object, logger);
+
+            //actionDescriptor
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo= new AttributeRouteInfo
+                    {
+                        Template="/test"
+                    },
+                    RouteValues= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        {"action", "test" },
+                        {"controller", "test "}
+                    }
+                }
+            };
+
+            var mockDescriptor = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptor.Setup(z => z.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            //setting up controller
+            var controller = new MammalsController(mockRepo, mapper, mockDescriptor.Object);
+
+            //Act
+            var result = await controller.Get(false);
+            var content = result.Result as OkObjectResult;
+            MammalDTO[] mammals = (MammalDTO[])content.Value;
+
+            //Assert
+            Assert.Equal(1, (int)mammals.Length);
+        }
+
+        public List<Mammal> GenerateMammal()
+        {
+            var mammals = new List<Mammal>
+            {
+                new Mammal
+                {
+                    MammalId=1,
+                    Name="Test",
+                    Family=null,
+                    MammalHabitats=null,
+                    LatinName="tester",
+                    Length=1,
+                    Lifespan=2,
+                    Weight=2
+                }
+            };
+            return mammals;
+
         }
     }
 }
