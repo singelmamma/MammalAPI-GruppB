@@ -49,6 +49,7 @@ namespace MammalAPI.Controllers
                     return NotFound();
                 }
                 var result = await _habitatRepository.GetAllHabitats(includeMammal);
+                if(result == null) throw new System.Exception($"GetAllHabitat GET-request failed");
                 IEnumerable<HabitatDTO> mappedResult = _mapper.Map<HabitatDTO[]>(result);
 
                 if (includeLinks)
