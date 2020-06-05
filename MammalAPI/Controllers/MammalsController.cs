@@ -42,7 +42,7 @@ namespace MammalAPI.Controllers
                 var results = await _repository.GetAllMammals(includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
-
+                if (results == null) throw new System.Exception($"Cant find all Mammals");
                 if (includeLinks)
                 {
 
@@ -97,11 +97,12 @@ namespace MammalAPI.Controllers
         public async Task<IActionResult> GetMammalById(int id, [FromQuery] bool includeLinks = true, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
-            {
+            {                
+            
                 var result = await _repository.GetMammalById(id, includeFamily, includeHabitat);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
-
-                if(includeLinks)
+                if (result == null) throw new System.Exception($"Mammal with {id} does not exist");
+                if (includeLinks)
                 {
                     if (includeFamily == true) 
                     {
@@ -135,7 +136,7 @@ namespace MammalAPI.Controllers
             {
                 var result = await _repository.GetMammalByName(mammalName, includeFamilies);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
-
+                if (result == null) throw new System.Exception($"Mammal with {mammalName} does not exist");
                 if (includeFamilies)
                 {
                     mappedResult.Family.Mammals = null;
@@ -172,6 +173,7 @@ namespace MammalAPI.Controllers
                 var results = await _repository.GetMammalsByHabitatId(habitatId, includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
+                if (results == null) throw new System.Exception($"Habitat with {habitatId} does not exist");
 
                 if (includeFamily)
                 {
@@ -234,6 +236,7 @@ namespace MammalAPI.Controllers
             {
                 var results = await _repository.GetMammalsByHabitat(habitatName);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                if (results == null) throw new System.Exception($"HabitatName with {habitatName} does not exist");
 
                 if (includeLinks)
                 {
@@ -262,6 +265,7 @@ namespace MammalAPI.Controllers
                 var results = await _repository.GetMammalsByFamilyId(id, includeHabitat, includeFamily);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
+                if (results == null) throw new System.Exception($"Family with id{id} does not exist");
 
                 if (includeLinks)
                 {
@@ -315,6 +319,7 @@ namespace MammalAPI.Controllers
                 var results = await _repository.GetMammalsByFamily(familyName, includeHabitat, includeFamily);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
+                if (results == null) throw new System.Exception($"FamilyName with {familyName} does not exist");
 
                 if (includeLinks)
                 {
@@ -368,6 +373,7 @@ namespace MammalAPI.Controllers
                 var results = await _repository.GetMammalsByLifeSpan(fromYear, toYear, includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
+                if (results == null) throw new System.Exception($"Mammal with lifespand {fromYear} and {toYear} does not exist");
 
                 if (includeLinks)
                 {
