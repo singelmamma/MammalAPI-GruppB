@@ -131,7 +131,7 @@ namespace MammalAPI.Controllers
         /// <h1>Get specific Mammal by Id and you can also include Family and Habitat!</h1>
         /// </remarks>
         [HttpGet("habitatid/{habitatId}")]
-        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
+        public async Task<ActionResult<MammalDTO>> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeLinks=true, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
@@ -140,32 +140,32 @@ namespace MammalAPI.Controllers
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
 
 
-                if (includeHabitat)
+                if (includeLinks)
                 {
                     foreach (var mammal in mappedResult)
                     {
                         mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                     }
-                }
-                if (includeFamily)
-                {
-                    foreach (MammalDTO mammal in mappedResult)
+                    if (includeFamily)
                     {
-                        if(mammal.Family != null)
+                        foreach (MammalDTO mammal in mappedResult)
                         {
-                            if (!items.ContainsKey(mammal.Family.Name))
+                            if(mammal.Family != null)
                             {
-                                items.Add(mammal.Family.Name, HateoasMainLinks(mammal.Family));
+                                if (!items.ContainsKey(mammal.Family.Name))
+                                {
+                                    items.Add(mammal.Family.Name, HateoasMainLinks(mammal.Family));
+                                }
+                                mammal.Family.Mammals = null;
                             }
-                            mammal.Family.Mammals = null;
                         }
-                    }
 
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        if (mammal.Family != null)
+                        foreach (MammalDTO mammal in mappedResult)
                         {
-                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                            if (mammal.Family != null)
+                            {
+                                mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                            }
                         }
                     }
                 }
@@ -185,14 +185,19 @@ namespace MammalAPI.Controllers
         /// <h1>Get Mammal by HabitatName!</h1>
         /// </remarks>
         [HttpGet("habitat/{habitatName}")]
-        public async Task<IActionResult> GetMammalsByHabitat(string habitatName)
+        public async Task<IActionResult> GetMammalsByHabitatName(string habitatName, [FromQuery] bool includeLinks = true)
         {
             try
             {
                 var results = await _repository.GetMammalsByHabitat(habitatName);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
-                IEnumerable<MammalDTO> mammalsresult = mappedResult.Select(m => HateoasMainLinks(m));
-                return Ok(mammalsresult);
+
+                if (includeLinks)
+                {
+                    mappedResult = mappedResult.Select(m => HateoasMainLinks(m));
+                }
+                
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -261,7 +266,7 @@ namespace MammalAPI.Controllers
         /// <h1>Get Mammal by FamilyName and you can also include Habitat and Family!</h1>
         /// </remarks>
         [HttpGet("byfamilyname/{familyName}")]
-        public async Task<IActionResult> GetMammalsByFamilyName(string familyName, bool includeHabitat = false, bool includeFamily = false)
+        public async Task<IActionResult> GetMammalsByFamilyName(string familyName, [FromQuery] bool includeLinks = true, [FromQuery] bool includeHabitat = false, [FromQuery] bool includeFamily = false)
         {
             try
             {
@@ -269,19 +274,24 @@ namespace MammalAPI.Controllers
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
 
+                if (includeFamily)
+                {
+                    foreach (MammalDTO mammal in mappedResult)
+                    {
+                        if (mammal.Family != null)
+                        {
+                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                        }
+                    }
+                }
 
-                //We have tried filtering in the repositroy but cannot find a good way to limit the recursion depth, hence why we've opted for this approach
-                //where we filter the DTO to stop recursion
-                if (includeHabitat)
+                if (includeLinks)
                 {
                     foreach (var mammal in mappedResult)
                     {
                         mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                     }
-                }
 
-                if (includeFamily)
-                {
                     foreach (MammalDTO mammal in mappedResult)
                     {
                         if (mammal.Family != null)
@@ -293,15 +303,8 @@ namespace MammalAPI.Controllers
                             mammal.Family.Mammals = null;
                         }
                     }
-
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        if (mammal.Family != null)
-                        {
-                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
-                        }
-                    }
                 }
+                
                 return Ok(mappedResult);
             }
             catch (Exception e)

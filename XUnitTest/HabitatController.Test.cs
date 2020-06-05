@@ -14,11 +14,59 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MammalAPI.DTO;
+using System.Threading.Tasks;
 
 namespace XUnitTest
 {
     public class HabitatControllerTest
     {
+        [Fact]
+        public async void PostHabitat_Should_SaveOne()
+        {
+            var profile = new MammalAPI.Configuration.Mapper();
+            var config = new MapperConfiguration(c => c.AddProfile(profile));
+            IMapper mapper = new Mapper(config);
+            List<Habitat> habitats = new List<Habitat>();
+
+            var habitatrepo = new Mock<IHabitatRepository>();
+            habitatrepo.Setup(h => h.Add<Habitat>(It.IsAny<Habitat>()));
+            habitatrepo.Setup(h => h.GetAllHabitats(It.IsAny<Boolean>())).Returns(Task.FromResult(habitats));
+            habitatrepo.Setup(h => h.Save()).Returns(Task.FromResult(true));
+
+            var actions = new List<ActionDescriptor>
+            {
+                new ActionDescriptor
+                {
+                    AttributeRouteInfo = new AttributeRouteInfo()
+                    {
+                        Template = "/test",
+                    },
+                    RouteValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "action", "Test" },
+                        { "controller", "Test" },
+                    },
+                },
+            };
+            var mockDescriptorProvider = new Mock<IActionDescriptorCollectionProvider>();
+            mockDescriptorProvider.Setup(m => m.ActionDescriptors).Returns(new ActionDescriptorCollection(actions, 0));
+
+            var controller = new HabitatController(habitatrepo.Object, mapper, mockDescriptorProvider.Object);
+
+            var habitatDTO = new HabitatDTO
+            {
+                HabitatID = 1,
+                Name = "Habitat test"
+            };
+
+            var result = await controller.PostHabitat(habitatDTO);
+
+            var test = result.Result as CreatedResult;
+            var dtoResult = (HabitatDTO)test.Value;
+            Assert.Equal("Habitat test", dtoResult.Name);
+
+        }
+
         [Fact]
         public async void GetAllHabitats_GetArrayOfAllHabitats()
         {
