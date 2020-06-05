@@ -37,6 +37,9 @@ namespace MammalAPI.Controllers
             try
             {
                 var results = await _familyRepository.GetAllFamilies(includeMammals);
+
+                if (results.Length == 0) throw new System.Exception($"Cant find any families");
+
                 IEnumerable<FamilyDTO> mappedResult = _mapper.Map<FamilyDTO[]>(results);
 
                 if (includeLinks)
@@ -79,6 +82,9 @@ namespace MammalAPI.Controllers
             try
             {
                 var result = await _familyRepository.GetFamilyById(id, includeMammals);
+
+                if (result == null) throw new System.Exception($"Cant find family with id: {id}");
+
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
                 
                 if (includeLinks)
@@ -113,6 +119,9 @@ namespace MammalAPI.Controllers
             try
             {
                 var result = await _familyRepository.GetFamilyByName(name, includeMammals);
+
+                if (result == null) throw new System.Exception($"Cant find Family with name: {name}");
+
                 var mappedResult = _mapper.Map<FamilyDTO>(result);
 
                 if (includeLinks)
