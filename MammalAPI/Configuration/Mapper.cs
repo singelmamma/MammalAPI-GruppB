@@ -13,8 +13,16 @@ namespace MammalAPI.Configuration
                     .Select(y => new Habitat { HabitatID = y.Habitat.HabitatID, Name = y.Habitat.Name, MammalHabitats = null }).ToList())).ReverseMap();
             
             CreateMap<Family, FamilyDTO>().ForMember(dto => dto.Mammals, opt => opt.MapFrom(x => x.Mammals
-                        .Select(y => new Mammal {MammalId = y.MammalId, Name = y.Name,
-                        MammalHabitats = null}).ToList())).ReverseMap();
+                        .Select(y => new Mammal {
+                            MammalId = y.MammalId, 
+                            Name = y.Name,
+                            MammalHabitats = null, 
+                            Family = null,
+                            LatinName = y.LatinName,
+                            Length = y.Length,
+                            Lifespan = y.Lifespan,
+                            Weight = y.Weight
+                        }).ToList())).ReverseMap();
 
             CreateMap<Habitat, HabitatDTO>().ForMember(dto => dto.Mammal, opt => opt.MapFrom(x => x.MammalHabitats
                    .Select(y => new Mammal { 
