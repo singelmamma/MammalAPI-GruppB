@@ -131,7 +131,7 @@ namespace MammalAPI.Controllers
         /// <h1>Get specific Mammal by Id and you can also include Family and Habitat!</h1>
         /// </remarks>
         [HttpGet("habitatid/{habitatId}")]
-        public async Task<IActionResult> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
+        public async Task<ActionResult<MammalDTO>> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeLinks=true, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
         {
             try
             {
@@ -140,32 +140,32 @@ namespace MammalAPI.Controllers
                 Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
 
 
-                if (includeHabitat)
+                if (includeLinks)
                 {
                     foreach (var mammal in mappedResult)
                     {
                         mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                     }
-                }
-                if (includeFamily)
-                {
-                    foreach (MammalDTO mammal in mappedResult)
+                    if (includeFamily)
                     {
-                        if(mammal.Family != null)
+                        foreach (MammalDTO mammal in mappedResult)
                         {
-                            if (!items.ContainsKey(mammal.Family.Name))
+                            if(mammal.Family != null)
                             {
-                                items.Add(mammal.Family.Name, HateoasMainLinks(mammal.Family));
+                                if (!items.ContainsKey(mammal.Family.Name))
+                                {
+                                    items.Add(mammal.Family.Name, HateoasMainLinks(mammal.Family));
+                                }
+                                mammal.Family.Mammals = null;
                             }
-                            mammal.Family.Mammals = null;
                         }
-                    }
 
-                    foreach (MammalDTO mammal in mappedResult)
-                    {
-                        if (mammal.Family != null)
+                        foreach (MammalDTO mammal in mappedResult)
                         {
-                            mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                            if (mammal.Family != null)
+                            {
+                                mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                            }
                         }
                     }
                 }
