@@ -29,29 +29,26 @@ namespace MammalAPI.Services
         public async Task<Habitat> GetHabitatById(int id, bool includeMammal = false)
         {
             _logger.LogInformation($"Getting habitat with id: { id }");
-            IQueryable<Habitat> query = _dBContext.Habitats;
+            IQueryable<Habitat> query = _dBContext.Habitats.Where(x => x.HabitatID == id);
             
             if (includeMammal == true)
             {
                 query = query.Include(x => x.MammalHabitats).ThenInclude(x=>x.Mammal);
             }
-            query = query.Where(x => x.HabitatID == id);
-            if (query == null) throw new System.Exception($"Not found {id}");
+            
             return await query.FirstOrDefaultAsync();
         }
 
         public async Task<Habitat> GetHabitatByName(string name, bool includeMammal=false)
         {
             _logger.LogInformation($"Getting habitat with name: { name }");
-            IQueryable<Habitat> query = _dBContext.Habitats;
+            IQueryable<Habitat> query = _dBContext.Habitats.Where(c => c.Name == name); ;
             
             if (includeMammal==true)
             {
                 query = query.Include(x => x.MammalHabitats).ThenInclude(x => x.Mammal);
             }
 
-            query = query.Where(c => c.Name == name);
-            if (query == null) throw new System.Exception($"Not found {name}");
             return await query.FirstOrDefaultAsync();
         }
     }
