@@ -83,8 +83,14 @@ namespace MammalAPI.Controllers
 
                 if(includeLinks)
                 {
-                    mappedResult.Family = HateoasMainLinks(mappedResult.Family);
-                    mappedResult.Habitats = mappedResult.Habitats.Select(m => HateoasMainLinks(m)).ToList();
+                    if (includeFamily == true) 
+                    {
+                        mappedResult.Family.Mammals = null;
+                        mappedResult.Family = HateoasMainLinks(mappedResult.Family);
+                    } 
+
+                    if(includeHabitat == true) mappedResult.Habitats = mappedResult.Habitats.Select(m => HateoasMainLinks(m)).ToList();
+
                     return Ok(HateoasMainLinks(mappedResult));
                 }
 
