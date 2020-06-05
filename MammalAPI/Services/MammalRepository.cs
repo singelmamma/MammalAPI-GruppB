@@ -20,7 +20,7 @@ namespace MammalAPI.Services
             IQueryable<Mammal> query = _dBContext.Mammals;
             if (includeFamily)
             {
-               query = query.Include(f => f.Family);
+                query = query.Include(f => f.Family);
             }
             if (includeHabitat)
             {

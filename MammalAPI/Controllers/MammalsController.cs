@@ -110,9 +110,17 @@ namespace MammalAPI.Controllers
                 var result = await _repository.GetMammalByName(mammalName, includeFamilies);
                 var mappedResult = _mapper.Map<MammalDTO>(result);
 
+                if (includeFamilies)
+                {
+                    mappedResult.Family.Mammals = null;
+                }
+
                 if (includeLinks)
                 {
-                    mappedResult.Family = HateoasMainLinks(mappedResult.Family);
+                    if (mappedResult.Family != null)
+                    {
+                        mappedResult.Family = HateoasMainLinks(mappedResult.Family);
+                    }                    
                     return Ok(HateoasMainLinks(mappedResult));
                 }
 
