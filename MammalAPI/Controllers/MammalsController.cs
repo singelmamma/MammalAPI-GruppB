@@ -41,22 +41,42 @@ namespace MammalAPI.Controllers
             {
                 var results = await _repository.GetAllMammals(includeFamily, includeHabitat);
                 IEnumerable<MammalDTO> mappedResult = _mapper.Map<MammalDTO[]>(results);
+                Dictionary<string, FamilyDTO> items = new Dictionary<string, FamilyDTO>();
+
                 if (includeLinks)
                 {
-                    foreach(var mammal in mappedResult)
+
+                    if (includeHabitat)
                     {
-                        if(mammal.Family != null)
+                        foreach (var mammal in mappedResult)
                         {
-                            mammal.Family = HateoasMainLinks(mammal.Family);
+                            mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
                         }
                     }
-                    foreach (var mammal in mappedResult)
+                    if (includeFamily)
                     {
-                        mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
-                    }
-                    mappedResult = mappedResult.Select(x => HateoasMainLinks(x)).ToList();
-                    return Ok(mappedResult);
+                        foreach (MammalDTO mammal in mappedResult)
+                        {
+                            if (mammal.Family != null)
+                            {
+                                if (!items.ContainsKey(mammal.Family.Name))
+                                {
+                                    items.Add(mammal.Family.Name, HateoasMainLinks(mammal.Family));
+                                }
+                                mammal.Family.Mammals = null;
+                            }
+                        }
 
+                        foreach (MammalDTO mammal in mappedResult)
+                        {
+                            if (mammal.Family != null)
+                            {
+                                mammal.Family.Mammals = items[mammal.Family.Name].Mammals;
+                            }
+                        }
+                    }
+                    mappedResult = mappedResult.Select(m => HateoasMainLinks(m));
+                    return Ok(mappedResult);
                 }
 
                 return Ok(mappedResult);
@@ -142,7 +162,7 @@ namespace MammalAPI.Controllers
         /// Get specific Mammal by Id
         /// </summary>
         /// <remarks>
-        /// <h1>Get specific Mammal by Id and you can also include Family and Habitat!</h1>
+        /// <h1>Get specific Mammal by HabitatId and you can also include Family and Habitat!</h1>
         /// </remarks>
         [HttpGet("habitatid/{habitatId}")]
         public async Task<ActionResult<MammalDTO>> GetMammalsByHabitatId(int habitatId, [FromQuery] bool includeLinks=true, [FromQuery] bool includeFamily = false, bool includeHabitat = false)
