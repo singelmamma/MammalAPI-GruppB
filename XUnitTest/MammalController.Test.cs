@@ -269,7 +269,7 @@ namespace XUnitTest
                 {
                     FamilyId = 1,
                     Name = "Test family One"
-                }
+                },
                 MammalHabitats = new List<MammalHabitat>
                 {
                     new MammalHabitat
@@ -294,7 +294,7 @@ namespace XUnitTest
                 {
                     FamilyId = 1,
                     Name = "Test family One"
-                }
+                },
                 MammalHabitats = new List<MammalHabitat>
                 {
                     new MammalHabitat
@@ -319,7 +319,7 @@ namespace XUnitTest
                 {
                     FamilyId = 2,
                     Name = "Test family Two"
-                }
+                },
                 MammalHabitats = new List<MammalHabitat>
                 {
                     new MammalHabitat
@@ -344,7 +344,7 @@ namespace XUnitTest
                 {
                     FamilyId = 3,
                     Name = "Test family Three"
-                }
+                },
                 MammalHabitats = new List<MammalHabitat>
                 {
                     new MammalHabitat
