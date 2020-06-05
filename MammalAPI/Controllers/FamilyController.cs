@@ -107,7 +107,7 @@ namespace MammalAPI.Controllers
         /// <remarks>
         /// <h1>Get specific family and you can also include mammals!</h1>
         /// </remarks>
-        [HttpGet("{name}")]
+        [HttpGet("{name}", Name = "GetFamilyByName")]
         public async Task<ActionResult> GetFamilyByName(string name, [FromQuery] bool includeLinks = true, [FromQuery] bool includeMammals = false)
         {
             try
