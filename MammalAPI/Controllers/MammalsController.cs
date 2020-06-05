@@ -45,10 +45,13 @@ namespace MammalAPI.Controllers
 
                 if (includeLinks)
                 {
-                    mappedResult = mappedResult.Select(m => HateoasMainLinks(m));
-                    foreach (var mammal in mappedResult)
+
+                    if (includeHabitat)
                     {
-                        mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
+                        foreach (var mammal in mappedResult)
+                        {
+                            mammal.Habitats = mammal.Habitats.Select(m => HateoasMainLinks(m)).ToList();
+                        }
                     }
                     if (includeFamily)
                     {
@@ -72,6 +75,8 @@ namespace MammalAPI.Controllers
                             }
                         }
                     }
+                    mappedResult = mappedResult.Select(m => HateoasMainLinks(m));
+                    return Ok(mappedResult);
                 }
 
                 return Ok(mappedResult);
