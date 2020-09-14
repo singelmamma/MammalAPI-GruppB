@@ -2,7 +2,7 @@
 
 namespace MammalAPI.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace MammalAPI.Migrations
                 {
                     FamilyId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -25,11 +25,25 @@ namespace MammalAPI.Migrations
                 {
                     HabitatID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Habitats", x => x.HabitatID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAccounts",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAccounts", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -38,10 +52,10 @@ namespace MammalAPI.Migrations
                 {
                     MammalId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 70, nullable: true),
                     Length = table.Column<double>(nullable: false),
                     Weight = table.Column<double>(nullable: false),
-                    LatinName = table.Column<string>(nullable: true),
+                    LatinName = table.Column<string>(maxLength: 100, nullable: true),
                     Lifespan = table.Column<int>(nullable: false),
                     FamilyId = table.Column<int>(nullable: true)
                 },
@@ -96,6 +110,9 @@ namespace MammalAPI.Migrations
         {
             migrationBuilder.DropTable(
                 name: "MammalHabitats");
+
+            migrationBuilder.DropTable(
+                name: "UserAccounts");
 
             migrationBuilder.DropTable(
                 name: "Habitats");

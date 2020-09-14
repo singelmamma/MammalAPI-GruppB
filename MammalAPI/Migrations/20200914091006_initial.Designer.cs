@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MammalAPI.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20200505093652_Initial")]
-    partial class Initial
+    [Migration("20200914091006_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,7 +29,9 @@ namespace MammalAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("FamilyId");
 
@@ -44,7 +46,8 @@ namespace MammalAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("HabitatID");
 
@@ -62,7 +65,8 @@ namespace MammalAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LatinName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<double>("Length")
                         .HasColumnType("float");
@@ -71,7 +75,8 @@ namespace MammalAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(70)")
+                        .HasMaxLength(70);
 
                     b.Property<double>("Weight")
                         .HasColumnType("float");
@@ -101,10 +106,28 @@ namespace MammalAPI.Migrations
                     b.ToTable("MammalHabitats");
                 });
 
+            modelBuilder.Entity("MammalAPI.Models.UserAccount", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("UserAccounts");
+                });
+
             modelBuilder.Entity("MammalAPI.Models.Mammal", b =>
                 {
                     b.HasOne("MammalAPI.Models.Family", "Family")
-                        .WithMany()
+                        .WithMany("Mammals")
                         .HasForeignKey("FamilyId");
                 });
 
